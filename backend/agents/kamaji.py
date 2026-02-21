@@ -129,12 +129,12 @@ def aggregate_insights(listing: dict, target_budget: float) -> dict:
             # Map agents to ElevenLabs Voice IDs (Users can customize these!)
             # These are default distinct voices from the public library:
             voice_map = {
-                "commute": "ErXwobaYiN019PkySvjV",      # Conductor voice
-                "budget": "EXAVITQu4vr4xnSDxMaL",       # Lin voice
-                "market": "TX3OmfQAAmAcvTJeHMyV",       # Baron voice
-                "neighborhood": "21m00Tcm4TlvDq8ikWAM", # Kiki voice
-                "hidden": "MF3mGyEYCl7XYWbV9V6O",       # Soot Sprite voice
-                "kamaji": "pNInz6obbf5AWCG1NVKt"        # Kamaji voice
+                "commute":      "auq43ws1oslv0tO4BDa7",
+                "budget":       "auq43ws1oslv0tO4BDa7",
+                "market":       "auq43ws1oslv0tO4BDa7",
+                "neighborhood": "auq43ws1oslv0tO4BDa7",
+                "hidden":       "auq43ws1oslv0tO4BDa7",
+                "kamaji":       "auq43ws1oslv0tO4BDa7"
             }
             
             # Construct the speech text for each agent (matching the frontend dialogue)
@@ -152,7 +152,7 @@ def aggregate_insights(listing: dict, target_budget: float) -> dict:
                     audio_generator = client.text_to_speech.convert(
                         text=text,
                         voice_id=voice_id,
-                        model_id="eleven_monolingual_v1",
+                        model_id="eleven_turbo_v2_5",
                         output_format="mp3_44100_128",
                     )
                     audio_bytes = b"".join(audio_generator)
