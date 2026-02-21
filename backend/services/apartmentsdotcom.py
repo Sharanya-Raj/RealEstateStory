@@ -1,49 +1,134 @@
-import requests
-from bs4 import BeautifulSoup
-import path
 import sys
 import os
-from . import geolocate
+import re
+import time
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from bs4 import BeautifulSoup
 
+# Add parent dir (backend/) for model import, and current dir (services/) for geolocate
 current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.join(current_dir, ".."))
+sys.path.insert(0, os.path.join(current_dir, ".."))
+sys.path.insert(0, current_dir)
 
 from model import Apartment
+import geolocate
 
+def _parse_beds(bed_text):
+    """Convert bed label like '1 Bed', '2 Beds', 'Studio' to an integer."""
+    bed_text = bed_text.strip().lower()
+    if "studio" in bed_text:
+        return 0
+    match = re.search(r"(\d+)", bed_text)
+    return int(match.group(1)) if match else 1
+
+def _get_driver():
+    """Initialize a reusable headless Chrome driver."""
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument(
+        "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+    )
+    return webdriver.Chrome(options=options)
 
 def get_apartmentsdotcom(location):
-    location = location.replace(" ", "-").lower()
-    results = geolocate.get_coordinates(location)
+    geo = geolocate.get_coordinates(location)
 
-    url = f"https://www.apartments.com/{results['name'].replace(' ', '-')}/"
-    headers = {"User-Agent": "Mozilla/5.0"}
-    
-    response = requests.get(url, headers=headers)
-    soup = BeautifulSoup(response.text, "html.parser")
-    
-    apartments = []
-    
-    for card in soup.select(".property"):
-        try:
-            name = card.select_one(".property-title").text.strip()
-            price = card.select_one(".property-pricing").text.strip()
+    if not geo or geo.get("latitude") == 0:
+        print(f"[apartments.com] Could not geocode: {location}")
+        return []
+
+    city = geo.get("city", "").replace(" ", "-").lower()
+    state = geo.get("state", "nj").lower()
+    univ_slug = location.replace(" ", "-").lower()
+
+    # Base URL construction
+    if city:
+        base_url = f"https://www.apartments.com/off-campus-housing/{state}/{city}/{univ_slug}/"
+    else:
+        base_url = f"https://www.apartments.com/off-campus-housing/{state}/{univ_slug}/"
+
+    all_apartments = []
+    current_page_url = base_url
+    driver = _get_driver()
+
+    try:
+        while current_page_url:
+            print(f"[apartments.com] Fetching: {current_page_url}")
+            driver.get(current_page_url)
+            time.sleep(5)  # Allow JS to load
             
-            apartments.append(
-                Apartment(
-                    name=name,
-                    address=results['display_name'],
-                    price=price if price else "N/A",  # demo fallback
-                    bedrooms=2,
-                    latitude=results['latitude'],
-                    longitude=results['longitude'],
-                    source="Apartments.com",
-                    score=0
-                )
-            )
-        except:
-            continue
+            soup = BeautifulSoup(driver.page_source, "html.parser")
+            listings = soup.find_all("article", attrs={"data-listingid": True})
+            
+            if not listings:
+                print("[apartments.com] No listings found on this page. Ending search.")
+                break
 
-    return apartments
+            for article in listings:
+                try:
+                    # Name
+                    name_el = article.select_one(".js-placardTitle.title")
+                    if not name_el: continue
+                    name = name_el.text.strip()
+
+                    # Address
+                    address_el = article.select_one(".property-address")
+                    address = address_el.get("title") or address_el.text.strip() if address_el else geo.get("display_name", location)
+
+
+                    #Amenities
+                    amenities = []
+                    amenity_els = article.select(".property-amenities span")
+                    for amenity_el in amenity_els:
+                        amenities.append(amenity_el.text.strip())         
+
+                    # Price/Beds
+                    bed_rows = article.select(".bedRentBox")
+                    if bed_rows:
+                        for row in bed_rows:
+                            bed_el = row.select_one(".bedTextBox")
+                            price_el = row.select_one(".priceTextBox span")
+                            if not bed_el or not price_el: continue
+                            
+                            all_apartments.append(Apartment(
+                                name=name, address=address, price=price_el.text.strip(),
+                                bedrooms=_parse_beds(bed_el.text),
+                                latitude=geo.get("latitude", 0.0), longitude=geo.get("longitude", 0.0),
+                                source="Apartments.com", score=0.0,
+                                amenities=amenities
+                            ))
+                    else:
+                        all_apartments.append(Apartment(
+                            name=name, address=address, price="N/A", bedrooms=1,
+                            latitude=geo.get("latitude", 0.0), longitude=geo.get("longitude", 0.0),
+                            source="Apartments.com", score=0.0,
+                            amenities=amenities
+                        ))
+                except Exception as e:
+                    print(f"[apartments.com] Error parsing card: {e}")
+
+            # --- PAGINATION LOGIC ---
+            # Look for the 'next' button in the pagination nav
+            next_button = soup.select_one("a.next")
+            if next_button and next_button.get("href"):
+                current_page_url = next_button.get("href")
+                # Ensure the URL is absolute
+                if not current_page_url.startswith("http"):
+                    current_page_url = "https://www.apartments.com" + current_page_url
+            else:
+                current_page_url = None # Exit loop if no next page
+
+    finally:
+        driver.quit()
+
+    print(f"[apartments.com] Total Found: {len(all_apartments)}")
+    return all_apartments
 
 if __name__ == "__main__":
-    print(get_apartmentsdotcom("Rutgers University"))
+    results = get_apartmentsdotcom("Princeton University")
+    for apt in results:
+        print(f"{apt.name} - {apt.price} - {apt.bedrooms} beds - {apt.address}")
