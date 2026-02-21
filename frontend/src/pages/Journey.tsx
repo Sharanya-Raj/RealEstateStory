@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import GhibliLayout from "@/components/GhibliLayout";
 import AgentScene from "@/components/AgentScene";
 import { agents } from "@/data/agents";
@@ -63,6 +64,15 @@ The property was built in ${listing.yearBuilt}. ${listing.yearBuilt > 2015 ? "Qu
   }
 }
 
+// Agent-specific ambient page backgrounds for cinematic cross-fades
+const agentPageBg: Record<string, string> = {
+  commute:      "radial-gradient(ellipse at 60% 30%, rgba(59,130,246,0.18) 0%, transparent 70%), radial-gradient(ellipse at 20% 80%, rgba(100,200,255,0.10) 0%, transparent 60%)",
+  budget:       "radial-gradient(ellipse at 40% 20%, rgba(99,102,241,0.18) 0%, transparent 65%), radial-gradient(ellipse at 80% 70%, rgba(139,92,246,0.10) 0%, transparent 60%)",
+  market:       "radial-gradient(ellipse at 30% 40%, rgba(14,165,233,0.18) 0%, transparent 65%), radial-gradient(ellipse at 70% 80%, rgba(59,130,246,0.12) 0%, transparent 55%)",
+  neighborhood: "radial-gradient(ellipse at 50% 20%, rgba(139,92,246,0.18) 0%, transparent 65%), radial-gradient(ellipse at 80% 70%, rgba(168,85,247,0.10) 0%, transparent 60%)",
+  hidden:       "radial-gradient(ellipse at 20% 50%, rgba(30,40,100,0.35) 0%, transparent 65%), radial-gradient(ellipse at 80% 20%, rgba(59,130,246,0.12) 0%, transparent 60%)",
+};
+
 const Journey = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -74,78 +84,46 @@ const Journey = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isAiLoading, setIsAiLoading] = useState(true);
 
-  // State for the AI Market Fairness response
   const [fairnessData, setFairnessData] = useState<any>(null);
   const [isFetchingFairness, setIsFetchingFairness] = useState(false);
 
   useEffect(() => {
     fetch(`http://127.0.0.1:8000/api/listings/${id}`)
-      .then(res => {
-        if (!res.ok) throw new Error("Not found");
-        return res.json();
-      })
-      .then(data => {
-        setListing(data);
-        setIsFetching(false);
-      })
-      .catch(err => {
-        console.error("Failed to fetch listing", err);
-        setListing(null);
-        setIsFetching(false);
-      });
+      .then(res => { if (!res.ok) throw new Error("Not found"); return res.json(); })
+      .then(data => { setListing(data); setIsFetching(false); })
+      .catch(err => { console.error("Failed to fetch listing", err); setListing(null); setIsFetching(false); });
   }, [id]);
 
   const college = preferences?.college || "your college";
   const currentAgent = agents[currentStep];
 
-  // Effect to fetch fairness data when the "market" agent takes the stage
   useEffect(() => {
     if (currentAgent.id === "market" && !fairnessData && listing) {
       setIsFetchingFairness(true);
       fetch("http://127.0.0.1:8000/api/fairness", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          listing_id: listing.id,
-          listing_rent: listing.price,
-          zip_code: listing.zip || "Ann Arbor", // Fallback if mock is weird
-        }),
+        body: JSON.stringify({ listing_id: listing.id, listing_rent: listing.price, zip_code: listing.zip || "Ann Arbor" }),
       })
-        .then((res) => {
-          if (!res.ok) throw new Error("API fairness error");
-          return res.json();
-        })
-        .then((data) => {
-          setFairnessData(data);
-          setIsFetchingFairness(false);
-        })
-        .catch((err) => {
-          console.error("Failed to fetch fairness AI", err);
-          setIsFetchingFairness(false);
-        });
+        .then((res) => { if (!res.ok) throw new Error("API fairness error"); return res.json(); })
+        .then((data) => { setFairnessData(data); setIsFetchingFairness(false); })
+        .catch((err) => { console.error("Failed to fetch fairness AI", err); setIsFetchingFairness(false); });
     }
   }, [currentAgent.id, fairnessData, listing]);
 
-  // New useEffect hook to fetch from the newly integrated FastMCP AI pipeline
   useEffect(() => {
     if (!listing) return;
     const fetchAI = async () => {
       try {
         setIsAiLoading(true);
-        // We pass the "mock_data" payload as approved so Kamaji dynamically calculates his real values
         const response = await fetch("http://localhost:8000/api/evaluate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            address: listing.address,
-            budget: preferences?.priceMax || 1500,
-            mock_data: listing
-          })
+          body: JSON.stringify({ address: listing.address, budget: preferences?.priceMax || 1500, mock_data: listing })
         });
-        
         if (response.ok) {
-           const data = await response.json();
-           if (!data.error) setAiPayload(data);
+          const data = await response.json();
+          if (!data.error) setAiPayload(data);
         }
       } catch (e) {
         console.error("AI fetching failed, falling back to static", e);
@@ -153,22 +131,17 @@ const Journey = () => {
         setIsAiLoading(false);
       }
     };
-    
-    // Always refetch if the payload ID doesn't match the current listing
     if (!aiPayload || aiPayload.id !== listing.id) {
-       fetchAI();
+      fetchAI();
     } else {
-       setIsAiLoading(false);
+      setIsAiLoading(false);
     }
   }, [listing, preferences?.priceMax, setAiPayload, aiPayload]);
 
   const handleNext = useCallback(() => {
     if (currentStep < agents.length - 1) {
       setIsLoading(true);
-      setTimeout(() => {
-        setCurrentStep((s) => s + 1);
-        setIsLoading(false);
-      }, 700);
+      setTimeout(() => { setCurrentStep((s) => s + 1); setIsLoading(false); }, 700);
     } else {
       navigate(`/summary/${id}`, { state: { fairnessData } });
     }
@@ -200,24 +173,45 @@ const Journey = () => {
 
   return (
     <GhibliLayout showBack>
-      <div className="container mx-auto px-4 py-8">
+      {/* Cinematic per-agent ambient background cross-fade */}
+      <AnimatePresence mode="sync">
+        <motion.div
+          key={currentAgent.id + "-bg"}
+          className="fixed inset-0 pointer-events-none z-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.9, ease: "easeInOut" }}
+          style={{ background: agentPageBg[currentAgent.id] ?? "none" }}
+          aria-hidden
+        />
+      </AnimatePresence>
+
+      <div className="container mx-auto px-4 py-8 relative z-10">
         {isAiLoading ? (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-                <div className="text-7xl mb-6 animate-float">🚂</div>
-                <h2 className="font-playfair text-2xl font-semibold mb-2 text-foreground">Summoning the Spirits...</h2>
-                <p className="text-muted-foreground font-quicksand">Kamaji is evaluating {listing.address}</p>
-            </div>
+          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+            <motion.div
+              animate={{ y: [0, -12, 0], rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity }}
+              className="text-7xl mb-6"
+              style={{ filter: "drop-shadow(0 0 28px rgba(166,215,132,0.6))" }}
+            >
+              🚂
+            </motion.div>
+            <h2 className="font-playfair text-2xl font-semibold mb-2 text-foreground">Summoning the Spirits...</h2>
+            <p className="text-muted-foreground font-quicksand">Kamaji is evaluating {listing.address}</p>
+          </div>
         ) : (
-            <AgentScene
-              agent={currentAgent}
-              dialogue={dialogue}
-              isLoading={sceneIsLoading}
-              onNext={handleNext}
-              isLast={currentStep === agents.length - 1}
-              stepNumber={currentStep}
-              totalSteps={agents.length}
-              audioBase64={aiPayload?.audioStreams?.[currentAgent.id] ?? null}
-            />
+          <AgentScene
+            agent={currentAgent}
+            dialogue={dialogue}
+            isLoading={sceneIsLoading}
+            onNext={handleNext}
+            isLast={currentStep === agents.length - 1}
+            stepNumber={currentStep}
+            totalSteps={agents.length}
+            audioBase64={aiPayload?.audioStreams?.[currentAgent.id] ?? null}
+          />
         )}
       </div>
     </GhibliLayout>
@@ -225,3 +219,4 @@ const Journey = () => {
 };
 
 export default Journey;
+
