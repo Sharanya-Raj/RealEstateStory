@@ -1,13 +1,13 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import GhibliLayout from "@/components/GhibliLayout";
 import AgentScene from "@/components/AgentScene";
 import { agents } from "@/data/agents";
-import { mockListings } from "@/data/mockListings";
+import { type Listing } from "@/data/mockListings";
 import { usePreferences } from "@/contexts/PreferencesContext";
 
 // Pre-built dialogue for each agent based on listing data
-function generateDialogue(agentId: string, listing: typeof mockListings[0], college: string): string {
+function generateDialogue(agentId: string, listing: Listing, college: string, fairnessData?: any): string {
   switch (agentId) {
     case "commute":
       return `Tickets, please! The iron horse waits for no one! I've calculated your trek from ${listing.address} to ${college}—it's approximately ${listing.commuteMinutes} minutes, covering ${listing.distanceMiles} miles.
@@ -39,6 +39,19 @@ Security deposit is $${listing.securityDeposit}. Make sure you have that ready b
 Budget Fit Score: ${totalMonthly < 1200 ? "⭐⭐⭐⭐⭐ Golden! Very affordable." : totalMonthly < 1600 ? "⭐⭐⭐⭐ Manageable with some budgeting." : totalMonthly < 2000 ? "⭐⭐⭐ Tight squeeze—be frugal!" : "⭐⭐ Expensive—make sure this fits your budget."}`;
 
     case "market":
+      if (fairnessData) {
+        return `Many things in this world are overpriced illusions. I have consulted my Great Ledger and analyzed this property carefully...
+
+${fairnessData.explanation?.summary || "The property has been evaluated for market fairness."}
+
+My verdict: The Market Fairness Score is ${fairnessData.fairness_score}/100!
+You fall exactly in the ${fairnessData.percentile_position}th percentile for similar listings in this zip code.
+
+${fairnessData.fairness_score >= 80 ? "A true craftsman knows the value of a roof. This landlord is pricing honestly—a rare gem indeed! ⭐⭐⭐⭐⭐" : fairnessData.fairness_score >= 50 ? "It's a tad higher than the market suggests. You might be able to negotiate especially if you sign a longer lease. ⭐⭐⭐" : "Beware! Don't pay for gold when they're selling you brass. This is significantly above market value. I'd strongly suggest looking at alternatives. ⭐"}
+
+The property was built in ${listing.yearBuilt}. ${listing.yearBuilt > 2015 ? "Quite modern—expect fewer maintenance issues." : listing.yearBuilt > 2000 ? "Reasonably up-to-date, though some appliances might be aging." : "An older property. Ask about recent renovations."}`;
+      }
+
       const diff = listing.price - listing.zillowEstimate;
       const fairness = diff <= 0 ? "Fair" : diff <= 100 ? "Slightly Above" : "Overpriced";
       return `Many things in this world are overpriced illusions. I have consulted the Great Ledger of Zillow to see if this landlord is being truthful.
@@ -104,11 +117,64 @@ const Journey = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { preferences } = usePreferences();
-  const listing = mockListings.find((l) => l.id === id);
+
+  const [listing, setListing] = useState<Listing | null>(null);
+  const [isFetching, setIsFetching] = useState(true);
+
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
+  // State for the AI Market Fairness response
+  const [fairnessData, setFairnessData] = useState<any>(null);
+  const [isFetchingFairness, setIsFetchingFairness] = useState(false);
+
+  useEffect(() => {
+    fetch(`http://127.0.0.1:8000/api/listings/${id}`)
+      .then(res => {
+        if (!res.ok) throw new Error("Not found");
+        return res.json();
+      })
+      .then(data => {
+        setListing(data);
+        setIsFetching(false);
+      })
+      .catch(err => {
+        console.error("Failed to fetch listing", err);
+        setListing(null);
+        setIsFetching(false);
+      });
+  }, [id]);
+
   const college = preferences?.college || "your college";
+  const currentAgent = agents[currentStep];
+
+  // Effect to fetch fairness data when the "market" agent takes the stage
+  useEffect(() => {
+    if (currentAgent.id === "market" && !fairnessData && listing) {
+      setIsFetchingFairness(true);
+      fetch("http://127.0.0.1:8000/api/fairness", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          listing_id: listing.id,
+          listing_rent: listing.price,
+          zip_code: listing.zip || "Ann Arbor", // Fallback if mock is weird
+        }),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("API fairness error");
+          return res.json();
+        })
+        .then((data) => {
+          setFairnessData(data);
+          setIsFetchingFairness(false);
+        })
+        .catch((err) => {
+          console.error("Failed to fetch fairness AI", err);
+          setIsFetchingFairness(false);
+        });
+    }
+  }, [currentAgent.id, fairnessData, listing]);
 
   const handleNext = useCallback(() => {
     if (currentStep < agents.length - 1) {
@@ -116,19 +182,35 @@ const Journey = () => {
       setTimeout(() => {
         setCurrentStep((s) => s + 1);
         setIsLoading(false);
-      }, 800);
+      }, 700);
     } else {
-      navigate(`/summary/${id}`);
+      navigate(`/summary/${id}`, { state: { fairnessData } });
     }
-  }, [currentStep, navigate, id]);
+  }, [currentStep, navigate, id, fairnessData]);
 
-  if (!listing) {
-    navigate("/listings");
-    return null;
+  if (isFetching) {
+    return (
+      <GhibliLayout showBack>
+        <div className="container mx-auto px-4 py-16 text-center">
+          <span className="text-5xl block mb-4 animate-bounce">🍂</span>
+          <p className="text-xl text-muted-foreground">Preparing your journey...</p>
+        </div>
+      </GhibliLayout>
+    );
   }
 
-  const currentAgent = agents[currentStep];
-  const dialogue = generateDialogue(currentAgent.id, listing, college);
+  if (!listing) {
+    return (
+      <GhibliLayout showBack>
+        <div className="container mx-auto px-4 py-16 text-center">
+          <p className="text-xl text-muted-foreground">Listing not found 🍃</p>
+        </div>
+      </GhibliLayout>
+    );
+  }
+
+  const dialogue = generateDialogue(currentAgent.id, listing, college, fairnessData);
+  const sceneIsLoading = isLoading || isFetchingFairness;
 
   return (
     <GhibliLayout showBack>
@@ -136,7 +218,7 @@ const Journey = () => {
         <AgentScene
           agent={currentAgent}
           dialogue={dialogue}
-          isLoading={isLoading}
+          isLoading={sceneIsLoading}
           onNext={handleNext}
           isLast={currentStep === agents.length - 1}
           stepNumber={currentStep}

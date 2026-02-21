@@ -1,9 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import GhibliLayout from "@/components/GhibliLayout";
 import ListingCard from "@/components/ListingCard";
-import { mockListings } from "@/data/mockListings";
+import { type Listing } from "@/data/mockListings";
 import { usePreferences } from "@/contexts/PreferencesContext";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, SlidersHorizontal } from "lucide-react";
@@ -16,36 +16,51 @@ const Listings = () => {
   const [sortBy, setSortBy] = useState<SortOption>("distance");
   const [showFilters, setShowFilters] = useState(false);
   const [maxPrice, setMaxPrice] = useState(preferences?.priceMax || 3000);
+  const [listings, setListings] = useState<Listing[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/listings")
+      .then(res => res.json())
+      .then(data => {
+        setListings(data);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.error("Failed to fetch listings", err);
+        setIsLoading(false);
+      });
+  }, []);
 
   const filteredListings = useMemo(() => {
-    let listings = [...mockListings];
-    
+    let filtered = [...listings];
+
     // Filter by price
-    listings = listings.filter((l) => l.price <= maxPrice);
-    
+    filtered = filtered.filter((l) => l.price <= maxPrice);
+
     // Filter by commute distance
     if (preferences?.maxCommuteMiles) {
-      listings = listings.filter((l) => l.distanceMiles <= preferences.maxCommuteMiles);
+      filtered = filtered.filter((l) => l.distanceMiles <= preferences.maxCommuteMiles);
     }
 
     // Sort
     switch (sortBy) {
       case "price-asc":
-        listings.sort((a, b) => a.price - b.price);
+        filtered.sort((a, b) => a.price - b.price);
         break;
       case "price-desc":
-        listings.sort((a, b) => b.price - a.price);
+        filtered.sort((a, b) => b.price - a.price);
         break;
       case "distance":
-        listings.sort((a, b) => a.distanceMiles - b.distanceMiles);
+        filtered.sort((a, b) => a.distanceMiles - b.distanceMiles);
         break;
       case "rating":
-        listings.sort((a, b) => b.rating - a.rating);
+        filtered.sort((a, b) => b.rating - a.rating);
         break;
     }
 
-    return listings;
-  }, [sortBy, maxPrice, preferences]);
+    return filtered;
+  }, [sortBy, maxPrice, preferences, listings]);
 
   const handleListingClick = (id: string) => {
     setSelectedListingId(id);
@@ -97,11 +112,10 @@ const Listings = () => {
             <button
               key={opt.key}
               onClick={() => setSortBy(opt.key)}
-              className={`px-3 py-1.5 rounded-full text-xs font-quicksand transition-all ${
-                sortBy === opt.key
-                  ? "bg-ghibli-meadow text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
-              }`}
+              className={`px-3 py-1.5 rounded-full text-xs font-quicksand transition-all ${sortBy === opt.key
+                ? "bg-ghibli-meadow text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-muted/80"
+                }`}
             >
               {opt.label}
             </button>
@@ -131,7 +145,12 @@ const Listings = () => {
         )}
 
         {/* Listings Grid */}
-        {filteredListings.length === 0 ? (
+        {isLoading ? (
+          <div className="text-center py-16">
+            <span className="text-5xl block mb-4 animate-bounce">🍂</span>
+            <p className="font-playfair text-xl text-foreground mb-2">Fetching nests...</p>
+          </div>
+        ) : filteredListings.length === 0 ? (
           <div className="text-center py-16">
             <span className="text-5xl block mb-4">🍃</span>
             <p className="font-playfair text-xl text-foreground mb-2">No nests found</p>

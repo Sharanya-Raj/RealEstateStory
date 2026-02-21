@@ -1,7 +1,8 @@
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import GhibliLayout from "@/components/GhibliLayout";
-import { mockListings } from "@/data/mockListings";
+import { type Listing } from "@/data/mockListings";
 import { usePreferences } from "@/contexts/PreferencesContext";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +14,37 @@ const ListingDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { setSelectedListingId } = usePreferences();
-  const listing = mockListings.find((l) => l.id === id);
+
+  const [listing, setListing] = useState<Listing | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`http://127.0.0.1:8000/api/listings/${id}`)
+      .then(res => {
+        if (!res.ok) throw new Error("Not found");
+        return res.json();
+      })
+      .then(data => {
+        setListing(data);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.error("Failed to fetch listing", err);
+        setListing(null);
+        setIsLoading(false);
+      });
+  }, [id]);
+
+  if (isLoading) {
+    return (
+      <GhibliLayout showBack>
+        <div className="container mx-auto px-4 py-16 text-center">
+          <span className="text-5xl block mb-4 animate-bounce">🍂</span>
+          <p className="text-xl text-muted-foreground">Summoning listing details...</p>
+        </div>
+      </GhibliLayout>
+    );
+  }
 
   if (!listing) {
     return (
