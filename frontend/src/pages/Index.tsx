@@ -160,15 +160,18 @@ const Index = () => {
     navigate("/listings");
   };
 
-  const inputCls = "w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-foreground font-quicksand focus:outline-none focus:ring-2 focus:ring-ghibli-meadow/60 placeholder-muted-foreground backdrop-blur-sm transition-all";
+  const inputCls = "w-full rounded-2xl border border-blue-500/20 bg-blue-950/40 px-4 py-3 text-white font-quicksand focus:outline-none focus:ring-2 focus:ring-blue-400/60 placeholder-blue-300/40 backdrop-blur-sm transition-all";
   const toggleCls = (active: boolean) =>
-    `px-5 py-2 rounded-xl font-quicksand text-sm transition-all duration-200 cursor-pointer ${active ? "bg-ghibli-meadow/80 text-white shadow-lg shadow-ghibli-meadow/20" : "bg-white/8 text-muted-foreground hover:bg-white/12 border border-white/10"}`;
+    `px-5 py-2 rounded-xl font-quicksand text-sm transition-all duration-200 cursor-pointer ${active ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30" : "bg-blue-950/50 text-blue-200 hover:bg-blue-900/60 border border-blue-500/20"}`;
 
   return (
-    <div className="min-h-screen relative overflow-hidden cursor-none">
-      {/* Background */}
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Background with blue tint */}
       <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url(${heroBg})` }}>
-        <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/50 to-background/95" />
+        {/* Blue color tint filter */}
+        <div className="absolute inset-0" style={{ background: "rgba(10, 20, 80, 0.65)" }} />
+        {/* Dark gradient toward bottom */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/60 to-background" />
       </div>
 
       <Particles />
@@ -188,7 +191,7 @@ const Index = () => {
                 animate={{ y: [0, -12, 0], rotate: [0, 3, -3, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 className="text-7xl mb-6 inline-block"
-                style={{ filter: "drop-shadow(0 0 24px rgba(166,215,132,0.5))" }}
+                style={{ filter: "drop-shadow(0 0 24px rgba(59,130,246,0.6))" }}
               >
                 🏡
               </motion.div>
