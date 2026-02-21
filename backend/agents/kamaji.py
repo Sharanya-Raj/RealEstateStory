@@ -9,6 +9,7 @@ import os
 import base64
 from elevenlabs.client import ElevenLabs
 import requests
+from google import genai
 
 def aggregate_insights(listing: dict, target_budget: float) -> dict:
     """
