@@ -1,4 +1,4 @@
-# Real Estate Story: Implementation Plan
+# Ghibli Nest: Implementation Plan
 
 ## 1. Overview & Prize Strategy
 This project transforms a standard real estate dashboard into a beautiful, emotionally engaging storytelling experience inspired by Studio Ghibli. We target maximum impact by aiming for:

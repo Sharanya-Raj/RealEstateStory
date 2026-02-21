@@ -6,61 +6,61 @@
 
 @layer base {
   :root {
-    /* Ghibli Parchment theme */
-    --background: 44 100% 95%;
-    --foreground: 0 0% 23%;
+    /* Ghibli Midnight Blue theme */
+    --background: 222 47% 7%;
+    --foreground: 210 40% 95%;
 
-    --card: 44 60% 97%;
-    --card-foreground: 0 0% 23%;
+    --card: 224 45% 10%;
+    --card-foreground: 210 40% 95%;
 
-    --popover: 44 60% 97%;
-    --popover-foreground: 0 0% 23%;
+    --popover: 224 45% 10%;
+    --popover-foreground: 210 40% 95%;
 
-    --primary: 101 48% 68%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 217 91% 65%;
+    --primary-foreground: 222 47% 7%;
 
-    --secondary: 216 66% 74%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 199 89% 58%;
+    --secondary-foreground: 222 47% 7%;
 
-    --muted: 120 33% 93%;
-    --muted-foreground: 0 0% 40%;
+    --muted: 223 35% 18%;
+    --muted-foreground: 217 20% 60%;
 
-    --accent: 28 87% 67%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 199 89% 58%;
+    --accent-foreground: 222 47% 7%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 101 30% 80%;
-    --input: 101 20% 85%;
-    --ring: 101 48% 68%;
+    --border: 218 40% 22%;
+    --input: 218 40% 22%;
+    --ring: 217 91% 65%;
 
     --radius: 1rem;
 
-    /* Ghibli extended palette */
-    --ghibli-meadow: 101 48% 68%;
-    --ghibli-sky: 216 66% 74%;
-    --ghibli-parchment: 44 100% 95%;
-    --ghibli-pink: 349 74% 83%;
-    --ghibli-amber: 28 87% 67%;
-    --ghibli-forest: 108 33% 37%;
-    --ghibli-soot: 0 0% 23%;
-    --ghibli-mist: 120 33% 93%;
-    --ghibli-cloud: 0 0% 100%;
+    /* Ghibli extended blue palette */
+    --ghibli-meadow: 217 91% 65%;        /* electric blue - replaces green */
+    --ghibli-sky: 199 89% 58%;           /* cyan-sky */
+    --ghibli-parchment: 224 45% 13%;     /* dark navy - replaces cream */
+    --ghibli-pink: 280 60% 75%;          /* lavender/mauve - replaces pink */
+    --ghibli-amber: 217 70% 75%;         /* soft periwinkle - replaces amber */
+    --ghibli-forest: 199 80% 40%;        /* deep teal - replaces forest green */
+    --ghibli-soot: 222 30% 85%;          /* light grey-blue */
+    --ghibli-mist: 218 40% 14%;          /* dark mist background */
+    --ghibli-cloud: 210 35% 95%;         /* near white */
 
-    /* Glassmorphism */
-    --glass-bg: 0 0% 100% / 0.55;
-    --glass-border: 0 0% 100% / 0.3;
-    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
+    /* Glassmorphism - much more frosted/opaque */
+    --glass-bg: 220 60% 12% / 0.82;
+    --glass-border: 217 60% 70% / 0.2;
+    --glass-shadow: 0 8px 40px 0 rgba(10, 20, 60, 0.5);
 
-    --sidebar-background: 44 60% 97%;
-    --sidebar-foreground: 0 0% 23%;
-    --sidebar-primary: 101 48% 68%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 120 33% 93%;
-    --sidebar-accent-foreground: 0 0% 23%;
-    --sidebar-border: 101 30% 80%;
-    --sidebar-ring: 101 48% 68%;
+    --sidebar-background: 224 45% 10%;
+    --sidebar-foreground: 210 40% 95%;
+    --sidebar-primary: 217 91% 65%;
+    --sidebar-primary-foreground: 222 47% 7%;
+    --sidebar-accent: 223 35% 18%;
+    --sidebar-accent-foreground: 210 40% 95%;
+    --sidebar-border: 218 40% 22%;
+    --sidebar-ring: 217 91% 65%;
   }
 }
 
@@ -79,21 +79,23 @@
 }
 
 @layer components {
+  /* Heavy frosted glass — background barely visible through it */
   .glass-card {
     background: hsla(var(--glass-bg));
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(32px) saturate(1.8);
+    -webkit-backdrop-filter: blur(32px) saturate(1.8);
     border: 1px solid hsla(var(--glass-border));
-    box-shadow: var(--glass-shadow);
+    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(100, 160, 255, 0.12);
     border-radius: var(--radius);
   }
 
+  /* Extra thick frosted glass for prominent cards */
   .glass-card-strong {
-    background: hsla(0, 0%, 100%, 0.75);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid hsla(0, 0%, 100%, 0.4);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    background: hsla(220, 55%, 10%, 0.88);
+    backdrop-filter: blur(44px) saturate(2);
+    -webkit-backdrop-filter: blur(44px) saturate(2);
+    border: 1px solid rgba(100, 160, 255, 0.18);
+    box-shadow: 0 8px 60px rgba(10, 20, 70, 0.6), inset 0 1px 0 rgba(120, 180, 255, 0.15);
     border-radius: var(--radius);
   }
 
@@ -109,8 +111,9 @@
   .ghibli-text-gradient {
     background: linear-gradient(
       135deg,
-      hsl(var(--ghibli-forest)) 0%,
-      hsl(var(--ghibli-meadow)) 100%
+      hsl(var(--ghibli-sky)) 0%,
+      hsl(var(--ghibli-meadow)) 60%,
+      hsl(var(--ghibli-pink)) 100%
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

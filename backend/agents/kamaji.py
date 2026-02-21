@@ -22,6 +22,47 @@ def aggregate_insights(listing: dict, target_budget: float) -> dict:
     neighborhood = analyze_neighborhood(listing)
     hidden = analyze_hidden_costs(listing)
     
+    # 0. Gemini Data Hallucination / Completion Layer
+    # Hackathon saver: if our real data arrays (zori, apartments) are missing fields
+    # we use Gemini's vast world knowledge to estimate them dynamically.
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if api_key:
+        try:
+            client = genai.Client(api_key=api_key)
+            completion_prompt = f"""
+            You are an expert real estate AI. Evaluate the property at {listing.get('address', 'Unknown')}.
+            Based on your world knowledge of this area, provide educated estimates for the following missing data in strict JSON:
+            {{
+                "walk_score": (integer 0-100),
+                "driving_minutes_to_center": (integer),
+                "market_fairness_percentile": (integer 0-100),
+                "safety_score_out_of_10": (integer 1-10)
+            }}
+            Return ONLY the valid JSON, no markdown formatting.
+            """
+            response = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=completion_prompt
+            )
+            
+            import json
+            try:
+                # Clean prompt formatting
+                clean_json = response.text.replace('```json', '').replace('```', '').strip()
+                ai_data = json.loads(clean_json)
+                
+                # Intelligently patch missing data
+                if commute["walkScore"] == 0 or commute["walkScore"] == 70: # 70 was our static mock fallback
+                    commute["walkScore"] = ai_data.get("walk_score", commute["walkScore"])
+                if neighborhood["safety"]["score"] == 0 or neighborhood["safety"]["score"] == 7:
+                    neighborhood["safety"]["score"] = ai_data.get("safety_score_out_of_10", neighborhood["safety"]["score"])
+                if fairness["percentile"] == 0 or fairness["percentile"] == 50:
+                    fairness["percentile"] = ai_data.get("market_fairness_percentile", fairness["percentile"])
+            except json.JSONDecodeError:
+                pass
+        except Exception as e:
+            print(f"Gemini Data Padding error: {str(e)}")
+
     # 1. The Spirit Match Score (overall rating)
     # Combine individual sub-scores into an overall score 0-100
     base = 100
@@ -75,22 +116,66 @@ def aggregate_insights(listing: dict, target_budget: float) -> dict:
         except Exception as e:
             print(f"OpenRouter Kamaji error: {str(e)}")
     
-    # 3. ElevenLabs TTS for Kamaji's Voiceover
-    audio_base64 = None
+    # 3. ElevenLabs TTS for All Agents (Parallelized)
     eleven_key = os.environ.get("ELEVENLABS_API_KEY")
+    audio_streams = {
+        "commute": None,
+        "budget": None,
+        "market": None,
+        "neighborhood": None,
+        "hidden": None,
+        "kamaji": None
+    }
+    
     if eleven_key:
         try:
             client = ElevenLabs(api_key=eleven_key)
-            audio_generator = client.text_to_speech.convert(
-                text=summary_text,
-                voice_id="pNInz6obbf5AWCG1NVKt",
-                model_id="eleven_monolingual_v1",
-                output_format="mp3_44100_128",
-            )
-            audio_bytes = b"".join(audio_generator)
-            audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
+            
+            # Map agents to ElevenLabs Voice IDs (Users can customize these!)
+            # These are default distinct voices from the public library:
+            voice_map = {
+                "commute":      "auq43ws1oslv0tO4BDa7",
+                "budget":       "auq43ws1oslv0tO4BDa7",
+                "market":       "auq43ws1oslv0tO4BDa7",
+                "neighborhood": "auq43ws1oslv0tO4BDa7",
+                "hidden":       "auq43ws1oslv0tO4BDa7",
+                "kamaji":       "auq43ws1oslv0tO4BDa7"
+            }
+            
+            # Construct the speech text for each agent (matching the frontend dialogue)
+            speech_texts = {
+                "commute": f"Driving takes {commute.get('driving', 'some time')}. Transit takes {commute.get('transit', 'some time')}. {commute.get('llm_insight', 'Hmm, no commute data found.')}",
+                "budget": f"Base Rent is ${budget.get('costBreakdown', {}).get('rent', listing.get('base_rent'))}. {budget.get('llm_insight', 'My calculations are clouded.')}",
+                "market": f"This property sits around the {fairness['percentile']}th percentile for this ZIP code. {fairness.get('historicalInsight', 'A landlord never reveals their secrets.')}",
+                "neighborhood": f"Walk Score is {commute['walkScore']} out of 100. {neighborhood['safety'].get('summary', 'The spirits are quiet today.')}",
+                "hidden": f"Total True Cost is ${hidden['trueCost']} per month. I sense some hidden fees lurking in the shadows. Always read the contract!",
+                "kamaji": summary_text
+            }
+            
+            def fetch_tts(agent_id, text, voice_id):
+                try:
+                    audio_generator = client.text_to_speech.convert(
+                        text=text,
+                        voice_id=voice_id,
+                        model_id="eleven_turbo_v2_5",
+                        output_format="mp3_44100_128",
+                    )
+                    audio_bytes = b"".join(audio_generator)
+                    return agent_id, base64.b64encode(audio_bytes).decode('utf-8')
+                except Exception as e:
+                    print(f"ElevenLabs error for {agent_id}: {e}")
+                    return agent_id, None
+            
+            # Execute all 6 TTS requests in parallel to prevent massive loading times
+            import concurrent.futures
+            with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
+                futures = [executor.submit(fetch_tts, agent, speech_texts[agent], voice_map[agent]) for agent in speech_texts]
+                for future in concurrent.futures.as_completed(futures):
+                    agent_id, base64_audio = future.result()
+                    audio_streams[agent_id] = base64_audio
+                    
         except Exception as e:
-            print(f"ElevenLabs error: {e}")
+            print(f"ElevenLabs parallel execution error: {e}")
             
     result = {
         "id": listing["id"],
@@ -122,7 +207,8 @@ def aggregate_insights(listing: dict, target_budget: float) -> dict:
         "pros": pros[:4],
         "cons": cons[:3],
         "sophieSummary": summary_text,
-        "voiceoverBase64": audio_base64,
+        "voiceoverBase64": audio_streams["kamaji"],
+        "audioStreams": audio_streams,
         "images": []
     }
     
