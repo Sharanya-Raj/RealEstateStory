@@ -111,22 +111,66 @@ def aggregate_insights(listing: dict, target_budget: float) -> dict:
         except Exception as e:
             print(f"Gemini Kamaji error: {str(e)}")
     
-    # 3. ElevenLabs TTS for Kamaji's Voiceover
-    audio_base64 = None
+    # 3. ElevenLabs TTS for All Agents (Parallelized)
     eleven_key = os.environ.get("ELEVENLABS_API_KEY")
+    audio_streams = {
+        "commute": None,
+        "budget": None,
+        "market": None,
+        "neighborhood": None,
+        "hidden": None,
+        "kamaji": None
+    }
+    
     if eleven_key:
         try:
             client = ElevenLabs(api_key=eleven_key)
-            audio_generator = client.text_to_speech.convert(
-                text=summary_text,
-                voice_id="pNInz6obbf5AWCG1NVKt",
-                model_id="eleven_monolingual_v1",
-                output_format="mp3_44100_128",
-            )
-            audio_bytes = b"".join(audio_generator)
-            audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
+            
+            # Map agents to ElevenLabs Voice IDs (Users can customize these!)
+            # These are default distinct voices from the public library:
+            voice_map = {
+                "commute": "ErXwobaYiN019PkySvjV",      # Conductor voice
+                "budget": "EXAVITQu4vr4xnSDxMaL",       # Lin voice
+                "market": "TX3OmfQAAmAcvTJeHMyV",       # Baron voice
+                "neighborhood": "21m00Tcm4TlvDq8ikWAM", # Kiki voice
+                "hidden": "MF3mGyEYCl7XYWbV9V6O",       # Soot Sprite voice
+                "kamaji": "pNInz6obbf5AWCG1NVKt"        # Kamaji voice
+            }
+            
+            # Construct the speech text for each agent (matching the frontend dialogue)
+            speech_texts = {
+                "commute": f"Driving takes {commute.get('driving', 'some time')}. Transit takes {commute.get('transit', 'some time')}. {commute.get('llm_insight', 'Hmm, no commute data found.')}",
+                "budget": f"Base Rent is ${budget.get('costBreakdown', {}).get('rent', listing.get('base_rent'))}. {budget.get('llm_insight', 'My calculations are clouded.')}",
+                "market": f"This property sits around the {fairness['percentile']}th percentile for this ZIP code. {fairness.get('historicalInsight', 'A landlord never reveals their secrets.')}",
+                "neighborhood": f"Walk Score is {commute['walkScore']} out of 100. {neighborhood['safety'].get('summary', 'The spirits are quiet today.')}",
+                "hidden": f"Total True Cost is ${hidden['trueCost']} per month. I sense some hidden fees lurking in the shadows. Always read the contract!",
+                "kamaji": summary_text
+            }
+            
+            def fetch_tts(agent_id, text, voice_id):
+                try:
+                    audio_generator = client.text_to_speech.convert(
+                        text=text,
+                        voice_id=voice_id,
+                        model_id="eleven_monolingual_v1",
+                        output_format="mp3_44100_128",
+                    )
+                    audio_bytes = b"".join(audio_generator)
+                    return agent_id, base64.b64encode(audio_bytes).decode('utf-8')
+                except Exception as e:
+                    print(f"ElevenLabs error for {agent_id}: {e}")
+                    return agent_id, None
+            
+            # Execute all 6 TTS requests in parallel to prevent massive loading times
+            import concurrent.futures
+            with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
+                futures = [executor.submit(fetch_tts, agent, speech_texts[agent], voice_map[agent]) for agent in speech_texts]
+                for future in concurrent.futures.as_completed(futures):
+                    agent_id, base64_audio = future.result()
+                    audio_streams[agent_id] = base64_audio
+                    
         except Exception as e:
-            print(f"ElevenLabs error: {e}")
+            print(f"ElevenLabs parallel execution error: {e}")
             
     result = {
         "id": listing["id"],
@@ -158,7 +202,8 @@ def aggregate_insights(listing: dict, target_budget: float) -> dict:
         "pros": pros[:4],
         "cons": cons[:3],
         "sophieSummary": summary_text,
-        "voiceoverBase64": audio_base64,
+        "voiceoverBase64": audio_streams["kamaji"],
+        "audioStreams": audio_streams,
         "images": []
     }
     

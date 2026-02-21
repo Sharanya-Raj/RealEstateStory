@@ -1,7 +1,8 @@
 import { Agent } from "@/data/agents";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Loader2 } from "lucide-react";
+import { ChevronRight, Loader2, Volume2 } from "lucide-react";
+import { useEffect, useRef, useCallback } from "react";
 
 interface AgentSceneProps {
   agent: Agent;
@@ -11,9 +12,79 @@ interface AgentSceneProps {
   isLast: boolean;
   stepNumber: number;
   totalSteps: number;
+  audioBase64?: string | null;
 }
 
-const AgentScene = ({ agent, dialogue, isLoading, onNext, isLast, stepNumber, totalSteps }: AgentSceneProps) => {
+// Splits dialogue string into individual "lines" for staggered animation
+// Lines are separated by newlines; quoted text gets special treatment
+function parseDialogueLines(dialogue: string): string[] {
+  return dialogue
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+}
+
+const containerVariants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.35,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const lineVariants = {
+  hidden: { opacity: 0, y: 18, filter: "blur(4px)" },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.55, ease: "easeOut" as const },
+  },
+};
+
+const AgentScene = ({
+  agent,
+  dialogue,
+  isLoading,
+  onNext,
+  isLast,
+  stepNumber,
+  totalSteps,
+  audioBase64,
+}: AgentSceneProps) => {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Auto-play the agent's unique voice whenever a new scene renders
+  const playAudio = useCallback(() => {
+    if (!audioBase64) return;
+    try {
+      const src = `data:audio/mp3;base64,${audioBase64}`;
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = src;
+        audioRef.current.play().catch((e) => console.warn("Audio autoplay blocked:", e));
+      } else {
+        const audio = new Audio(src);
+        audioRef.current = audio;
+        audio.play().catch((e) => console.warn("Audio autoplay blocked:", e));
+      }
+    } catch (e) {
+      console.warn("Could not play agent audio:", e);
+    }
+  }, [audioBase64]);
+
+  useEffect(() => {
+    if (!isLoading) playAudio();
+    return () => {
+      // Stop current audio when agent changes
+      audioRef.current?.pause();
+    };
+  }, [agent.id, isLoading, playAudio]);
+
+  const lines = parseDialogueLines(dialogue);
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -36,7 +107,19 @@ const AgentScene = ({ agent, dialogue, isLoading, onNext, isLast, stepNumber, to
           <h2 className="font-playfair text-2xl lg:text-3xl font-bold text-foreground mb-1">{agent.name}</h2>
           <p className="text-sm text-muted-foreground italic mb-2">{agent.character} — {agent.movie}</p>
           <p className="text-xs text-muted-foreground max-w-xs">{agent.description}</p>
-          
+
+          {/* Audio indicator */}
+          {audioBase64 && !isLoading && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex items-center gap-1 mt-3 text-xs text-muted-foreground"
+            >
+              <Volume2 className="h-3 w-3 animate-pulse text-ghibli-meadow" />
+              <span>Speaking…</span>
+            </motion.div>
+          )}
+
           {/* Progress dots */}
           <div className="flex gap-2 mt-6">
             {Array.from({ length: totalSteps }).map((_, i) => (
@@ -58,20 +141,39 @@ const AgentScene = ({ agent, dialogue, isLoading, onNext, isLast, stepNumber, to
                 <span className="text-2xl">{agent.emoji}</span>
                 <span className="font-quicksand font-semibold text-foreground">{agent.character} says:</span>
               </div>
-              
+
               {isLoading ? (
                 <div className="flex items-center gap-3 text-muted-foreground py-8">
                   <Loader2 className="h-5 w-5 animate-spin" />
                   <span className="italic">The spirits are gathering information...</span>
                 </div>
               ) : (
+                /* Stagger-animate each dialogue line as data pops in */
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                  className="text-foreground leading-relaxed whitespace-pre-wrap font-quicksand"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="show"
+                  className="space-y-3"
                 >
-                  <p className="text-lg italic text-muted-foreground mb-4">"{dialogue}"</p>
+                  {lines.map((line, i) => {
+                    const isQuote = line.startsWith('"') || line.startsWith('\u201c');
+                    const isStat = /^[🚗🚌🏠💰📊🛒💪🔍⚠️]/.test(line);
+                    return (
+                      <motion.div key={i} variants={lineVariants}>
+                        {isQuote ? (
+                          <p className="text-lg italic text-muted-foreground font-quicksand border-l-2 border-ghibli-meadow/50 pl-3">
+                            {line}
+                          </p>
+                        ) : isStat ? (
+                          <div className="flex items-center gap-2 bg-background/30 rounded-lg px-3 py-2">
+                            <span className="font-quicksand text-sm font-semibold text-foreground">{line}</span>
+                          </div>
+                        ) : (
+                          <p className="text-foreground leading-relaxed font-quicksand text-sm">{line}</p>
+                        )}
+                      </motion.div>
+                    );
+                  })}
                 </motion.div>
               )}
             </div>

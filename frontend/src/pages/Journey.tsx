@@ -216,6 +216,7 @@ const Journey = () => {
               isLast={currentStep === agents.length - 1}
               stepNumber={currentStep}
               totalSteps={agents.length}
+              audioBase64={aiPayload?.audioStreams?.[currentAgent.id] ?? null}
             />
         )}
       </div>
