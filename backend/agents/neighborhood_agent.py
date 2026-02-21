@@ -1,6 +1,6 @@
 # agents/neighborhood_agent.py
 import os
-from google import genai
+import requests
 
 def analyze_neighborhood(listing: dict) -> dict:
     """
@@ -16,14 +16,24 @@ def analyze_neighborhood(listing: dict) -> dict:
         summary = "Some recent activity in the area; standard precautions advised."
         
     # Generate dynamic LLM insight using Gemini
-    api_key = os.environ.get("GEMINI_API_KEY")
+    api_key = os.environ.get("OPENROUTER_API_KEY")
     if api_key:
         try:
-            client = genai.Client(api_key=api_key)
             prompt = f"You are Kiki from Kiki's Delivery Service, an energetic flying witch observing a town from the sky. This neighborhood has a crime/safety rating of {crime_rating}/10 and walk score of {listing.get('walk_score', 50)}. Give 1 enthusiastic sentence describing the vibe of the neighborhood."
-            response = client.models.generate_content(model='gemini-flash-latest', contents=prompt)
-            if response.text: summary = response.text.strip().replace('"', '')
-        except: pass
+            response = requests.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={"Authorization": f"Bearer {api_key}"},
+                json={
+                    "model": "google/gemini-2.5-flash",
+                    "messages": [{"role": "user", "content": prompt}]
+                },
+                timeout=10
+            )
+            if response.ok:
+                data = response.json()
+                summary = data["choices"][0]["message"]["content"].strip().replace('"', '')
+        except Exception as e:
+            print("Neighborhood API error:", e)
         
     return {
         "safety": {

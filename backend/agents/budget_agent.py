@@ -1,6 +1,6 @@
 # agents/budget_agent.py
 import os
-from google import genai
+import requests
 
 def analyze_budget(listing: dict, target_budget: float) -> dict:
     """
@@ -24,14 +24,24 @@ def analyze_budget(listing: dict, target_budget: float) -> dict:
         
     # Generate dynamic LLM insight using Gemini
     insight_text = ""
-    api_key = os.environ.get("GEMINI_API_KEY")
+    api_key = os.environ.get("OPENROUTER_API_KEY")
     if api_key:
         try:
-            client = genai.Client(api_key=api_key)
             prompt = f"You are Lin from Spirited Away, a pragmatic worker evaluating budget. The user has ${target_budget}/mo. This property costs ${total_estimated}/mo (Rent: ${rent}, Util: ${utilities}). Give 1 punchy sentence telling them if it's a smart financial fit."
-            response = client.models.generate_content(model='gemini-flash-latest', contents=prompt)
-            if response.text: insight_text = response.text.strip().replace('"', '')
-        except: pass
+            response = requests.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={"Authorization": f"Bearer {api_key}"},
+                json={
+                    "model": "google/gemini-2.5-flash",
+                    "messages": [{"role": "user", "content": prompt}]
+                },
+                timeout=10
+            )
+            if response.ok:
+                data = response.json()
+                insight_text = data["choices"][0]["message"]["content"].strip().replace('"', '')
+        except Exception as e:
+            print("Budget API error:", e)
         
     return {
         "matchScore": int(budget_fit),

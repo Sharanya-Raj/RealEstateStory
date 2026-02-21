@@ -1,9 +1,16 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import Any, Dict
 from market_fairness.schema import MarketFairnessInput, MarketFairnessOutput
 from market_fairness.handler import run_market_fairness_agent
+from agents.kamaji import aggregate_insights
 import sys
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Ensure the backend directory is in the python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -36,6 +43,87 @@ def evaluate_market_fairness(input_data: MarketFairnessInput):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+class EvaluateRequest(BaseModel):
+    address: str
+    budget: float
+    mock_data: Dict[str, Any]
+
+def _translate_frontend_to_backend(frontend_data: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    The frontend sends listing data using camelCase field names (e.g. 'price', 'walkScore'),
+    but the backend agents expect the original CSV snake_case names (e.g. 'base_rent', 'walk_score').
+    This function bridges that gap so the agents get real data instead of defaults.
+    """
+    # Start with a copy of the original data (preserves any fields that already match)
+    backend = dict(frontend_data)
+    
+    # Map frontend → backend field names
+    field_map = {
+        "price": "base_rent",
+        "walkScore": "walk_score",
+        "crimeScore": "crime_rating",
+        "commuteMinutes": "transit_time_to_hub",
+        "petFriendly": "pet_friendly",
+    }
+    
+    for frontend_key, backend_key in field_map.items():
+        if frontend_key in frontend_data and backend_key not in frontend_data:
+            backend[backend_key] = frontend_data[frontend_key]
+    
+    # Extract hidden costs into flat fee fields if not already present
+    hidden_costs = frontend_data.get("hiddenCosts", [])
+    if hidden_costs and "parking_fee" not in backend:
+        for cost in hidden_costs:
+            name = cost.get("name", "").lower()
+            amount = cost.get("amount", 0)
+            if "parking" in name:
+                backend.setdefault("parking_fee", amount)
+            elif "amenity" in name:
+                backend.setdefault("amenity_fee", amount)
+            elif "utilit" in name:
+                backend.setdefault("avg_utilities", amount)
+    
+    # Ensure critical fields have sensible defaults
+    backend.setdefault("parking_fee", 0)
+    backend.setdefault("amenity_fee", 0)
+    backend.setdefault("avg_utilities", 0)
+    backend.setdefault("base_rent", frontend_data.get("price", 1500))
+    backend.setdefault("walk_score", 50)
+    backend.setdefault("crime_rating", 5)
+    backend.setdefault("transit_time_to_hub", 20)
+    backend.setdefault("has_gym", False)
+    backend.setdefault("has_grocery_nearby", False)
+    backend.setdefault("pet_friendly", False)
+    backend.setdefault("description", "")
+    backend.setdefault("bedrooms", 1)
+    backend.setdefault("bathrooms", 1)
+    backend.setdefault("sqft", 800)
+    
+    return backend
+
+@app.post("/api/evaluate")
+def evaluate_listing(request: EvaluateRequest):
+    try:
+        # Translate frontend field names to backend field names
+        backend_data = _translate_frontend_to_backend(request.mock_data)
+        print(f"\n{'='*60}")
+        print(f"[EVALUATE] Received listing: {backend_data.get('id', '?')}")
+        print(f"[EVALUATE] base_rent={backend_data.get('base_rent')}, walk_score={backend_data.get('walk_score')}, crime_rating={backend_data.get('crime_rating')}")
+        print(f"[EVALUATE] OPENROUTER_API_KEY loaded: {bool(os.environ.get('OPENROUTER_API_KEY'))}")
+        print(f"{'='*60}")
+        # Pass the translated data to Kamaji along with the budget target
+        result = aggregate_insights(backend_data, request.budget)
+        print(f"[EVALUATE] Result keys: {list(result.keys())}")
+        print(f"[EVALUATE] commute.llm_insight: '{result.get('commute', {}).get('llm_insight', 'MISSING')}'")
+        print(f"[EVALUATE] budgetInsight: '{result.get('budgetInsight', 'MISSING')}'")
+        print(f"[EVALUATE] historicalInsight: '{result.get('historicalInsight', 'MISSING')}'")
+        return result
+    except Exception as e:
+        # If orchestration fails, return an error block so frontend falls back
+        print(f"[EVALUATE] ERROR: {e}")
+        import traceback; traceback.print_exc()
+        return {"error": str(e)}
 
 import pandas as pd
 import random

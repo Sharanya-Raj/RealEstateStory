@@ -8,7 +8,7 @@ import random
 import os
 import base64
 from elevenlabs.client import ElevenLabs
-from google import genai
+import requests
 
 def aggregate_insights(listing: dict, target_budget: float) -> dict:
     """
@@ -55,20 +55,25 @@ def aggregate_insights(listing: dict, target_budget: float) -> dict:
     summary_text = f"A true find. The overall feeling is a {match_score}% match. Be mindful of the true cost of ${hidden['trueCost']}/mo."
     
     # Generate dynamic LLM summary using Gemini
-    api_key = os.environ.get("GEMINI_API_KEY")
+    api_key = os.environ.get("OPENROUTER_API_KEY")
     if api_key:
         try:
-            client = genai.Client(api_key=api_key)
             prompt = f"You are Kamaji from Spirited Away, a gruff but caring boiler man giving rental advice. Analyze these reports and give a 2-sentence final verdict on the property focusing on the Pros and Cons. Mention the Spirit Match score ({match_score}/100) and True Cost (${hidden['trueCost']}). Pros: {pros}. Cons: {cons}."
             
-            response = client.models.generate_content(
-                model='gemini-flash-latest',
-                contents=prompt
+            response = requests.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={"Authorization": f"Bearer {api_key}"},
+                json={
+                    "model": "google/gemini-2.5-flash",
+                    "messages": [{"role": "user", "content": prompt}]
+                },
+                timeout=10
             )
-            if response.text:
-                summary_text = response.text.strip().replace('"', '')
+            if response.ok:
+                data = response.json()
+                summary_text = data["choices"][0]["message"]["content"].strip().replace('"', '')
         except Exception as e:
-            print(f"Gemini Kamaji error: {str(e)}")
+            print(f"OpenRouter Kamaji error: {str(e)}")
     
     # 3. ElevenLabs TTS for Kamaji's Voiceover
     audio_base64 = None

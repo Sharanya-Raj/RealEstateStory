@@ -1,7 +1,7 @@
 # agents/fairness_agent.py
 import pandas as pd
 import os
-from google import genai
+import requests
 import sys
 
 # Add the market_fairness to the path
@@ -49,14 +49,24 @@ def analyze_fairness(listing: dict) -> dict:
         print(f"Fairness Match Error: {e}")
                 
     # Generate dynamic LLM insight using Gemini
-    api_key = os.environ.get("GEMINI_API_KEY")
+    api_key = os.environ.get("OPENROUTER_API_KEY")
     if api_key:
         try:
-            client = genai.Client(api_key=api_key)
             prompt = f"You are The Baron from Whisper of the Heart, a dapper aristocrat cat giving distinguished real estate advice. The history indicates {insight}. The rent is ${rent}. Give 1 elegant sentence telling the user if this is a fair market value."
-            response = client.models.generate_content(model='gemini-flash-latest', contents=prompt)
-            if response.text: insight = response.text.strip().replace('"', '')
-        except: pass
+            response = requests.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={"Authorization": f"Bearer {api_key}"},
+                json={
+                    "model": "google/gemini-2.5-flash",
+                    "messages": [{"role": "user", "content": prompt}]
+                },
+                timeout=10
+            )
+            if response.ok:
+                data = response.json()
+                insight = data["choices"][0]["message"]["content"].strip().replace('"', '')
+        except Exception as e:
+            print("Fairness API error:", e)
                 
     return {
         "historicalInsight": insight,

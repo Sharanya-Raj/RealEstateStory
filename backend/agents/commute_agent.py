@@ -1,6 +1,6 @@
 # agents/commute_agent.py
 import os
-from google import genai
+import requests
 
 def analyze_commute(listing: dict) -> dict:
     """
@@ -17,14 +17,32 @@ def analyze_commute(listing: dict) -> dict:
 
     # Generate dynamic LLM insight using Gemini
     insight_text = ""
-    api_key = os.environ.get("GEMINI_API_KEY")
+    api_key = os.environ.get("OPENROUTER_API_KEY")
+    print(f"[COMMUTE] API key present: {bool(api_key)}, prefix: {api_key[:12] if api_key else 'NONE'}...")
     if api_key:
         try:
-            client = genai.Client(api_key=api_key)
             prompt = f"You are the Conductor from Spirited Away, speaking about a train journey. This property has a transit time of {transit_time} to the hub, driving time {driving_time}, and a walk score of {walk_score}/100. Give 1 sentence advising the traveler on their commute options."
-            response = client.models.generate_content(model='gemini-flash-latest', contents=prompt)
-            if response.text: insight_text = response.text.strip().replace('"', '')
-        except: pass
+            response = requests.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={"Authorization": f"Bearer {api_key}"},
+                json={
+                    "model": "google/gemini-2.5-flash",
+                    "messages": [{"role": "user", "content": prompt}]
+                },
+                timeout=15
+            )
+            print(f"[COMMUTE] Response status: {response.status_code}")
+            print(f"[COMMUTE] Response body: {response.text[:300]}")
+            if response.ok:
+                data = response.json()
+                insight_text = data["choices"][0]["message"]["content"].strip().replace('"', '')
+                print(f"[COMMUTE] LLM insight: {insight_text[:100]}")
+            else:
+                print(f"[COMMUTE] API FAILED: {response.status_code} - {response.text[:200]}")
+        except Exception as e: 
+            print(f"[COMMUTE] EXCEPTION: {e}")
+    else:
+        print("[COMMUTE] No API key found, skipping LLM call")
 
     return {
         "driving": driving_time,

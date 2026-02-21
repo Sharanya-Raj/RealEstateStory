@@ -1,7 +1,7 @@
 # agents/hidden_cost_agent.py
 import os
 import json
-from google import genai
+import requests
 from pydantic import BaseModel
 
 class GeminiFeeExtraction(BaseModel):
@@ -27,29 +27,32 @@ def analyze_hidden_costs(listing: dict) -> dict:
     unstructured_fees = 0.0
     gemini_insight = "No unstructured text provided."
     
-    api_key = os.environ.get("GEMINI_API_KEY")
+    api_key = os.environ.get("OPENROUTER_API_KEY")
     if api_key and description:
         try:
-            client = genai.Client(api_key=api_key)
             prompt = f"Analyze this rental property description and identify any hidden monthly fees or strict penalties (e.g. pet rent, mandatory valet trash) that are not base rent. Estimate their monthly cost. Return JSON matching the schema. Description: {description}"
             
-            response = client.models.generate_content(
-                model='gemini-flash-latest',
-                contents=prompt,
-                config={
-                    'response_mime_type': 'application/json',
-                    'response_schema': GeminiFeeExtraction,
+            response = requests.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={"Authorization": f"Bearer {api_key}"},
+                json={
+                    "model": "google/gemini-2.5-flash",
+                    "messages": [{"role": "user", "content": prompt}],
+                    "response_format": {"type": "json_object"}
                 },
+                timeout=10
             )
             
-            # The SDK parses this automatically if structured correctly, or we load it
-            result = json.loads(response.text)
-            unstructured_fees = float(result.get('estimated_unstructured_fees', 0.0))
-            if result.get('has_hidden_fee_warnings'):
-                gemini_insight = result.get('analysis_reasoning', '')
+            if response.ok:
+                data = response.json()
+                content = data["choices"][0]["message"]["content"]
+                result = json.loads(content)
+                unstructured_fees = float(result.get('estimated_unstructured_fees', 0.0))
+                if result.get('has_hidden_fee_warnings'):
+                    gemini_insight = result.get('analysis_reasoning', '')
                 
         except Exception as e:
-            gemini_insight = f"Gemini analysis failed: {str(e)}"
+            gemini_insight = f"OpenRouter analysis failed: {str(e)}"
     
     true_cost = rent + parking + amenities + utilities + unstructured_fees
     
