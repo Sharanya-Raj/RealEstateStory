@@ -4,23 +4,18 @@ import json
 import logging
 import os
 import random
+import requests
+import concurrent.futures
 
 from elevenlabs.client import ElevenLabs
-from llm_client import generate_text
 
 from .commute_agent import analyze_commute
-
-logger = logging.getLogger("agents.kamaji")
 from .budget_agent import analyze_budget
 from .fairness_agent import analyze_fairness
 from .neighborhood_agent import analyze_neighborhood
 from .hidden_cost_agent import analyze_hidden_costs
-import random
-import os
-import base64
-from elevenlabs.client import ElevenLabs
-import requests
-from google import genai
+
+logger = logging.getLogger("agents.kamaji")
 
 def aggregate_insights(listing: dict, target_budget: float) -> dict:
     """
@@ -39,31 +34,39 @@ def aggregate_insights(listing: dict, target_budget: float) -> dict:
     logger.info("AGENT: analyze_hidden_costs (Soot Sprite)")
     hidden = analyze_hidden_costs(listing)
     
-    # 0. LLM Data Hallucination / Completion Layer (Gemini or OpenRouter)
-    logger.info("AGENT: Kamaji LLM data padding (gemini-2.5-flash)")
-    # Hackathon saver: if our real data arrays (zori, apartments) are missing fields
-    # we use the LLM's world knowledge to estimate them dynamically.
-    try:
-        completion_prompt = f"""
-You are an expert real estate AI. Evaluate the property at {listing.get('address', 'Unknown')}.
+    # 0. LLM Data Completion Layer (OpenRouter / Gemini)
+    logger.info("AGENT: Kamaji LLM data padding")
+    api_key = os.environ.get("OPENROUTER_API_KEY")
+    if api_key:
+        try:
+            completion_prompt = f"""You are an expert real estate AI. Evaluate the property at {listing.get('address', 'Unknown')}.
 Based on your world knowledge of this area, provide educated estimates in strict JSON:
 {{"walk_score": (int 0-100), "driving_minutes_to_center": (int), "market_fairness_percentile": (int 0-100), "safety_score_out_of_10": (int 1-10)}}
 Return ONLY the valid JSON, no markdown."""
-        text = generate_text(completion_prompt, model="gemini-2.5-flash", json_mode=True)
-        if text:
-            clean_json = text.replace("```json", "").replace("```", "").strip()
-            ai_data = json.loads(clean_json)
-            if commute["walkScore"] == 0 or commute["walkScore"] == 70:
-                commute["walkScore"] = ai_data.get("walk_score", commute["walkScore"])
-            if neighborhood["safety"]["score"] == 0 or neighborhood["safety"]["score"] == 7:
-                neighborhood["safety"]["score"] = ai_data.get("safety_score_out_of_10", neighborhood["safety"]["score"])
-            if fairness["percentile"] == 0 or fairness["percentile"] == 50:
-                fairness["percentile"] = ai_data.get("market_fairness_percentile", fairness["percentile"])
-    except Exception as e:
-        logger.warning("LLM Data Padding error: %s", e)
+            response = requests.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={"Authorization": f"Bearer {api_key}"},
+                json={
+                    "model": "google/gemini-2.5-flash",
+                    "messages": [{"role": "user", "content": completion_prompt}],
+                    "response_format": {"type": "json_object"}
+                },
+                timeout=15
+            )
+            if response.ok:
+                text = response.json()["choices"][0]["message"]["content"]
+                clean_json = text.replace("```json", "").replace("```", "").strip()
+                ai_data = json.loads(clean_json)
+                if commute["walkScore"] == 0 or commute["walkScore"] == 70:
+                    commute["walkScore"] = ai_data.get("walk_score", commute["walkScore"])
+                if neighborhood["safety"]["score"] == 0 or neighborhood["safety"]["score"] == 7:
+                    neighborhood["safety"]["score"] = ai_data.get("safety_score_out_of_10", neighborhood["safety"]["score"])
+                if fairness["percentile"] == 0 or fairness["percentile"] == 50:
+                    fairness["percentile"] = ai_data.get("market_fairness_percentile", fairness["percentile"])
+        except Exception as e:
+            logger.warning("LLM Data Padding error: %s", e)
 
     # 1. The Spirit Match Score (overall rating)
-    # Combine individual sub-scores into an overall score 0-100
     base = 100
     if budget["matchScore"] < 80:
         base -= (80 - budget["matchScore"]) * 1.5
@@ -94,8 +97,7 @@ Return ONLY the valid JSON, no markdown."""
     
     summary_text = f"A true find. The overall feeling is a {match_score}% match. Be mindful of the true cost of ${hidden['trueCost']}/mo."
     
-    # Generate dynamic LLM summary using Gemini
-    api_key = os.environ.get("OPENROUTER_API_KEY")
+    # Generate dynamic LLM summary using OpenRouter
     if api_key:
         try:
             prompt = f"You are Kamaji from Spirited Away, a gruff but caring boiler man giving rental advice. Analyze these reports and give a 2-sentence final verdict on the property focusing on the Pros and Cons. Mention the Spirit Match score ({match_score}/100) and True Cost (${hidden['trueCost']}). Pros: {pros}. Cons: {cons}."
@@ -113,7 +115,7 @@ Return ONLY the valid JSON, no markdown."""
                 data = response.json()
                 summary_text = data["choices"][0]["message"]["content"].strip().replace('"', '')
         except Exception as e:
-            print(f"OpenRouter Kamaji error: {str(e)}")
+            logger.warning("OpenRouter Kamaji error: %s", e)
     
     # 3. ElevenLabs TTS for All Agents (Parallelized)
     eleven_key = os.environ.get("ELEVENLABS_API_KEY")
@@ -131,8 +133,6 @@ Return ONLY the valid JSON, no markdown."""
             logger.info("API: ElevenLabs TTS for 6 agents (parallel)")
             client = ElevenLabs(api_key=eleven_key)
             
-            # Map agents to ElevenLabs Voice IDs (Users can customize these!)
-            # These are default distinct voices from the public library:
             voice_map = {
                 "commute":      "auq43ws1oslv0tO4BDa7",
                 "budget":       "auq43ws1oslv0tO4BDa7",
@@ -142,7 +142,6 @@ Return ONLY the valid JSON, no markdown."""
                 "kamaji":       "auq43ws1oslv0tO4BDa7"
             }
             
-            # Construct the speech text for each agent (matching the frontend dialogue)
             speech_texts = {
                 "commute": f"Driving takes {commute.get('driving', 'some time')}. Transit takes {commute.get('transit', 'some time')}. {commute.get('llm_insight', 'Hmm, no commute data found.')}",
                 "budget": f"Base Rent is ${budget.get('costBreakdown', {}).get('rent', listing.get('base_rent'))}. {budget.get('llm_insight', 'My calculations are clouded.')}",
@@ -166,8 +165,6 @@ Return ONLY the valid JSON, no markdown."""
                     logger.warning("ElevenLabs error for %s: %s", agent_id, e)
                     return agent_id, None
             
-            # Execute all 6 TTS requests in parallel to prevent massive loading times
-            import concurrent.futures
             with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
                 futures = [executor.submit(fetch_tts, agent, speech_texts[agent], voice_map[agent]) for agent in speech_texts]
                 for future in concurrent.futures.as_completed(futures):
@@ -179,8 +176,8 @@ Return ONLY the valid JSON, no markdown."""
             
     result = {
         "id": listing["id"],
-        "rank": random.randint(1, 100), # Let frontend sort
-        "name": f"{listing.get('address').split(',')[0]} Apartments",
+        "rank": random.randint(1, 100),
+        "name": f"{listing.get('address', 'Unknown').split(',')[0]} Apartments",
         "address": f"{listing.get('address')}, {listing.get('city')}, {listing.get('state')} {listing.get('zip')}",
         "rent": listing.get('base_rent'),
         "trueCost": hidden["trueCost"],
@@ -188,7 +185,7 @@ Return ONLY the valid JSON, no markdown."""
         "bedrooms": listing.get('bedrooms'),
         "bathrooms": listing.get('bathrooms'),
         "sqft": listing.get('sqft'),
-        "distanceToCampus": f"{random.uniform(0.5, 4.0):.1f} mi", # Synthetic
+        "distanceToCampus": f"{random.uniform(0.5, 4.0):.1f} mi",
         "walkScore": commute["walkScore"],
         "hasGym": neighborhood["hasGym"],
         "hasGrocery": neighborhood["hasGrocery"],
@@ -197,7 +194,7 @@ Return ONLY the valid JSON, no markdown."""
         "description": listing.get('description'),
         "historicalInsight": fairness["historicalInsight"],
         "historicalTrend": fairness["historicalTrend"],
-        "historicalPercent": fairness["percentile"], # To match frontend mapping
+        "historicalPercent": fairness["percentile"],
         "costBreakdown": budget["costBreakdown"],
         "budgetInsight": budget.get("llm_insight", ""),
         "commute": commute,

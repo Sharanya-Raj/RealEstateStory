@@ -8,8 +8,10 @@ from agents.kamaji import aggregate_insights
 import sys
 import os
 import json
-import asyncio
-from server import mcp, ListingQuery, search_and_analyze_property
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Ensure the backend directory is in the python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))

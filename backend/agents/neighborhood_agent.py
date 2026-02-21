@@ -1,14 +1,12 @@
 # agents/neighborhood_agent.py
 import logging
 import math
+import os
 import random
 import requests
-import os
-from llm_client import generate_text
 
 logger = logging.getLogger("agents.neighborhood")
 
-# hardcoded for now
 def analyze_neighborhood(listing: dict) -> dict:
     """
     Kiki: Analyzes crime, grocery, gym and walkability.
@@ -29,7 +27,6 @@ def analyze_neighborhood(listing: dict) -> dict:
             has_gym = nearby_data.get("gyms", 0) > 0
             has_grocery = nearby_data.get("supermarkets", 0) > 0
             
-            # Simple dynamic walkability estimation
             total_amenities = nearby_data.get("restaurants", 0) + nearby_data.get("supermarkets", 0) * 3 + nearby_data.get("transit_score", 0) * 2 
             walk_score = min(100, 40 + total_amenities)
             crime_rating = nearby_data.get("crime_score", 0.5) * 10
@@ -40,20 +37,32 @@ def analyze_neighborhood(listing: dict) -> dict:
     elif crime_rating < 4:
         summary = "Some recent activity in the area; standard precautions advised."
         
-    # Generate dynamic LLM insight using Gemini
+    # Generate dynamic LLM insight using OpenRouter
     api_key = os.environ.get("OPENROUTER_API_KEY")
     if api_key:
         try:
-            client = genai.Client(api_key=api_key)
             prompt = f"You are Kiki from Kiki's Delivery Service, an energetic flying witch observing a town from the sky. This neighborhood has a crime/safety rating of {crime_rating}/10 and walk score of {walk_score}. Give 1 enthusiastic sentence describing the vibe of the neighborhood."
-            response = client.models.generate_content(model='gemini-flash-latest', contents=prompt)
-            if response.text: summary = response.text.strip().replace('"', '')
-        except: pass
+            response = requests.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={"Authorization": f"Bearer {api_key}"},
+                json={
+                    "model": "google/gemini-2.5-flash",
+                    "messages": [{"role": "user", "content": prompt}]
+                },
+                timeout=15
+            )
+            if response.ok:
+                data = response.json()
+                summary = data["choices"][0]["message"]["content"].strip().replace('"', '')
+            else:
+                logger.warning("Neighborhood API failed: %s - %s", response.status_code, response.text[:200])
+        except Exception as e:
+            logger.warning("Neighborhood API error: %s", e)
         
     return {
         "safety": {
             "score": int(crime_rating),
-            "nearestPolice": "0.4 mi", # mock
+            "nearestPolice": "0.4 mi",
             "summary": summary
         },
         "hasGym": has_gym,
@@ -64,7 +73,7 @@ def analyze_neighborhood(listing: dict) -> dict:
 
 def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     """Approximate distance in km between two points (Haversine)."""
-    R = 6371  # Earth radius in km
+    R = 6371
     dlat = math.radians(lat2 - lat1)
     dlon = math.radians(lon2 - lon1)
     a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2
@@ -83,8 +92,6 @@ def _el_latlon(el: dict, center_lat: float, center_lon: float) -> tuple[float, f
 
 
 def analyze_nearby(lat, lon):
-    # We use a union (parentheses) to get everything in one go
-    # This is much lighter on the server.
     query = f"""
     [out:json][timeout:25];
     (
@@ -97,18 +104,16 @@ def analyze_nearby(lat, lon):
     """
     
     try:
-        logger.info("API CALL: Overpass (OpenStreetMap) for gyms/supermarkets/restaurants/transit at lat=%s lon=%s", lat, lon)
+        logger.info("API CALL: Overpass (OpenStreetMap) at lat=%s lon=%s", lat, lon)
         response = requests.post("http://overpass-api.de/api/interpreter", data={"data": query})
 
-        # Check if we got a 200 OK before trying to parse JSON
         if response.status_code != 200:
-            logger.warning("Overpass API returned status=%s: %s", response.status_code, response.text[:200])
+            logger.warning("Overpass API returned status=%s", response.status_code)
             return None
             
         data = response.json()
         elements = data.get("elements", [])
 
-        # Collect gyms and supermarkets with distance
         gyms_with_dist = []
         supermarkets_with_dist = []
 
@@ -127,31 +132,23 @@ def analyze_nearby(lat, lon):
                     continue
                 supermarkets_with_dist.append({"name": name, "distance_km": round(dist_km, 2)})
 
-        # Sort by distance and take top 3
         gyms_with_dist.sort(key=lambda x: x["distance_km"])
         supermarkets_with_dist.sort(key=lambda x: x["distance_km"])
-        top_gyms = gyms_with_dist[:3]
-        top_supermarkets = supermarkets_with_dist[:3]
-        logger.info("API RETURN: Overpass completed gyms=%d supermarkets=%d restaurants=%d transit=%d",
-                    len(gyms_with_dist), len(supermarkets_with_dist),
-                    sum(1 for el in elements if el.get("tags", {}).get("amenity") == "restaurant"),
-                    sum(1 for el in elements if "highway" in el.get("tags", {})))
 
-        # Initialize counters and top-3 lists
         results = {
             "gyms": len(gyms_with_dist),
             "supermarkets": len(supermarkets_with_dist),
             "restaurants": sum(1 for el in elements if el.get("tags", {}).get("amenity") == "restaurant"),
             "transit_score": sum(1 for el in elements if "highway" in el.get("tags", {})),
             "crime_score": get_crime_score(lat, lon),
-            "nearest_gyms": top_gyms,
-            "nearest_supermarkets": top_supermarkets,
+            "nearest_gyms": gyms_with_dist[:3],
+            "nearest_supermarkets": supermarkets_with_dist[:3],
         }
 
         return results
 
     except Exception as e:
-        logger.warning("API ERROR: Overpass request failed: %s", e)
+        logger.warning("Overpass request failed: %s", e)
         return None
 
 
