@@ -1,0 +1,251 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Nunito:wght@300;400;500;600;700&family=Caveat:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 43 53% 92%;
+    --foreground: 25 19% 19%;
+
+    --card: 40 60% 98%;
+    --card-foreground: 25 19% 19%;
+
+    --popover: 40 60% 98%;
+    --popover-foreground: 25 19% 19%;
+
+    --primary: 12 44% 56%;
+    --primary-foreground: 40 60% 98%;
+
+    --secondary: 205 46% 84%;
+    --secondary-foreground: 25 19% 19%;
+
+    --muted: 37 33% 84%;
+    --muted-foreground: 28 8% 44%;
+
+    --accent: 119 22% 45%;
+    --accent-foreground: 40 60% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 40 60% 98%;
+
+    --border: 37 33% 84%;
+    --input: 37 33% 84%;
+    --ring: 39 60% 59%;
+
+    --radius: 1rem;
+
+    /* Custom Ghibli tokens */
+    --ghibli-cream: 43 53% 92%;
+    --ghibli-sky: 205 46% 84%;
+    --ghibli-terracotta: 12 44% 56%;
+    --ghibli-forest: 119 22% 45%;
+    --ghibli-gold: 39 60% 59%;
+    --ghibli-charcoal: 25 19% 19%;
+    --ghibli-warm-gray: 28 8% 44%;
+    --ghibli-card: 40 60% 98%;
+    --ghibli-tan: 37 33% 84%;
+
+    --sidebar-background: 43 53% 92%;
+    --sidebar-foreground: 25 19% 19%;
+    --sidebar-primary: 12 44% 56%;
+    --sidebar-primary-foreground: 40 60% 98%;
+    --sidebar-accent: 119 22% 45%;
+    --sidebar-accent-foreground: 40 60% 98%;
+    --sidebar-border: 37 33% 84%;
+    --sidebar-ring: 39 60% 59%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 0.02em;
+  }
+}
+
+@layer components {
+  .font-heading {
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 0.02em;
+  }
+
+  .font-body {
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .font-handwritten {
+    font-family: 'Caveat', cursive;
+  }
+
+  .ghibli-card {
+    @apply bg-card rounded-2xl;
+    box-shadow: 0 4px 20px rgba(59, 48, 40, 0.08);
+    transition: all 0.4s ease-in-out;
+  }
+
+  .ghibli-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(59, 48, 40, 0.12);
+  }
+
+  .ghibli-btn {
+    @apply rounded-full px-8 py-3 font-body font-semibold transition-all duration-400;
+  }
+
+  .ghibli-btn-primary {
+    @apply ghibli-btn bg-primary text-primary-foreground;
+  }
+
+  .ghibli-btn-primary:hover {
+    box-shadow: 0 0 20px hsl(var(--ghibli-terracotta) / 0.3);
+    transform: translateY(-2px);
+  }
+
+  .ghibli-btn-accent {
+    @apply ghibli-btn bg-accent text-accent-foreground;
+  }
+
+  .ghibli-btn-accent:hover {
+    box-shadow: 0 0 20px hsl(var(--ghibli-forest) / 0.3);
+    transform: translateY(-2px);
+  }
+
+  .ghibli-btn-gold {
+    @apply ghibli-btn text-foreground;
+    background-color: hsl(var(--ghibli-gold));
+  }
+
+  .ghibli-btn-gold:hover {
+    box-shadow: 0 0 20px hsl(var(--ghibli-gold) / 0.4);
+    transform: translateY(-2px);
+  }
+
+  .speech-bubble {
+    @apply relative bg-card rounded-2xl p-4 font-handwritten text-lg;
+    box-shadow: 0 2px 12px rgba(59, 48, 40, 0.06);
+  }
+
+  .speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 24px;
+    width: 16px;
+    height: 16px;
+    background: hsl(var(--card));
+    transform: rotate(45deg);
+    box-shadow: 4px 4px 8px rgba(59, 48, 40, 0.04);
+  }
+
+  .watercolor-gradient {
+    background: linear-gradient(
+      160deg,
+      hsl(var(--ghibli-cream)) 0%,
+      hsl(var(--ghibli-sky) / 0.4) 50%,
+      hsl(var(--ghibli-cream)) 100%
+    );
+  }
+
+  .ghibli-chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-body font-medium transition-all duration-300 cursor-pointer select-none;
+    background: hsl(var(--ghibli-forest) / 0.1);
+    color: hsl(var(--ghibli-forest));
+    border: 1.5px solid hsl(var(--ghibli-forest) / 0.2);
+  }
+
+  .ghibli-chip.selected {
+    background: hsl(var(--ghibli-forest) / 0.2);
+    border-color: hsl(var(--ghibli-forest) / 0.5);
+  }
+
+  .ghibli-chip-gold {
+    background: hsl(var(--ghibli-gold) / 0.15);
+    color: hsl(var(--ghibli-charcoal));
+    border-color: hsl(var(--ghibli-gold) / 0.3);
+  }
+}
+
+@layer utilities {
+  .duration-400 {
+    transition-duration: 400ms;
+  }
+
+  .text-ghibli-charcoal {
+    color: hsl(var(--ghibli-charcoal));
+  }
+
+  .text-ghibli-warm-gray {
+    color: hsl(var(--ghibli-warm-gray));
+  }
+
+  .bg-ghibli-cream {
+    background-color: hsl(var(--ghibli-cream));
+  }
+
+  .bg-ghibli-sky {
+    background-color: hsl(var(--ghibli-sky));
+  }
+
+  .bg-ghibli-gold {
+    background-color: hsl(var(--ghibli-gold));
+  }
+
+  .text-ghibli-terracotta {
+    color: hsl(var(--ghibli-terracotta));
+  }
+
+  .text-ghibli-forest {
+    color: hsl(var(--ghibli-forest));
+  }
+
+  .text-ghibli-gold {
+    color: hsl(var(--ghibli-gold));
+  }
+}
+
+/* Soot sprite animation */
+@keyframes soot-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+}
+
+@keyframes gentle-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+.animate-soot-bounce {
+  animation: soot-bounce 0.6s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-gentle-pulse {
+  animation: gentle-pulse 2s ease-in-out infinite;
+}
+
+.animate-sparkle {
+  animation: sparkle 1.5s ease-in-out infinite;
+}
