@@ -1,15 +1,20 @@
+import logging
+
 from .schema import MarketFairnessInput, MarketFairnessOutput
 from .data_access import get_zori_for_zip, get_zordi_for_zip
+
+logger = logging.getLogger("market_fairness")
 from .calculations import compute_percentile_position, compute_fairness_score
 from .formatter import build_explanation
 
 def run_market_fairness_agent(input_data: MarketFairnessInput) -> MarketFairnessOutput:
-    # 1. Load ZORI + ZORDI for the ZIP
     zip_code = str(input_data.zip_code)
+    logger.info("API: Loading ZORI/ZORDI data for zip=%s", zip_code)
     zori_data = get_zori_for_zip(zip_code)
     zordi_data = get_zordi_for_zip(zip_code)
 
     if not zori_data or not zordi_data:
+        logger.warning("Market fairness: No ZORI/ZORDI data for zip=%s", zip_code)
         return MarketFairnessOutput(
             listing_id=input_data.listing_id,
             fairness_score=50.0,

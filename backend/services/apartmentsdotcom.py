@@ -1,8 +1,12 @@
-import sys
+import logging
 import os
 import re
+import sys
 import time
+
 from selenium import webdriver
+
+logger = logging.getLogger("services.apartmentsdotcom")
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 
@@ -35,10 +39,12 @@ def _get_driver():
     return webdriver.Chrome(options=options)
 
 def get_apartmentsdotcom(location):
+    logger.info("API: Apartments.com scrape starting for location=%r", location)
     geo = geolocate.get_coordinates(location)
 
-    if not geo or geo.get("latitude") == 0:
-        print(f"[apartments.com] Could not geocode: {location}")
+    # geolocate returns (0,0,"") tuple on failure, or dict with latitude/longitude on success
+    if not isinstance(geo, dict) or not geo.get("latitude") or not geo.get("longitude"):
+        logger.warning("Apartments.com: Could not geocode location=%r (got %s)", location, type(geo).__name__)
         return []
 
     city = geo.get("city", "").replace(" ", "-").lower()
@@ -57,7 +63,7 @@ def get_apartmentsdotcom(location):
 
     try:
         while current_page_url:
-            print(f"[apartments.com] Fetching: {current_page_url}")
+            logger.info("API: Apartments.com fetching page %s", current_page_url)
             driver.get(current_page_url)
             time.sleep(5)  # Allow JS to load
             
@@ -65,7 +71,7 @@ def get_apartmentsdotcom(location):
             listings = soup.find_all("article", attrs={"data-listingid": True})
             
             if not listings:
-                print("[apartments.com] No listings found on this page. Ending search.")
+                logger.info("Apartments.com: No listings found on page, ending search")
                 break
 
             for article in listings:
@@ -109,7 +115,7 @@ def get_apartmentsdotcom(location):
                             amenities=amenities
                         ))
                 except Exception as e:
-                    print(f"[apartments.com] Error parsing card: {e}")
+                    logger.warning("Apartments.com: Error parsing listing card: %s", e)
 
             # --- PAGINATION LOGIC ---
             # Look for the 'next' button in the pagination nav
@@ -125,7 +131,7 @@ def get_apartmentsdotcom(location):
     finally:
         driver.quit()
 
-    print(f"[apartments.com] Total Found: {len(all_apartments)}")
+    logger.info("API: Apartments.com scrape completed, total listings=%d", len(all_apartments))
     return all_apartments
 
 if __name__ == "__main__":

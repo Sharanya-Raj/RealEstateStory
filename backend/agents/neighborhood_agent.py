@@ -1,9 +1,12 @@
 # agents/neighborhood_agent.py
-import os
+import logging
 import math
 import random
 import requests
-from google import genai
+import os
+from llm_client import generate_text
+
+logger = logging.getLogger("agents.neighborhood")
 
 # hardcoded for now
 def analyze_neighborhood(listing: dict) -> dict:
@@ -20,6 +23,7 @@ def analyze_neighborhood(listing: dict) -> dict:
     walk_score = listing.get("walk_score", 50)
     
     if lat and lon:
+        logger.info("AGENT: analyze_neighborhood calling analyze_nearby (Overpass API) for lat=%s lon=%s", lat, lon)
         nearby_data = analyze_nearby(lat, lon)
         if nearby_data:
             has_gym = nearby_data.get("gyms", 0) > 0
@@ -93,11 +97,12 @@ def analyze_nearby(lat, lon):
     """
     
     try:
+        logger.info("API CALL: Overpass (OpenStreetMap) for gyms/supermarkets/restaurants/transit at lat=%s lon=%s", lat, lon)
         response = requests.post("http://overpass-api.de/api/interpreter", data={"data": query})
-        
+
         # Check if we got a 200 OK before trying to parse JSON
         if response.status_code != 200:
-            print(f"Server returned error {response.status_code}: {response.text}")
+            logger.warning("Overpass API returned status=%s: %s", response.status_code, response.text[:200])
             return None
             
         data = response.json()
@@ -127,6 +132,10 @@ def analyze_nearby(lat, lon):
         supermarkets_with_dist.sort(key=lambda x: x["distance_km"])
         top_gyms = gyms_with_dist[:3]
         top_supermarkets = supermarkets_with_dist[:3]
+        logger.info("API RETURN: Overpass completed gyms=%d supermarkets=%d restaurants=%d transit=%d",
+                    len(gyms_with_dist), len(supermarkets_with_dist),
+                    sum(1 for el in elements if el.get("tags", {}).get("amenity") == "restaurant"),
+                    sum(1 for el in elements if "highway" in el.get("tags", {})))
 
         # Initialize counters and top-3 lists
         results = {
@@ -142,7 +151,7 @@ def analyze_nearby(lat, lon):
         return results
 
     except Exception as e:
-        print(f"Request failed: {e}")
+        logger.warning("API ERROR: Overpass request failed: %s", e)
         return None
 
 

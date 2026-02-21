@@ -1,5 +1,16 @@
 # agents/kamaji.py
+import base64
+import json
+import logging
+import os
+import random
+
+from elevenlabs.client import ElevenLabs
+from llm_client import generate_text
+
 from .commute_agent import analyze_commute
+
+logger = logging.getLogger("agents.kamaji")
 from .budget_agent import analyze_budget
 from .fairness_agent import analyze_fairness
 from .neighborhood_agent import analyze_neighborhood
@@ -17,52 +28,39 @@ def aggregate_insights(listing: dict, target_budget: float) -> dict:
     into a structured dict matching the frontend expectation.
     """
     
+    logger.info("AGENT: analyze_commute (Conductor)")
     commute = analyze_commute(listing)
+    logger.info("AGENT: analyze_budget (Lin)")
     budget = analyze_budget(listing, target_budget)
+    logger.info("AGENT: analyze_fairness (Baron)")
     fairness = analyze_fairness(listing)
+    logger.info("AGENT: analyze_neighborhood (Kiki)")
     neighborhood = analyze_neighborhood(listing)
+    logger.info("AGENT: analyze_hidden_costs (Soot Sprite)")
     hidden = analyze_hidden_costs(listing)
     
-    # 0. Gemini Data Hallucination / Completion Layer
+    # 0. LLM Data Hallucination / Completion Layer (Gemini or OpenRouter)
+    logger.info("AGENT: Kamaji LLM data padding (gemini-2.5-flash)")
     # Hackathon saver: if our real data arrays (zori, apartments) are missing fields
-    # we use Gemini's vast world knowledge to estimate them dynamically.
-    api_key = os.environ.get("GEMINI_API_KEY")
-    if api_key:
-        try:
-            client = genai.Client(api_key=api_key)
-            completion_prompt = f"""
-            You are an expert real estate AI. Evaluate the property at {listing.get('address', 'Unknown')}.
-            Based on your world knowledge of this area, provide educated estimates for the following missing data in strict JSON:
-            {{
-                "walk_score": (integer 0-100),
-                "driving_minutes_to_center": (integer),
-                "market_fairness_percentile": (integer 0-100),
-                "safety_score_out_of_10": (integer 1-10)
-            }}
-            Return ONLY the valid JSON, no markdown formatting.
-            """
-            response = client.models.generate_content(
-                model='gemini-2.5-flash',
-                contents=completion_prompt
-            )
-            
-            import json
-            try:
-                # Clean prompt formatting
-                clean_json = response.text.replace('```json', '').replace('```', '').strip()
-                ai_data = json.loads(clean_json)
-                
-                # Intelligently patch missing data
-                if commute["walkScore"] == 0 or commute["walkScore"] == 70: # 70 was our static mock fallback
-                    commute["walkScore"] = ai_data.get("walk_score", commute["walkScore"])
-                if neighborhood["safety"]["score"] == 0 or neighborhood["safety"]["score"] == 7:
-                    neighborhood["safety"]["score"] = ai_data.get("safety_score_out_of_10", neighborhood["safety"]["score"])
-                if fairness["percentile"] == 0 or fairness["percentile"] == 50:
-                    fairness["percentile"] = ai_data.get("market_fairness_percentile", fairness["percentile"])
-            except json.JSONDecodeError:
-                pass
-        except Exception as e:
-            print(f"Gemini Data Padding error: {str(e)}")
+    # we use the LLM's world knowledge to estimate them dynamically.
+    try:
+        completion_prompt = f"""
+You are an expert real estate AI. Evaluate the property at {listing.get('address', 'Unknown')}.
+Based on your world knowledge of this area, provide educated estimates in strict JSON:
+{{"walk_score": (int 0-100), "driving_minutes_to_center": (int), "market_fairness_percentile": (int 0-100), "safety_score_out_of_10": (int 1-10)}}
+Return ONLY the valid JSON, no markdown."""
+        text = generate_text(completion_prompt, model="gemini-2.5-flash", json_mode=True)
+        if text:
+            clean_json = text.replace("```json", "").replace("```", "").strip()
+            ai_data = json.loads(clean_json)
+            if commute["walkScore"] == 0 or commute["walkScore"] == 70:
+                commute["walkScore"] = ai_data.get("walk_score", commute["walkScore"])
+            if neighborhood["safety"]["score"] == 0 or neighborhood["safety"]["score"] == 7:
+                neighborhood["safety"]["score"] = ai_data.get("safety_score_out_of_10", neighborhood["safety"]["score"])
+            if fairness["percentile"] == 0 or fairness["percentile"] == 50:
+                fairness["percentile"] = ai_data.get("market_fairness_percentile", fairness["percentile"])
+    except Exception as e:
+        logger.warning("LLM Data Padding error: %s", e)
 
     # 1. The Spirit Match Score (overall rating)
     # Combine individual sub-scores into an overall score 0-100
@@ -130,6 +128,7 @@ def aggregate_insights(listing: dict, target_budget: float) -> dict:
     
     if eleven_key:
         try:
+            logger.info("API: ElevenLabs TTS for 6 agents (parallel)")
             client = ElevenLabs(api_key=eleven_key)
             
             # Map agents to ElevenLabs Voice IDs (Users can customize these!)
@@ -164,7 +163,7 @@ def aggregate_insights(listing: dict, target_budget: float) -> dict:
                     audio_bytes = b"".join(audio_generator)
                     return agent_id, base64.b64encode(audio_bytes).decode('utf-8')
                 except Exception as e:
-                    print(f"ElevenLabs error for {agent_id}: {e}")
+                    logger.warning("ElevenLabs error for %s: %s", agent_id, e)
                     return agent_id, None
             
             # Execute all 6 TTS requests in parallel to prevent massive loading times
@@ -176,7 +175,7 @@ def aggregate_insights(listing: dict, target_budget: float) -> dict:
                     audio_streams[agent_id] = base64_audio
                     
         except Exception as e:
-            print(f"ElevenLabs parallel execution error: {e}")
+            logger.warning("ElevenLabs parallel execution error: %s", e)
             
     result = {
         "id": listing["id"],

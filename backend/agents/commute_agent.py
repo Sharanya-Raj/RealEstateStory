@@ -1,6 +1,11 @@
 # agents/commute_agent.py
+import logging
 import os
 import requests
+from llm_client import generate_text
+
+logger = logging.getLogger("agents.commute")
+
 
 def analyze_commute(listing: dict) -> dict:
     """
@@ -15,7 +20,8 @@ def analyze_commute(listing: dict) -> dict:
     biking_time = f"{listing.get('transit_time_to_hub', 30) * 1.5} mins"
     walk_score = listing.get('walk_score', 50)
 
-    # Generate dynamic LLM insight using Gemini
+    # Generate dynamic LLM insight (Gemini or OpenRouter)
+    logger.info("AGENT: commute calling LLM (Conductor insight)")
     insight_text = ""
     api_key = os.environ.get("OPENROUTER_API_KEY")
     print(f"[COMMUTE] API key present: {bool(api_key)}, prefix: {api_key[:12] if api_key else 'NONE'}...")

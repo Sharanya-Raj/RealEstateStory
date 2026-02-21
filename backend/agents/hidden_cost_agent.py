@@ -1,6 +1,10 @@
 # agents/hidden_cost_agent.py
-import os
 import json
+import logging
+import os
+from llm_client import generate_text
+
+logger = logging.getLogger("agents.hidden_cost")
 import requests
 from pydantic import BaseModel
 
@@ -23,7 +27,7 @@ def analyze_hidden_costs(listing: dict) -> dict:
     
     description = listing.get('description', '')
     
-    # Analyze description for unstructured fees using Gemini
+    # Analyze description for unstructured fees (Gemini or OpenRouter)
     unstructured_fees = 0.0
     gemini_insight = "No unstructured text provided."
     

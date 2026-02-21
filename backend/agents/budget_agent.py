@@ -1,6 +1,11 @@
 # agents/budget_agent.py
+import logging
 import os
 import requests
+from llm_client import generate_text
+
+logger = logging.getLogger("agents.budget")
+
 
 def analyze_budget(listing: dict, target_budget: float) -> dict:
     """
@@ -22,7 +27,8 @@ def analyze_budget(listing: dict, target_budget: float) -> dict:
         # Save points if under budget!
         budget_fit = min(100, 80 + ((target_budget - total_estimated) / 50))
         
-    # Generate dynamic LLM insight using Gemini
+    # Generate dynamic LLM insight (Gemini or OpenRouter)
+    logger.info("AGENT: budget calling LLM (Lin insight)")
     insight_text = ""
     api_key = os.environ.get("OPENROUTER_API_KEY")
     if api_key:
