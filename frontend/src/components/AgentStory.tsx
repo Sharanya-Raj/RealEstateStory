@@ -17,72 +17,77 @@ interface StorySlide {
 }
 
 function buildSlides(listing: Listing): StorySlide[] {
-  const kiki = agents[2];
-  const noface = agents[3];
-  const haku = agents[4];
-  const jiji = agents[5];
-  const sophie = agents[6];
+  const conductor = agents[0];
+  const steward = agents[1];
+  const baron = agents[2];
+  const kiki = agents[3];
+  const spider = agents[4];
+  const kamaji = agents[5];
 
   return [
     {
-      agent: kiki,
+      agent: conductor,
       title: "Commute Report",
       accent: "bg-[hsl(var(--ghibli-sky))]",
       lines: [
-        `"Let me fly over and check the routes!"`,
+        `"Tickets, please! I’ve calculated your trek."`,
         `🚗 Driving: ${listing.commute.driving}`,
         `🚌 Transit: ${listing.commute.transit}`,
         `🚲 Biking: ${listing.commute.biking}`,
-        `🚶 Walking: ${listing.commute.walking}`,
-        `Walk score: ${listing.walkScore}/100`,
+        (listing.commute as any).llm_insight ? `"${(listing.commute as any).llm_insight}"` : `"Any longer and you’d be better off flying a broomstick!"`
       ],
     },
     {
-      agent: noface,
-      title: "True Cost Breakdown",
+      agent: steward,
+      title: "Budget Fit Analysis",
       accent: "bg-[hsl(var(--ghibli-terracotta))]",
       lines: [
-        `"Ah... ah... I've calculated everything."`,
+        `"Listen, kid—you can't live on roasted newts alone."`,
         `Base Rent: $${listing.costBreakdown.rent}`,
-        `Utilities: $${listing.costBreakdown.utilities}`,
-        `Transportation: $${listing.costBreakdown.transportation}`,
-        `Groceries: $${listing.costBreakdown.groceries}`,
-        `Total True Cost: $${listing.trueCost}/mo`,
+        (listing as any).budgetInsight ? `"${(listing as any).budgetInsight}"` : `"Don't let the shiny lights fool you; stick to the budget."`
       ],
     },
     {
-      agent: haku,
-      title: "Safety Assessment",
-      accent: "bg-[hsl(var(--ghibli-forest))]",
-      lines: [
-        `"I'll protect you — let me scout the area."`,
-        `Safety Score: ${listing.safety.score}/10`,
-        `Nearest Police: ${listing.safety.nearestPolice}`,
-        listing.safety.summary,
-      ],
-    },
-    {
-      agent: jiji,
-      title: "Historical Analysis",
+      agent: baron,
+      title: "Market Fairness",
       accent: "bg-[hsl(var(--ghibli-gold))]",
       lines: [
-        `"Hmph, let me check my records..."`,
-        `This listing is ${listing.historicalInsight}.`,
+        `"Many things in this world are overpriced illusions."`,
         `It sits in the ${listing.percentile}th percentile for this area.`,
-        listing.percentile < 50
-          ? `"Not bad, human. Below average price."`
-          : `"Hmph, you're paying above average."`,
+        listing.historicalInsight ? `"${listing.historicalInsight}"` : `"A true craftsman knows the value of a roof."`
       ],
     },
     {
-      agent: sophie,
+      agent: kiki,
+      title: "Neighborhood Scout",
+      accent: "bg-[hsl(var(--ghibli-forest))]",
+      lines: [
+        `"I just did a fly-over of the block!"`,
+        `Walk Score: ${listing.walkScore}/100`,
+        listing.safety.summary ? `"${listing.safety.summary}"` : `"It’s a peaceful neighborhood—hardly any 'stray spirits'."`
+      ],
+    },
+    {
+      agent: spider,
+      title: "Hidden Costs",
+      accent: "bg-[hsl(var(--ghibli-charcoal))]",
+      lines: [
+        `"You see the chimney, but you forget the soot!"`,
+        `Utilities: $${listing.costBreakdown.utilities}`,
+        `Total True Cost: $${listing.trueCost}/mo`,
+        `"I’ve crawled through the fine print. Look closely before you sign!"`
+      ],
+    },
+    {
+      agent: kamaji,
       title: "Final Verdict",
       accent: "bg-[hsl(var(--ghibli-gold))]",
       lines: [
         `Spirit Match: ${listing.matchScore}%`,
+        `"I’ve pulled all the threads together."`,
         ...listing.pros.map((p) => `✅ ${p}`),
         ...listing.cons.map((c) => `⚠️ ${c}`),
-        `"${listing.sophieSummary.slice(0, 120)}..."`,
+        `"Take this map—it’s everything you need finding your way home."`
       ],
     },
   ];

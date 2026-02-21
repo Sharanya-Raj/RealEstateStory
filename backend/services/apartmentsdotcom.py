@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import path
 import sys
 import os
-import geolocate
+from . import geolocate
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(current_dir, ".."))

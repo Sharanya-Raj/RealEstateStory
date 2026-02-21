@@ -38,7 +38,8 @@
 
     /* Custom Ghibli tokens */
     --ghibli-cream: 43 53% 92%;
-    --ghibli-sky: 205 46% 84%;
+    --ghibli-sky: 217 68% 74%; /* #8FB1E9 Castle Sky */
+    --ghibli-meadow: 95 52% 68%; /* #A6D784 Spirited Meadow */
     --ghibli-terracotta: 12 44% 56%;
     --ghibli-forest: 119 22% 45%;
     --ghibli-gold: 39 60% 59%;

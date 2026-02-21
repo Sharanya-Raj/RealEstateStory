@@ -55,6 +55,7 @@ export default {
         ghibli: {
           cream: "hsl(var(--ghibli-cream))",
           sky: "hsl(var(--ghibli-sky))",
+          meadow: "hsl(var(--ghibli-meadow))",
           terracotta: "hsl(var(--ghibli-terracotta))",
           forest: "hsl(var(--ghibli-forest))",
           gold: "hsl(var(--ghibli-gold))",

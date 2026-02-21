@@ -9,20 +9,8 @@ interface AgentPipelineProps {
 
 export const AgentPipeline = ({ currentStep }: AgentPipelineProps) => {
   const getStatus = (index: number): "idle" | "processing" | "complete" => {
-    // Kiki (2), No-Face (3), Haku (4) run in parallel
-    const parallelGroup = [2, 3, 4];
-    if (parallelGroup.includes(index)) {
-      const parallelStep = 2; // they all start at step 2
-      if (currentStep > 4) return "complete";
-      if (currentStep >= parallelStep) return currentStep === parallelStep ? "processing" : currentStep > index ? "complete" : "processing";
-      return "idle";
-    }
-    // Map agent indices to logical steps: 0,1 are sequential, 2-4 parallel (step 2), 5 is step 3, 6 is step 4
-    const logicalStep = index <= 1 ? index : index <= 4 ? 2 : index === 5 ? 3 : 4;
-    const currentLogical = currentStep <= 1 ? currentStep : currentStep <= 4 ? 2 : currentStep === 5 ? 3 : 4;
-
-    if (currentLogical > logicalStep) return "complete";
-    if (currentLogical === logicalStep) return "processing";
+    if (currentStep > index) return "complete";
+    if (currentStep === index) return "processing";
     return "idle";
   };
 
