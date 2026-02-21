@@ -4,6 +4,9 @@ from market_fairness.schema import MarketFairnessInput, MarketFairnessOutput
 from market_fairness.handler import run_market_fairness_agent
 import sys
 import os
+import json
+import asyncio
+from server import mcp, ListingQuery, search_and_analyze_property
 
 # Ensure the backend directory is in the python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -131,3 +134,21 @@ def get_listing(listing_id: str):
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+
+@app.post("/api/evaluate")
+async def evaluate_property(query: ListingQuery):
+    """
+    This endpoint acts as a bridge between the frontend and the FastMCP Agent.
+    It calls the MCP tool directly to run the LLM AI pipelines.
+    """
+    # Run the MCP tool
+    result_json_str = search_and_analyze_property(query)
+    
+    try:
+        return json.loads(result_json_str)
+    except json.JSONDecodeError:
+        return {"error": "Failed to parse MCP tool output."}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
