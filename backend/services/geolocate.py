@@ -1,6 +1,8 @@
 import requests
 import regex as re
 
+cities = ["Princeton", "New Brunswick", "Camden", "Newark", "Piscataway", "Edison", "Woodbridge", "Toms River", "Hamilton", "Trenton", "Clifton", "Passaic", "Union City", "Bayonne", "Hackensack", "Jersey City", "Elizabeth", "Paterson", "Morristown", "Wayne", "West New York"]
+
 def get_coordinates(place):
     url = "https://nominatim.openstreetmap.org/search"
     params = {"q": place, "format": "json"}
@@ -17,7 +19,8 @@ def get_coordinates(place):
         "name": place,
         "latitude": float(data[0]["lat"]),
         "longitude": float(data[0]["lon"]),
-        "state": str(data[0].get("address", {}).get("state", "")),
+        "city": next((city for city in cities if city in data[0].get("display_name", "")), ""),
+        "state": "nj",
         "zipcode": re.search(r"\b\d{5}\b", data[0]["display_name"]).group() if re.search(r"\b\d{5}\b", data[0]["display_name"]) else "",
         "display_name": str(data[0]["display_name"])
     }

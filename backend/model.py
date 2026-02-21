@@ -10,3 +10,4 @@ class Apartment:
     longitude: float
     source: str
     score: float = 0.0
+    amenities: list = None
