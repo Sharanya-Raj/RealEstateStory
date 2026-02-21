@@ -3,8 +3,8 @@ import os
 
 # Resolve paths to the CSV files relative to this file's directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
-zori_path = os.path.join(current_dir, "..", "market_data", "ZORI.csv")
-zordi_path = os.path.join(current_dir, "..", "market_data", "ZORDI.csv")
+zori_path = os.path.join(current_dir, "..", "data", "ZORI.csv")
+zordi_path = os.path.join(current_dir, "..", "data", "ZORDI.csv")
 
 ZORI_DATA = {}
 ZORDI_DATA = {}

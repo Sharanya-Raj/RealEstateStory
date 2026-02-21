@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import GhibliLayout from "@/components/GhibliLayout";
 import ChatInterface from "@/components/ChatInterface";
 import { chatAgent } from "@/data/agents";
-import { mockListings } from "@/data/mockListings";
+import { type Listing } from "@/data/mockListings";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Home, FileText } from "lucide-react";
 
@@ -13,37 +13,42 @@ interface Message {
   content: string;
 }
 
-// Simple mock responses for demo (will be replaced with Gemini API)
-function getMockResponse(question: string, listing: typeof mockListings[0]): string {
-  const q = question.toLowerCase();
-  if (q.includes("price") || q.includes("cost") || q.includes("rent") || q.includes("afford")) {
-    const total = listing.price + listing.hiddenCosts.reduce((s, c) => s + c.amount, 0);
-    return `The base rent is $${listing.price}/month. When you factor in hidden costs (${listing.hiddenCosts.map(c => c.name).join(", ")}), your true monthly cost is approximately $${total}. ${listing.utilitiesIncluded ? "Utilities are included, which is a nice perk!" : "Keep in mind utilities are separate."} The Zillow estimate for this area is $${listing.zillowEstimate}/month.`;
-  }
-  if (q.includes("safe") || q.includes("crime") || q.includes("dangerous") || q.includes("security")) {
-    return `The safety score for this area is ${listing.crimeScore}/10. ${listing.crimeScore >= 7 ? "It's considered quite safe—well-lit streets and active community presence." : "Exercise normal caution, especially at night. The main roads are well-traveled."} I'd recommend checking the local police department's crime map for the most current data.`;
-  }
-  if (q.includes("commute") || q.includes("distance") || q.includes("far") || q.includes("close")) {
-    return `This listing is ${listing.distanceMiles} miles from campus, roughly a ${listing.commuteMinutes}-minute commute. ${listing.parkingIncluded ? "Parking is included!" : "You'll need to arrange parking separately."} The walk score is ${listing.walkScore}/100.`;
-  }
-  if (q.includes("pet") || q.includes("dog") || q.includes("cat")) {
-    return listing.petFriendly ? "Great news! This property is pet-friendly. You should still confirm specific pet policies (size limits, breed restrictions, deposits) with the landlord." : "Unfortunately, this property does not allow pets. If that's important to you, I'd suggest looking at other listings.";
-  }
-  if (q.includes("amenit") || q.includes("include") || q.includes("feature")) {
-    return `This property offers: ${listing.amenities.join(", ")}. The unit is ${listing.sqft} sq ft with ${listing.bedrooms} bedroom(s) and ${listing.bathrooms} bathroom(s). Built in ${listing.yearBuilt}.`;
-  }
-  if (q.includes("move") || q.includes("when") || q.includes("available") || q.includes("lease")) {
-    return `The move-in date is ${listing.moveInDate} with a ${listing.leaseTermMonths}-month lease term. Security deposit is $${listing.securityDeposit}. Contact ${listing.landlord} for application details.`;
-  }
-  return `That's a great question about ${listing.address}! Here's what I know: This is a ${listing.bedrooms}-bed/${listing.bathrooms}-bath unit at $${listing.price}/mo in ${listing.city}. It's ${listing.distanceMiles} miles from campus with a walk score of ${listing.walkScore}. The safety rating is ${listing.crimeScore}/10. Feel free to ask me anything more specific about the pricing, commute, neighborhood, or lease terms!`;
-}
-
 const Chat = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const listing = mockListings.find((l) => l.id === id);
+  const [listing, setListing] = useState<Listing | null>(null);
+  const [isLoadingListing, setIsLoadingListing] = useState(true);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Fetch listing from backend instead of mockListings
+  useEffect(() => {
+    fetch(`http://127.0.0.1:8000/api/listings/${id}`)
+      .then(res => {
+        if (!res.ok) throw new Error("Not found");
+        return res.json();
+      })
+      .then(data => {
+        setListing(data);
+        setIsLoadingListing(false);
+      })
+      .catch(err => {
+        console.error("Failed to fetch listing for chat", err);
+        setListing(null);
+        setIsLoadingListing(false);
+      });
+  }, [id]);
+
+  if (isLoadingListing) {
+    return (
+      <GhibliLayout showBack>
+        <div className="container mx-auto px-4 py-16 text-center">
+          <span className="text-5xl block mb-4 animate-bounce">🍂</span>
+          <p className="text-xl text-muted-foreground">Summoning Howl...</p>
+        </div>
+      </GhibliLayout>
+    );
+  }
 
   if (!listing) {
     navigate("/listings");
@@ -55,12 +60,29 @@ const Chat = () => {
     setMessages((prev) => [...prev, userMsg]);
     setIsLoading(true);
 
-    // Simulate AI response delay
-    await new Promise((r) => setTimeout(r, 1200));
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          listing_id: listing.id,
+          question: text,
+          listing_context: listing
+        })
+      });
 
-    const response = getMockResponse(text, listing);
-    setMessages((prev) => [...prev, { role: "assistant", content: response }]);
-    setIsLoading(false);
+      if (response.ok) {
+        const data = await response.json();
+        setMessages((prev) => [...prev, { role: "assistant", content: data.response }]);
+      } else {
+        setMessages((prev) => [...prev, { role: "assistant", content: "My castle hit some turbulence! Please try again." }]);
+      }
+    } catch (e) {
+      console.error("Chat API error:", e);
+      setMessages((prev) => [...prev, { role: "assistant", content: "The connection to my castle was lost. Please try again." }]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
