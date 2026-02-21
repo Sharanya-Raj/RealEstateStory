@@ -22,6 +22,47 @@ def aggregate_insights(listing: dict, target_budget: float) -> dict:
     neighborhood = analyze_neighborhood(listing)
     hidden = analyze_hidden_costs(listing)
     
+    # 0. Gemini Data Hallucination / Completion Layer
+    # Hackathon saver: if our real data arrays (zori, apartments) are missing fields
+    # we use Gemini's vast world knowledge to estimate them dynamically.
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if api_key:
+        try:
+            client = genai.Client(api_key=api_key)
+            completion_prompt = f"""
+            You are an expert real estate AI. Evaluate the property at {listing.get('address', 'Unknown')}.
+            Based on your world knowledge of this area, provide educated estimates for the following missing data in strict JSON:
+            {{
+                "walk_score": (integer 0-100),
+                "driving_minutes_to_center": (integer),
+                "market_fairness_percentile": (integer 0-100),
+                "safety_score_out_of_10": (integer 1-10)
+            }}
+            Return ONLY the valid JSON, no markdown formatting.
+            """
+            response = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=completion_prompt
+            )
+            
+            import json
+            try:
+                # Clean prompt formatting
+                clean_json = response.text.replace('```json', '').replace('```', '').strip()
+                ai_data = json.loads(clean_json)
+                
+                # Intelligently patch missing data
+                if commute["walkScore"] == 0 or commute["walkScore"] == 70: # 70 was our static mock fallback
+                    commute["walkScore"] = ai_data.get("walk_score", commute["walkScore"])
+                if neighborhood["safety"]["score"] == 0 or neighborhood["safety"]["score"] == 7:
+                    neighborhood["safety"]["score"] = ai_data.get("safety_score_out_of_10", neighborhood["safety"]["score"])
+                if fairness["percentile"] == 0 or fairness["percentile"] == 50:
+                    fairness["percentile"] = ai_data.get("market_fairness_percentile", fairness["percentile"])
+            except json.JSONDecodeError:
+                pass
+        except Exception as e:
+            print(f"Gemini Data Padding error: {str(e)}")
+
     # 1. The Spirit Match Score (overall rating)
     # Combine individual sub-scores into an overall score 0-100
     base = 100

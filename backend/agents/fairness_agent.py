@@ -50,9 +50,41 @@ def analyze_fairness(listing: dict) -> dict:
                 
     # Generate dynamic LLM insight using Gemini
     api_key = os.environ.get("GEMINI_API_KEY")
+    historical_prices = [
+        {"month": "Jan", "price": historical_avg * 0.9},
+        {"month": "Feb", "price": historical_avg * 0.95},
+        {"month": "Mar", "price": historical_avg},
+        {"month": "Apr", "price": rent}
+    ]
+    
     if api_key:
         try:
             client = genai.Client(api_key=api_key)
+            
+            # 1. Hallucinate Historical Data if ZORI failed
+            if percentile == 50 and "error" in insight.lower():
+                prompt_data = f"""
+                You are a real estate AI. For zip code {zip_code} with current rent ${rent}:
+                Return strict JSON predicting realistic rent for the last 4 months and market percentile:
+                {{
+                    "p": (integer 0-100),
+                    "h": [
+                        {{"month": "Jan", "price": (integer)}},
+                        {{"month": "Feb", "price": (integer)}},
+                        {{"month": "Mar", "price": (integer)}},
+                        {{"month": "Apr", "price": (integer)}}
+                    ]
+                }}
+                """
+                try:
+                    res_data = client.models.generate_content(model='gemini-2.5-flash', contents=prompt_data)
+                    import json
+                    ai_json = json.loads(res_data.text.replace('```json', '').replace('```', '').strip())
+                    percentile = ai_json.get("p", percentile)
+                    historical_prices = ai_json.get("h", historical_prices)
+                except Exception as e: pass
+
+            # 2. Baron's Insight
             prompt = f"You are The Baron from Whisper of the Heart, a dapper aristocrat cat giving distinguished real estate advice. The history indicates {insight}. The rent is ${rent}. Give 1 elegant sentence telling the user if this is a fair market value."
             response = client.models.generate_content(model='gemini-flash-latest', contents=prompt)
             if response.text: insight = response.text.strip().replace('"', '')
@@ -62,10 +94,5 @@ def analyze_fairness(listing: dict) -> dict:
         "historicalInsight": insight,
         "historicalTrend": trend,
         "percentile": percentile,
-        "historicalPrices": [
-            {"month": "Jan", "price": historical_avg * 0.9},
-            {"month": "Feb", "price": historical_avg * 0.95},
-            {"month": "Mar", "price": historical_avg},
-            {"month": "Apr", "price": rent}
-        ]
+        "historicalPrices": historical_prices
     }

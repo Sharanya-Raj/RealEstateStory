@@ -15,10 +15,10 @@ This guide details how to deploy the backend container to a Vultr cloud instance
    ```bash
    ssh root@<YOUR_VULTR_IP>
    ```
-2. Clone your RealEstateStory GitHub repository:
+2. Clone your GhibliNest GitHub repository:
    ```bash
    git clone <YOUR_REPO_URL>
-   cd RealEstateStory/backend
+   cd GhibliNest/backend
    ```
 3. Generate the mock 500-listing Kaggle dataset locally before building (or run this securely on local and push the `data` folder):
    ```bash
@@ -26,15 +26,15 @@ This guide details how to deploy the backend container to a Vultr cloud instance
    ```
 4. Build the Docker container:
    ```bash
-   docker build -t realestatestory-backend .
+   docker build -t ghiblinest-backend .
    ```
 5. Run the Docker container, passing in your API Keys as Environment Variables:
    ```bash
    docker run -d -p 8000:8000 \
      -e GEMINI_API_KEY="your_gemini_key_here" \
      -e ELEVENLABS_API_KEY="your_elevenlabs_key_here" \
-     --name realestatestory-api \
-     realestatestory-backend
+     --name ghiblinest-api \
+     ghiblinest-backend
    ```
 
 ## 3. Connect the Frontend

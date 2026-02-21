@@ -12,7 +12,7 @@ from services.geolocate import get_coordinates
 from services.geolocate import get_coordinates
 
 # Initialize FastMCP server
-mcp = FastMCP("RealEstateStory")
+mcp = FastMCP("GhibliNest")
 
 from typing import Optional
 
@@ -24,7 +24,7 @@ class ListingQuery(BaseModel):
 @mcp.tool()
 def search_and_analyze_property(query: ListingQuery) -> str:
     """
-    Triggers the RealEstateStory agentic pipeline.
+    Triggers the Ghibli Nest agentic pipeline.
     It takes an address, finds the closest mock listing, and runs all 6 Ghibli agents (Conductor, Lin, Baron, Kiki, Soot Sprite, and Kamaji) on it.
     Returns the comprehensive aggregated insights.
     """
