@@ -11,6 +11,7 @@ import Journey from "./pages/Journey";
 import Summary from "./pages/Summary";
 import Chat from "./pages/Chat";
 import NotFound from "./pages/NotFound";
+import SpiritedOracle from "./pages/SpiritedOracle";
 
 const queryClient = new QueryClient();
 
@@ -22,7 +23,9 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<SpiritedOracle />} />
+            <Route path="/main" element={<Index />} />
+            <Route path="/oracle" element={<SpiritedOracle />} />
             <Route path="/listings" element={<Listings />} />
             <Route path="/listing/:id" element={<ListingDetail />} />
             <Route path="/journey/:id" element={<Journey />} />
