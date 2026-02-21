@@ -191,12 +191,80 @@ def _map_row_to_listing(row) -> dict:
         "hiddenCosts": hidden_costs,
     }
 
+def _map_supabase_to_listing(row: dict) -> dict:
+    """Convert a Supabase row to the frontend Listing shape."""
+    gradients = [
+        "from-ghibli-meadow/40 to-ghibli-sky/40",
+        "from-ghibli-pink/40 to-ghibli-amber/40",
+        "from-ghibli-sky/40 to-ghibli-meadow/40",
+        "from-ghibli-amber/40 to-ghibli-pink/40",
+    ]
+    gradient = gradients[hash(str(row.get("id", ""))) % len(gradients)]
+    price = float(row.get("price") or 0)
+    amenities = row.get("amenities") or []
+
+    hidden_costs = []
+    return {
+        "id": str(row["id"]),
+        "address": row.get("address", ""),
+        "city": row.get("city", ""),
+        "state": row.get("state", "NJ"),
+        "zip": row.get("zip", ""),
+        "price": price,
+        "bedrooms": row.get("bedrooms", 1),
+        "bathrooms": row.get("bathrooms", 1),
+        "sqft": row.get("sqft") or 800,
+        "description": row.get("description", ""),
+        "shortDesc": f"Apartment in {row.get('city', 'NJ')}",
+        "amenities": amenities if isinstance(amenities, list) else [],
+        "distanceMiles": round(random.uniform(0.5, 5.0), 1),
+        "commuteMinutes": random.randint(5, 30),
+        "rating": round(random.uniform(3.5, 5.0), 1),
+        "imageGradient": gradient,
+        "landlord": f"{row.get('city', 'NJ')} Property Management",
+        "yearBuilt": random.randint(1970, 2023),
+        "parkingIncluded": False,
+        "utilitiesIncluded": False,
+        "petFriendly": row.get("pet_friendly", False),
+        "leaseTermMonths": 12,
+        "securityDeposit": price,
+        "moveInDate": "2025-08-01",
+        "zillowEstimate": max(500, price + random.randint(-150, 100)) if price else 1200,
+        "crimeScore": 7,
+        "walkScore": 70,
+        "nearbyGrocery": "Local Grocery (0.5 mi)",
+        "nearbyGym": "On-site Gym" if row.get("has_gym") else "Local Gym (1.0 mi)",
+        "hiddenCosts": hidden_costs,
+    }
+
 @app.get("/api/listings")
-def get_all_listings():
+def get_all_listings(college: str = None, radius: float = 10.0, max_price: float = 99999):
+    """
+    Get listings. If Supabase is configured and college is provided, uses geo-radius query.
+    Otherwise falls back to CSV.
+    """
+    # Try Supabase first
+    supabase_url = os.environ.get("SUPABASE_URL")
+    if supabase_url:
+        try:
+            from db import get_college_coords, get_nearby_listings, get_all_listings as db_get_all
+
+            if college:
+                coords = get_college_coords(college)
+                if coords:
+                    rows = get_nearby_listings(coords[0], coords[1], radius_miles=radius, max_price=max_price)
+                    return [_map_supabase_to_listing(r) for r in rows]
+
+            # No college filter — return all
+            rows = db_get_all(limit=100)
+            return [_map_supabase_to_listing(r) for r in rows]
+        except Exception as e:
+            print(f"[LISTINGS] Supabase error, falling back to CSV: {e}")
+
+    # Fallback to CSV
     try:
         csv_path = os.path.join(os.path.dirname(__file__), "data", "listings.csv")
         df = pd.read_csv(csv_path)
-        # Process and return the first 100 to avoid huge payloads
         df = df.head(100)
         results = [_map_row_to_listing(row) for _, row in df.iterrows()]
         return results
@@ -205,6 +273,18 @@ def get_all_listings():
 
 @app.get("/api/listings/{listing_id}")
 def get_listing(listing_id: str):
+    # Try Supabase first
+    supabase_url = os.environ.get("SUPABASE_URL")
+    if supabase_url:
+        try:
+            from db import get_listing_by_id
+            row = get_listing_by_id(listing_id)
+            if row:
+                return _map_supabase_to_listing(row)
+        except Exception as e:
+            print(f"[LISTING] Supabase error, falling back to CSV: {e}")
+
+    # Fallback to CSV
     try:
         csv_path = os.path.join(os.path.dirname(__file__), "data", "listings.csv")
         df = pd.read_csv(csv_path)

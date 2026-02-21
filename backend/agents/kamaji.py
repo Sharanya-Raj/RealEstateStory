@@ -195,6 +195,8 @@ Return ONLY the valid JSON, no markdown."""
         "historicalInsight": fairness["historicalInsight"],
         "historicalTrend": fairness["historicalTrend"],
         "historicalPercent": fairness["percentile"],
+        "fairnessScore": fairness.get("fairnessScore", 50),
+        "fairnessExplanation": fairness.get("explanation", {}),
         "costBreakdown": budget["costBreakdown"],
         "budgetInsight": budget.get("llm_insight", ""),
         "commute": commute,

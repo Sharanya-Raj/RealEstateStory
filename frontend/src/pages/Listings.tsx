@@ -10,10 +10,10 @@ import { SlidersHorizontal, ArrowUpDown, MapPin, Sparkles } from "lucide-react";
 type SortOption = "price-asc" | "price-desc" | "distance" | "rating";
 
 const SORT_OPTIONS: { key: SortOption; label: string }[] = [
-  { key: "distance",   label: "Closest" },
-  { key: "price-asc",  label: "$ Low → High" },
+  { key: "distance", label: "Closest" },
+  { key: "price-asc", label: "$ Low → High" },
   { key: "price-desc", label: "$ High → Low" },
-  { key: "rating",     label: "Top Rated" },
+  { key: "rating", label: "Top Rated" },
 ];
 
 const Listings = () => {
@@ -26,11 +26,16 @@ const Listings = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/listings")
+    const params = new URLSearchParams();
+    if (preferences?.college) params.set("college", preferences.college);
+    if (preferences?.maxCommuteMiles) params.set("radius", String(preferences.maxCommuteMiles));
+    if (preferences?.priceMax) params.set("max_price", String(preferences.priceMax));
+    const qs = params.toString();
+    fetch(`http://127.0.0.1:8000/api/listings${qs ? `?${qs}` : ""}`)
       .then(res => res.json())
       .then(data => { setListings(data); setIsLoading(false); })
       .catch(() => setIsLoading(false));
-  }, []);
+  }, [preferences]);
 
   const filteredListings = useMemo(() => {
     let filtered = [...listings].filter((l) => l.price <= maxPrice);
@@ -38,10 +43,10 @@ const Listings = () => {
       filtered = filtered.filter((l) => l.distanceMiles <= preferences.maxCommuteMiles);
     }
     switch (sortBy) {
-      case "price-asc":  filtered.sort((a, b) => a.price - b.price); break;
+      case "price-asc": filtered.sort((a, b) => a.price - b.price); break;
       case "price-desc": filtered.sort((a, b) => b.price - a.price); break;
-      case "distance":   filtered.sort((a, b) => a.distanceMiles - b.distanceMiles); break;
-      case "rating":     filtered.sort((a, b) => b.rating - a.rating); break;
+      case "distance": filtered.sort((a, b) => a.distanceMiles - b.distanceMiles); break;
+      case "rating": filtered.sort((a, b) => b.rating - a.rating); break;
     }
     return filtered;
   }, [sortBy, maxPrice, preferences, listings]);
@@ -93,11 +98,10 @@ const Listings = () => {
           {/* Filter toggle */}
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold border transition-all duration-200 ${
-              showFilters
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold border transition-all duration-200 ${showFilters
                 ? "bg-gradient-to-r from-blue-400 to-sky-400 text-white border-transparent shadow-[0_4px_12px_rgba(100,150,255,0.3)]"
                 : "bg-white/50 text-slate-500 border-white/70 hover:text-blue-500 hover:border-blue-200"
-            }`}
+              }`}
             style={{ backdropFilter: "blur(12px)" }}
           >
             <SlidersHorizontal size={14} />
@@ -113,11 +117,10 @@ const Listings = () => {
             <button
               key={opt.key}
               onClick={() => setSortBy(opt.key)}
-              className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 ${
-                sortBy === opt.key
+              className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 ${sortBy === opt.key
                   ? "bg-gradient-to-r from-blue-400 to-sky-400 text-white border-transparent shadow-[0_4px_12px_rgba(100,150,255,0.25)]"
                   : "bg-white/50 text-slate-500 border-white/70 hover:text-blue-500 hover:border-blue-200"
-              }`}
+                }`}
               style={{ backdropFilter: "blur(12px)" }}
             >
               {opt.label}
