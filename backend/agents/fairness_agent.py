@@ -21,7 +21,7 @@ def analyze_fairness(listing: dict) -> dict:
     rent = float(listing.get('base_rent', 1500))
     l_id = str(listing.get('id', 'mock_1'))
     city_name = str(listing.get('city', ''))
-    
+    api_key = os.environ.get("OPEN_ROUTER_API_KEY")
     historical_avg = rent # fallback
     trend = "stable"
     percentile = 50

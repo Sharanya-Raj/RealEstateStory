@@ -18,7 +18,7 @@ _OPENROUTER_MODELS = {
 def _use_openrouter() -> bool:
     """True if we should use OpenRouter instead of direct Google Gemini."""
     use = os.environ.get("USE_OPENROUTER", "").lower() in ("1", "true", "yes")
-    has_key = bool(os.environ.get("OPENROUTER_API_KEY"))
+    has_key = bool(os.environ.get("OPENROUTER_API_KEY") or os.environ.get("OPEN_ROUTER_API_KEY"))
     return use and has_key
 
 
@@ -29,7 +29,7 @@ def _get_openrouter_text(prompt: str, model: str, json_mode: bool = False) -> st
     except ImportError:
         logger.warning("install 'openai' to use OpenRouter")
         return None
-    api_key = os.environ.get("OPENROUTER_API_KEY")
+    api_key = os.environ.get("OPENROUTER_API_KEY") or os.environ.get("OPEN_ROUTER_API_KEY")
     if not api_key:
         return None
     model_id = _OPENROUTER_MODELS.get(model, model)

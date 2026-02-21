@@ -49,6 +49,7 @@ class EvaluateRequest(BaseModel):
     address: str
     budget: float
     mock_data: Dict[str, Any]
+    college: str = ""
 
 def _translate_frontend_to_backend(frontend_data: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -114,7 +115,7 @@ def evaluate_listing(request: EvaluateRequest):
         print(f"[EVALUATE] OPENROUTER_API_KEY loaded: {bool(os.environ.get('OPENROUTER_API_KEY'))}")
         print(f"{'='*60}")
         # Pass the translated data to Kamaji along with the budget target
-        result = aggregate_insights(backend_data, request.budget)
+        result = aggregate_insights(backend_data, request.budget, request.college)
         print(f"[EVALUATE] Result keys: {list(result.keys())}")
         print(f"[EVALUATE] commute.llm_insight: '{result.get('commute', {}).get('llm_insight', 'MISSING')}'")
         print(f"[EVALUATE] budgetInsight: '{result.get('budgetInsight', 'MISSING')}'")

@@ -1,4 +1,5 @@
 import logging
+import time
 import requests
 import re
 
@@ -29,6 +30,23 @@ def get_coordinates(place):
     }
     logger.info("API RETURN: Nominatim lat=%.4f lon=%.4f for place=%r", return_obj["latitude"], return_obj["longitude"], place)
     return return_obj
+
+
+def geocode_batch(addresses: list[str], delay_sec: float = 1.0) -> list[dict]:
+    """
+    Geocode multiple addresses. Nominatim allows ~1 req/sec; we throttle to avoid 429.
+    Returns list of dicts with latitude, longitude (or 0,0 on failure).
+    """
+    results = []
+    for i, addr in enumerate(addresses):
+        if i > 0 and delay_sec > 0:
+            time.sleep(delay_sec)
+        geo = get_coordinates(addr)
+        if isinstance(geo, dict) and geo.get("latitude"):
+            results.append({"latitude": geo["latitude"], "longitude": geo["longitude"]})
+        else:
+            results.append({"latitude": 0, "longitude": 0})
+    return results
 
 
 def geocode_address(address):
