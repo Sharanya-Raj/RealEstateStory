@@ -66,11 +66,11 @@ The property was built in ${listing.yearBuilt}. ${listing.yearBuilt > 2015 ? "Qu
 
 // Agent-specific ambient page backgrounds for cinematic cross-fades
 const agentPageBg: Record<string, string> = {
-  commute:      "radial-gradient(ellipse at 60% 30%, rgba(59,130,246,0.18) 0%, transparent 70%), radial-gradient(ellipse at 20% 80%, rgba(100,200,255,0.10) 0%, transparent 60%)",
-  budget:       "radial-gradient(ellipse at 40% 20%, rgba(99,102,241,0.18) 0%, transparent 65%), radial-gradient(ellipse at 80% 70%, rgba(139,92,246,0.10) 0%, transparent 60%)",
-  market:       "radial-gradient(ellipse at 30% 40%, rgba(14,165,233,0.18) 0%, transparent 65%), radial-gradient(ellipse at 70% 80%, rgba(59,130,246,0.12) 0%, transparent 55%)",
+  commute: "radial-gradient(ellipse at 60% 30%, rgba(59,130,246,0.18) 0%, transparent 70%), radial-gradient(ellipse at 20% 80%, rgba(100,200,255,0.10) 0%, transparent 60%)",
+  budget: "radial-gradient(ellipse at 40% 20%, rgba(99,102,241,0.18) 0%, transparent 65%), radial-gradient(ellipse at 80% 70%, rgba(139,92,246,0.10) 0%, transparent 60%)",
+  market: "radial-gradient(ellipse at 30% 40%, rgba(14,165,233,0.18) 0%, transparent 65%), radial-gradient(ellipse at 70% 80%, rgba(59,130,246,0.12) 0%, transparent 55%)",
   neighborhood: "radial-gradient(ellipse at 50% 20%, rgba(139,92,246,0.18) 0%, transparent 65%), radial-gradient(ellipse at 80% 70%, rgba(168,85,247,0.10) 0%, transparent 60%)",
-  hidden:       "radial-gradient(ellipse at 20% 50%, rgba(30,40,100,0.35) 0%, transparent 65%), radial-gradient(ellipse at 80% 20%, rgba(59,130,246,0.12) 0%, transparent 60%)",
+  hidden: "radial-gradient(ellipse at 20% 50%, rgba(30,40,100,0.35) 0%, transparent 65%), radial-gradient(ellipse at 80% 20%, rgba(59,130,246,0.12) 0%, transparent 60%)",
 };
 
 const Journey = () => {
@@ -103,7 +103,7 @@ const Journey = () => {
       fetch("http://127.0.0.1:8000/api/fairness", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ listing_id: listing.id, listing_rent: listing.price, zip_code: listing.zip || "Ann Arbor" }),
+        body: JSON.stringify({ listing_id: listing.id, listing_rent: listing.price, zip_code: listing.city || listing.zip }),
       })
         .then((res) => { if (!res.ok) throw new Error("API fairness error"); return res.json(); })
         .then((data) => { setFairnessData(data); setIsFetchingFairness(false); })

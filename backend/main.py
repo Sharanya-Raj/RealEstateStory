@@ -221,6 +221,57 @@ def get_listing(listing_id: str):
 def health_check():
     return {"status": "ok"}
 
+class ChatRequest(BaseModel):
+    listing_id: str
+    question: str
+    listing_context: Dict[str, Any] = {}
+
+@app.post("/api/chat")
+def chat_with_howl(request: ChatRequest):
+    """Chat endpoint — Howl answers questions about a specific listing using OpenRouter."""
+    api_key = os.environ.get("OPENROUTER_API_KEY")
+    
+    ctx = request.listing_context
+    listing_summary = f"""Property: {ctx.get('address', 'Unknown')}, {ctx.get('city', '')}, {ctx.get('state', '')} {ctx.get('zip', '')}
+Price: ${ctx.get('price', '?')}/mo | Beds: {ctx.get('bedrooms', '?')} | Baths: {ctx.get('bathrooms', '?')} | Sqft: {ctx.get('sqft', '?')}
+Walk Score: {ctx.get('walkScore', '?')}/100 | Safety: {ctx.get('crimeScore', '?')}/10 | Commute: {ctx.get('commuteMinutes', '?')} min
+Parking: {'Included' if ctx.get('parkingIncluded') else 'Not included'} | Pets: {'Allowed' if ctx.get('petFriendly') else 'Not allowed'}
+Utilities: {'Included' if ctx.get('utilitiesIncluded') else 'Not included'}
+Amenities: {', '.join(ctx.get('amenities', []))}
+Description: {ctx.get('description', 'N/A')}"""
+    
+    if not api_key:
+        return {"response": f"I'd love to help, but my magic mirror is cloudy right now (API key not configured). Here's what I know: {listing_summary}"}
+    
+    try:
+        import requests as req
+        prompt = f"""You are Howl from Howl's Moving Castle — charming, dramatic, and knowledgeable about real estate. 
+You are helping a college student evaluate a rental property. Be concise (2-3 sentences max), helpful, and stay in character.
+
+Property details:
+{listing_summary}
+
+Student's question: {request.question}"""
+        
+        response = req.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={"Authorization": f"Bearer {api_key}"},
+            json={
+                "model": "google/gemini-2.5-flash",
+                "messages": [{"role": "user", "content": prompt}]
+            },
+            timeout=15
+        )
+        if response.ok:
+            data = response.json()
+            answer = data["choices"][0]["message"]["content"].strip().replace('"', '')
+            return {"response": answer}
+        else:
+            return {"response": "My castle seems to be having engine trouble... try again in a moment!"}
+    except Exception as e:
+        print(f"Chat error: {e}")
+        return {"response": "The fire demon ate my response! Please try again."}
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

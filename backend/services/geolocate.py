@@ -1,6 +1,6 @@
 import logging
 import requests
-import regex as re
+import re
 
 logger = logging.getLogger("services.geolocate")
 

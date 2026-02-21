@@ -78,8 +78,13 @@ const Summary = () => {
   const totalMonthly = aiPayload ? aiPayload.trueCost : listing.price + totalHidden;
   const priceDiff = listing.price - listing.zillowEstimate;
 
-  const costBreakdown = aiPayload?.costBreakdown ? 
-    [{ name: "Base Rent", amount: aiPayload.rent }, ...aiPayload.costBreakdown.map((c: any) => ({ name: c.category, amount: c.amount }))] :
+  const costBreakdown = aiPayload?.costBreakdown ?
+    [
+      { name: "Base Rent", amount: aiPayload.costBreakdown.rent || aiPayload.rent },
+      ...(aiPayload.costBreakdown.utilities ? [{ name: "Utilities", amount: aiPayload.costBreakdown.utilities }] : []),
+      ...(aiPayload.costBreakdown.transportation ? [{ name: "Transportation", amount: aiPayload.costBreakdown.transportation }] : []),
+      ...(aiPayload.costBreakdown.groceries ? [{ name: "Groceries", amount: aiPayload.costBreakdown.groceries }] : []),
+    ] :
     [
       { name: "Base Rent", amount: listing.price },
       ...listing.hiddenCosts,
