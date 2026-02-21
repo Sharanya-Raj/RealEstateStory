@@ -14,9 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['"Playfair Display"', 'serif'],
-        body: ['"Nunito"', 'sans-serif'],
-        handwritten: ['"Caveat"', 'cursive'],
+        quicksand: ['Quicksand', 'sans-serif'],
+        playfair: ['Playfair Display', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -53,16 +52,15 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
         ghibli: {
-          cream: "hsl(var(--ghibli-cream))",
-          sky: "hsl(var(--ghibli-sky))",
           meadow: "hsl(var(--ghibli-meadow))",
-          terracotta: "hsl(var(--ghibli-terracotta))",
+          sky: "hsl(var(--ghibli-sky))",
+          parchment: "hsl(var(--ghibli-parchment))",
+          pink: "hsl(var(--ghibli-pink))",
+          amber: "hsl(var(--ghibli-amber))",
           forest: "hsl(var(--ghibli-forest))",
-          gold: "hsl(var(--ghibli-gold))",
-          charcoal: "hsl(var(--ghibli-charcoal))",
-          "warm-gray": "hsl(var(--ghibli-warm-gray))",
-          card: "hsl(var(--ghibli-card))",
-          tan: "hsl(var(--ghibli-tan))",
+          soot: "hsl(var(--ghibli-soot))",
+          mist: "hsl(var(--ghibli-mist))",
+          cloud: "hsl(var(--ghibli-cloud))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -89,10 +87,30 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        float: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        shimmer: {
+          "0%": { backgroundPosition: "-200% center" },
+          "100%": { backgroundPosition: "200% center" },
+        },
+        "fade-in-up": {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        sway: {
+          "0%, 100%": { transform: "rotate(-2deg)" },
+          "50%": { transform: "rotate(2deg)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        float: "float 3s ease-in-out infinite",
+        shimmer: "shimmer 3s ease-in-out infinite",
+        "fade-in-up": "fade-in-up 0.6s ease-out",
+        sway: "sway 4s ease-in-out infinite",
       },
     },
   },

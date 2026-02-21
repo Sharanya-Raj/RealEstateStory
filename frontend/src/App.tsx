@@ -3,11 +3,13 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PreferencesProvider } from "@/contexts/PreferencesContext";
 import Index from "./pages/Index";
-import Results from "./pages/Results";
+import Listings from "./pages/Listings";
 import ListingDetail from "./pages/ListingDetail";
+import Journey from "./pages/Journey";
+import Summary from "./pages/Summary";
+import Chat from "./pages/Chat";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -15,18 +17,21 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/results" element={<Results />} />
-          <Route path="/listing/:id" element={<ListingDetail />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
+      <PreferencesProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/listings" element={<Listings />} />
+            <Route path="/listing/:id" element={<ListingDetail />} />
+            <Route path="/journey/:id" element={<Journey />} />
+            <Route path="/summary/:id" element={<Summary />} />
+            <Route path="/chat/:id" element={<Chat />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </PreferencesProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
