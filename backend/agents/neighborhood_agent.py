@@ -10,11 +10,25 @@ def analyze_neighborhood(listing: dict) -> dict:
     """
     Kiki: Analyzes crime, grocery, gym and walkability.
     """
-    
-    
-
-
     crime_rating = listing.get('crime_rating', 5.0) # 0 to 10
+    
+    lat = listing.get("latitude")
+    lon = listing.get("longitude")
+    
+    has_gym = listing.get("has_gym", False)
+    has_grocery = listing.get("has_grocery_nearby", False)
+    walk_score = listing.get("walk_score", 50)
+    
+    if lat and lon:
+        nearby_data = analyze_nearby(lat, lon)
+        if nearby_data:
+            has_gym = nearby_data.get("gyms", 0) > 0
+            has_grocery = nearby_data.get("supermarkets", 0) > 0
+            
+            # Simple dynamic walkability estimation
+            total_amenities = nearby_data.get("restaurants", 0) + nearby_data.get("supermarkets", 0) * 3 + nearby_data.get("transit_score", 0) * 2 
+            walk_score = min(100, 40 + total_amenities)
+            crime_rating = nearby_data.get("crime_score", 0.5) * 10
     
     summary = "A peaceful neighborhood with average activity."
     if crime_rating > 8:
@@ -27,7 +41,7 @@ def analyze_neighborhood(listing: dict) -> dict:
     if api_key:
         try:
             client = genai.Client(api_key=api_key)
-            prompt = f"You are Kiki from Kiki's Delivery Service, an energetic flying witch observing a town from the sky. This neighborhood has a crime/safety rating of {crime_rating}/10 and walk score of {listing.get('walk_score', 50)}. Give 1 enthusiastic sentence describing the vibe of the neighborhood."
+            prompt = f"You are Kiki from Kiki's Delivery Service, an energetic flying witch observing a town from the sky. This neighborhood has a crime/safety rating of {crime_rating}/10 and walk score of {walk_score}. Give 1 enthusiastic sentence describing the vibe of the neighborhood."
             response = client.models.generate_content(model='gemini-flash-latest', contents=prompt)
             if response.text: summary = response.text.strip().replace('"', '')
         except: pass
@@ -38,47 +52,10 @@ def analyze_neighborhood(listing: dict) -> dict:
             "nearestPolice": "0.4 mi", # mock
             "summary": summary
         },
-        "hasGym": listing.get('has_gym', False),
-        "hasGrocery": listing.get('has_grocery_nearby', False),
-        "walkScore": listing.get('walk_score', 50)
+        "hasGym": has_gym,
+        "hasGrocery": has_grocery,
+        "walkScore": walk_score
     }
-
-
-
-#agentic reasoning for neighborhood
-
-def neighborhood_reasoning_agent(neighborhood_data):
-
-
-    prompt = f"""
-    You are evaluating neighborhood livability.
-
-    Data:
-    {neighborhood_data}
-
-    Assess:
-    - Safety
-    - Convenience
-    - Walkability
-
-    Return:
-    - Safety rating (0-1)
-    - Convenience rating (0-1)
-    - Summary paragraph
-    """
-
-    api_key = os.environ.get("GEMINI_API_KEY")
-    if api_key:
-        try:
-            client = genai.Client(api_key=api_key)
-            prompt = f"You are Kiki from Kiki's Delivery Service, an energetic flying witch observing a town from the sky. This neighborhood has a crime/safety rating of {crime_rating}/10 and walk score of {listing.get('walk_score', 50)}. Give 1 enthusiastic sentence describing the vibe of the neighborhood."
-            response = client.models.generate_content(model='gemini-flash-latest', contents=prompt)
-            if response.text: 
-                summary = response.text.strip().replace('"', '')
-        except: pass
-
-
-    return summary
 
 
 def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
