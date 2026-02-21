@@ -3,10 +3,13 @@ from fastmcp import FastMCP
 from pydantic import BaseModel, Field
 import json
 import random
+import re
+import re
 from data_loader import get_listings
 from agents.kamaji import aggregate_insights
-import re
 from services.apartmentsdotcom import get_apartmentsdotcom
+from services.geolocate import get_coordinates
+from services.geolocate import get_coordinates
 
 # Initialize FastMCP server
 mcp = FastMCP("RealEstateStory")
@@ -53,27 +56,55 @@ def search_and_analyze_property(query: ListingQuery) -> str:
             real_apts = get_apartmentsdotcom(query.address)
             if real_apts:
                 apt = real_apts[0]
-                # Clean price string like "$1,200"
-                price_str = re.sub(r'[^\d]', '', apt.price)
+                # Clean price string like "$1,200" or "N/A"
+                price_str = re.sub(r'[^\d]', '', apt.price or "")
                 base_rent = int(price_str) if price_str else 1500
-                
-                # Extract basic zipcode from address for fairness module
-                zip_match = re.search(r'\b\d{5}\b', apt.address)
+    
+                # Extract zipcode from address for fairness module
+                zip_match = re.search(r'\b\d{5}\b', apt.address or "")
                 zipcode = zip_match.group(0) if zip_match else "00000"
-                
+    
+            # Get city/state from geolocate (apartmentsdotcom uses it internally but doesn't return it)
+            city, state = "Unknown", "Unknown"
+            try:
+                geo = get_coordinates(query.address)
+                if isinstance(geo, dict) and geo.get("latitude"):
+                    city = geo.get("city", "") or "Unknown"
+                    state = geo.get("state", "nj").upper()
+                    if zipcode == "00000" and geo.get("zipcode"):
+                        zipcode = str(geo.get("zipcode", "")) or "00000"
+            except Exception:
+                pass
+
+            # Infer pet_friendly and has_gym from amenities
+            amenity_list = getattr(apt, "amenities", None) or []
+            amenity_str = " ".join(str(a).lower() for a in amenity_list)
+            pet_friendly = any(
+                x in amenity_str for x in ("pet", "dog", "cat", "cats allowed", "dogs allowed")
+            )
+            has_gym = any(
+                x in amenity_str for x in ("gym", "fitness", "exercise")
+            )
+
+            desc_parts = [f"Property found on {apt.source}: {apt.name}."]
+            if amenity_list:
+                desc_parts.append(f"Amenities: {', '.join(amenity_list)}.")
+
                 matched_listing = {
                     "id": "apt_real_1",
                     "name": apt.name,
                     "address": apt.address,
-                    "city": "Unknown",
-                    "state": "Unknown",
+                    "city": city,
+                    "state": state,
                     "zip": zipcode,
                     "base_rent": base_rent,
                     "bedrooms": apt.bedrooms,
                     "bathrooms": 1,
                     "sqft": 800,
-                    "pet_friendly": True,
-                    "description": f"A beautiful property found dynamically on {apt.source}."
+                    "pet_friendly": pet_friendly,
+                "has_gym": has_gym,
+                "avg_utilities": 120,
+                    "description": " ".join(desc_parts),
                 }
         except Exception as e:
             print(f"Scraper error: {e}")

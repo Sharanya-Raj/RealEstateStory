@@ -10,7 +10,7 @@ def get_coordinates(place):
     response = requests.get(url, params=params, headers={"User-Agent": "apt-app"})
     data = response.json()
     
-    print(data) #debugging
+    # print(data) #debugging
 
     if not data:
         return 0, 0, ""  # Default to (0, 0) if no results found
@@ -26,6 +26,27 @@ def get_coordinates(place):
     }
 
     return return_obj
+
+
+def geocode_address(address):
+    url = "https://nominatim.openstreetmap.org/search"
+    params = {"q": address, "format": "json"}
+    
+    response = requests.get(url, params=params, headers={"User-Agent": "apt-app"})
+    data = response.json()
+
+    if not data:
+        return 0, 0, ""  # Default to (0, 0) if no results found
+    
+    return_obj = {
+        "name": address,
+        "latitude": float(data[0]["lat"]),
+        "longitude": float(data[0]["lon"]),
+        "city": next((city for city in cities if city in data[0].get("display_name", "")), ""),
+    }
+
+    return return_obj
+
 if __name__ == "__main__":
     result = get_coordinates("Rutgers University")
     print("\n\n")
