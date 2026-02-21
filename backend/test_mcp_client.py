@@ -17,6 +17,13 @@ if _script_dir not in sys.path:
     sys.path.insert(0, _script_dir)
 os.chdir(_script_dir)
 
+# Load .env so OPENROUTER_API_KEY, GEMINI_API_KEY etc. are available
+try:
+    from dotenv import load_dotenv
+    load_dotenv(os.path.join(_script_dir, ".env"))
+except ImportError:
+    pass
+
 # Enable detailed logging for MCP, tools, and API calls
 from log_config import setup_logging
 setup_logging()
@@ -111,6 +118,9 @@ def main():
             print(result)
     else:
         print(json.dumps(result, indent=2) if isinstance(result, dict) else result)
+
+    with open("result.json", "w") as f:
+        json.dump(parsed, f, indent=2)
 
 
 if __name__ == "__main__":

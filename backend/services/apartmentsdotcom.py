@@ -38,8 +38,20 @@ def _get_driver():
     )
     return webdriver.Chrome(options=options)
 
-def get_apartmentsdotcom(location):
-    logger.info("API: Apartments.com scrape starting for location=%r", location)
+def _parse_price(price_str: str) -> int | None:
+    """Parse price string like '$1,200' or '1200' to int. Returns None if unparseable."""
+    if not price_str or price_str.upper() in ("N/A", "CALL", "CALL FOR PRICE", ""):
+        return None
+    digits = re.sub(r"[^\d]", "", price_str)
+    return int(digits) if digits else None
+
+
+def get_apartmentsdotcom(location, max_price: float | None = None):
+    """
+    Scrape Apartments.com for listings near the given location.
+    If max_price is set, only listings with price <= max_price are added.
+    """
+    logger.info("API: Apartments.com scrape starting for location=%r, max_price=%s", location, max_price)
     geo = geolocate.get_coordinates(location)
 
     # geolocate returns (0,0,"") tuple on failure, or dict with latitude/longitude on success
@@ -99,15 +111,24 @@ def get_apartmentsdotcom(location):
                             bed_el = row.select_one(".bedTextBox")
                             price_el = row.select_one(".priceTextBox span")
                             if not bed_el or not price_el: continue
-                            
+
+                            price_str = price_el.text.strip()
+                            if max_price is not None:
+                                parsed = _parse_price(price_str)
+                                if parsed is not None and parsed > max_price:
+                                    continue  # Skip over-budget listings
+
                             all_apartments.append(Apartment(
-                                name=name, address=address, price=price_el.text.strip(),
+                                name=name, address=address, price=price_str,
                                 bedrooms=_parse_beds(bed_el.text),
                                 latitude=geo.get("latitude", 0.0), longitude=geo.get("longitude", 0.0),
                                 source="Apartments.com", score=0.0,
                                 amenities=amenities
                             ))
                     else:
+                        # No bed/price rows - only include if no max_price filter, or we can't filter
+                        if max_price is not None:
+                            continue  # Skip listings with no parseable price when filtering
                         all_apartments.append(Apartment(
                             name=name, address=address, price="N/A", bedrooms=1,
                             latitude=geo.get("latitude", 0.0), longitude=geo.get("longitude", 0.0),

@@ -91,6 +91,86 @@ def _el_latlon(el: dict, center_lat: float, center_lon: float) -> tuple[float, f
     return None
 
 
+def analyze_nearby_batch(listings_with_coords: list[tuple[dict, float, float]]) -> list[dict]:
+    """
+    Single Overpass bbox query for all listings. Returns list of neighborhood results per listing.
+    listings_with_coords: [(listing_dict, lat, lon), ...]
+    """
+    if not listings_with_coords:
+        return []
+    lats = [c[1] for c in listings_with_coords]
+    lons = [c[2] for c in listings_with_coords]
+    south = min(lats) - 0.05
+    north = max(lats) + 0.05
+    west = min(lons) - 0.05
+    east = max(lons) + 0.05
+    # Overpass bbox: (south, west, north, east)
+    query = f"""
+    [out:json][timeout:45];
+    (
+      nw["leisure"~"fitness_centre|gym"]({south},{west},{north},{east});
+      nw["shop"~"supermarket|convenience"]({south},{west},{north},{east});
+      nw["amenity"="restaurant"]({south},{west},{north},{east});
+      nw["highway"="bus_stop"]({south},{west},{north},{east});
+    );
+    out center;
+    """
+    try:
+        logger.info("API CALL: Overpass batch bbox (south=%.2f west=%.2f north=%.2f east=%.2f) for %d listings",
+                    south, west, north, east, len(listings_with_coords))
+        response = requests.post("http://overpass-api.de/api/interpreter", data={"data": query}, timeout=60)
+        if response.status_code != 200:
+            logger.warning("Overpass batch returned status=%s", response.status_code)
+            return [{"gyms": 0, "supermarkets": 0, "restaurants": 0, "transit_score": 0, "crime_score": 0.5,
+                     "nearest_gyms": [], "nearest_supermarkets": []}] * len(listings_with_coords)
+        data = response.json()
+        elements = data.get("elements", [])
+        results = []
+        for listing, lat, lon in listings_with_coords:
+            gyms_with_dist = []
+            supermarkets_with_dist = []
+            n_rest = 0
+            n_transit = 0
+            for el in elements:
+                tags = el.get("tags", {})
+                pos = _el_latlon(el, lat, lon)
+                if not pos:
+                    continue
+                dist_km = _haversine_km(lat, lon, pos[0], pos[1])
+                if dist_km > 5.0:
+                    continue
+                name = tags.get("name") or tags.get("brand") or "Unnamed"
+                if "leisure" in tags:
+                    gyms_with_dist.append({"name": name, "distance_km": round(dist_km, 2)})
+                elif "shop" in tags:
+                    if name != "Unnamed":
+                        supermarkets_with_dist.append({"name": name, "distance_km": round(dist_km, 2)})
+                elif tags.get("amenity") == "restaurant":
+                    n_rest += 1
+                elif "highway" in tags:
+                    n_transit += 1
+            gyms_with_dist.sort(key=lambda x: x["distance_km"])
+            supermarkets_with_dist.sort(key=lambda x: x["distance_km"])
+            total_amenities = n_rest + len(supermarkets_with_dist) * 3 + n_transit * 2
+            walk_score = min(100, 40 + total_amenities)
+            results.append({
+                "gyms": len(gyms_with_dist),
+                "supermarkets": len(supermarkets_with_dist),
+                "restaurants": n_rest,
+                "transit_score": n_transit,
+                "crime_score": get_crime_score(lat, lon),
+                "nearest_gyms": gyms_with_dist[:3],
+                "nearest_supermarkets": supermarkets_with_dist[:3],
+                "walk_score": walk_score,
+            })
+        logger.info("Overpass batch: %d POIs for %d listings", len(elements), len(results))
+        return results
+    except Exception as e:
+        logger.warning("Overpass batch failed: %s", e)
+        return [{"gyms": 0, "supermarkets": 0, "restaurants": 0, "transit_score": 0, "crime_score": 0.5,
+                 "nearest_gyms": [], "nearest_supermarkets": [], "walk_score": 50}] * len(listings_with_coords)
+
+
 def analyze_nearby(lat, lon):
     query = f"""
     [out:json][timeout:25];
