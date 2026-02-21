@@ -17,6 +17,8 @@ interface PreferencesContextType {
   setPreferences: (prefs: UserPreferences) => void;
   selectedListingId: string | null;
   setSelectedListingId: (id: string | null) => void;
+  aiPayload: any | null;
+  setAiPayload: (payload: any | null) => void;
 }
 
 const PreferencesContext = createContext<PreferencesContextType | undefined>(undefined);
@@ -24,9 +26,10 @@ const PreferencesContext = createContext<PreferencesContextType | undefined>(und
 export const PreferencesProvider = ({ children }: { children: ReactNode }) => {
   const [preferences, setPreferences] = useState<UserPreferences | null>(null);
   const [selectedListingId, setSelectedListingId] = useState<string | null>(null);
+  const [aiPayload, setAiPayload] = useState<any | null>(null);
 
   return (
-    <PreferencesContext.Provider value={{ preferences, setPreferences, selectedListingId, setSelectedListingId }}>
+    <PreferencesContext.Provider value={{ preferences, setPreferences, selectedListingId, setSelectedListingId, aiPayload, setAiPayload }}>
       {children}
     </PreferencesContext.Provider>
   );

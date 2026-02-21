@@ -24,3 +24,14 @@ dist-ssr
 *.sw?
 
 /.claude
+
+# Python and Environment
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.env.local
+.venv
+venv/
+ENV/
+env/

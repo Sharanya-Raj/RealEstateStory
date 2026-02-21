@@ -20,7 +20,7 @@ const Summary = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { preferences } = usePreferences();
+  const { preferences, aiPayload } = usePreferences();
 
   const fairnessData = location.state?.fairnessData;
 
@@ -65,16 +65,41 @@ const Summary = () => {
     );
   }
 
-  const totalHidden = listing.hiddenCosts.reduce((s, c) => s + c.amount, 0);
-  const totalMonthly = listing.price + totalHidden;
+  // Play Kamaji's voiceover if available
+  useEffect(() => {
+    if (aiPayload?.voiceoverBase64) {
+      const audio = new Audio(`data:audio/mp3;base64,${aiPayload.voiceoverBase64}`);
+      audio.play().catch(e => console.error("Audio playback paused by browser:", e));
+    }
+  }, [aiPayload]);
+
+  // Use LLM-generated insights if available, fallback to dummy math otherwise
+  const totalHidden = aiPayload ? (aiPayload.trueCost - aiPayload.rent) : listing.hiddenCosts.reduce((s, c) => s + c.amount, 0);
+  const totalMonthly = aiPayload ? aiPayload.trueCost : listing.price + totalHidden;
   const priceDiff = listing.price - listing.zillowEstimate;
 
-  const costBreakdown = [
-    { name: "Base Rent", amount: listing.price },
-    ...listing.hiddenCosts,
+  const costBreakdown = aiPayload?.costBreakdown ? 
+    [{ name: "Base Rent", amount: aiPayload.rent }, ...aiPayload.costBreakdown.map((c: any) => ({ name: c.category, amount: c.amount }))] :
+    [
+      { name: "Base Rent", amount: listing.price },
+      ...listing.hiddenCosts,
+    ];
+
+  const scores = aiPayload ? [
+    { name: "Commute", score: aiPayload.commute.walking ? 4 : 3 },
+    { name: "Budget", score: Math.round(aiPayload.matchScore / 20) },
+    { name: "Fairness", score: aiPayload.percentile < 50 ? 5 : 3 },
+    { name: "Safety", score: aiPayload.safety.score || 5 },
+    { name: "Transparency", score: totalHidden < 100 ? 5 : 3 },
+  ] : [
+    { name: "Commute", score: listing.commuteMinutes <= 10 ? 5 : listing.commuteMinutes <= 20 ? 4 : 3 },
+    { name: "Budget", score: totalMonthly < 1200 ? 5 : totalMonthly < 1600 ? 4 : totalMonthly < 2000 ? 3 : 2 },
+    { name: "Fairness", score: priceDiff <= 0 ? 5 : priceDiff <= 100 ? 4 : 2 },
+    { name: "Safety", score: Math.round(listing.crimeScore / 2) },
+    { name: "Transparency", score: listing.hiddenCosts.length <= 2 ? 5 : listing.hiddenCosts.length <= 3 ? 4 : 3 },
   ];
 
-  const scores = [
+  const scoreCalculations = [
     {
       name: "Commute",
       score: listing.commuteMinutes <= 10 ? 5 : listing.commuteMinutes <= 20 ? 4 : 3,
@@ -99,33 +124,38 @@ const Summary = () => {
     },
   ];
 
-  const overallScore = Math.round((scores.reduce((s, x) => s + x.score, 0) / scores.length) * 20);
+  const overallScore = aiPayload ? aiPayload.matchScore : Math.round((scoreCalculations.reduce((s, x) => s + x.score, 0) / scoreCalculations.length) * 20);
 
-  const pros: string[] = [];
-  const cons: string[] = [];
+  const pros: string[] = aiPayload ? aiPayload.pros : [];
+  const cons: string[] = aiPayload ? aiPayload.cons : [];
 
-  if (listing.commuteMinutes <= 15) pros.push(`Short ${listing.commuteMinutes}-min commute`);
-  else cons.push(`${listing.commuteMinutes}-min commute may be long`);
+  if (!aiPayload) {
+    if (listing.commuteMinutes <= 15) pros.push(`Short ${listing.commuteMinutes}-min commute`);
+    else cons.push(`${listing.commuteMinutes}-min commute may be long`);
 
-  if (fairnessData) {
-    if (fairnessData.fairness_score >= 80) pros.push("Exceptional market value");
-    else if (fairnessData.fairness_score < 40) cons.push("Priced significantly above market value");
-  } else {
     if (priceDiff <= 0) pros.push("Priced at or below market value");
     else cons.push(`$${priceDiff} above Zillow estimate`);
+
+    if (fairnessData) {
+      if (fairnessData.fairness_score >= 80) pros.push("Exceptional market value");
+      else if (fairnessData.fairness_score < 40) cons.push("Priced significantly above market value");
+    } else {
+      if (priceDiff <= 0) pros.push("Priced at or below market value");
+      else cons.push(`$${priceDiff} above Zillow estimate`);
+    }
+
+    if (listing.crimeScore >= 7) pros.push("Safe neighborhood");
+    else cons.push("Safety score could be better");
+
+    if (listing.parkingIncluded) pros.push("Parking included");
+    else cons.push("No parking included");
+
+    if (listing.utilitiesIncluded) pros.push("Utilities included");
+    else cons.push("Utilities not included");
+
+    if (listing.petFriendly) pros.push("Pet friendly");
+    if (listing.amenities.length >= 5) pros.push(`${listing.amenities.length} amenities included`);
   }
-
-  if (listing.crimeScore >= 7) pros.push("Safe neighborhood");
-  else cons.push("Safety score could be better");
-
-  if (listing.parkingIncluded) pros.push("Parking included");
-  else cons.push("No parking included");
-
-  if (listing.utilitiesIncluded) pros.push("Utilities included");
-  else cons.push("Utilities not included");
-
-  if (listing.petFriendly) pros.push("Pet friendly");
-  if (listing.amenities.length >= 5) pros.push(`${listing.amenities.length} amenities included`);
 
   return (
     <GhibliLayout showBack>
@@ -143,7 +173,7 @@ const Summary = () => {
                 {summaryAgent.character}'s Grand Summary
               </h1>
               <p className="text-muted-foreground italic">
-                "I've pulled all the threads together for {listing.address}. Here is everything you need to find your way home."
+                "{aiPayload?.sophieSummary || `I've pulled all the threads together for ${listing.address}. Here is everything you need to find your way home.`}"
               </p>
             </div>
           </div>
