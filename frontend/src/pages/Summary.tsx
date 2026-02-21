@@ -1,7 +1,8 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import GhibliLayout from "@/components/GhibliLayout";
-import { mockListings } from "@/data/mockListings";
+import { type Listing } from "@/data/mockListings";
 import { usePreferences } from "@/contexts/PreferencesContext";
 import { Button } from "@/components/ui/button";
 import { summaryAgent } from "@/data/agents";
@@ -18,12 +19,50 @@ const COLORS = ["#A6D784", "#8FB1E9", "#F2B5C1", "#F4A460", "#5B8C3E"];
 const Summary = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { preferences } = usePreferences();
-  const listing = mockListings.find((l) => l.id === id);
+
+  const fairnessData = location.state?.fairnessData;
+
+  const [listing, setListing] = useState<Listing | null>(null);
+  const [isFetching, setIsFetching] = useState(true);
+
+  useEffect(() => {
+    fetch(`http://127.0.0.1:8000/api/listings/${id}`)
+      .then(res => {
+        if (!res.ok) throw new Error("Not found");
+        return res.json();
+      })
+      .then(data => {
+        setListing(data);
+        setIsFetching(false);
+      })
+      .catch(err => {
+        console.error("Failed to fetch listing", err);
+        setListing(null);
+        setIsFetching(false);
+      });
+  }, [id]);
+
+  if (isFetching) {
+    return (
+      <GhibliLayout showBack>
+        <div className="container mx-auto px-4 py-16 text-center">
+          <span className="text-5xl block mb-4 animate-bounce">🍂</span>
+          <p className="text-xl text-muted-foreground">Gathering your summary...</p>
+        </div>
+      </GhibliLayout>
+    );
+  }
 
   if (!listing) {
-    navigate("/listings");
-    return null;
+    return (
+      <GhibliLayout showBack>
+        <div className="container mx-auto px-4 py-16 text-center">
+          <p className="text-xl text-muted-foreground">Listing not found 🍃</p>
+        </div>
+      </GhibliLayout>
+    );
   }
 
   const totalHidden = listing.hiddenCosts.reduce((s, c) => s + c.amount, 0);
@@ -46,7 +85,9 @@ const Summary = () => {
     },
     {
       name: "Fairness",
-      score: priceDiff <= 0 ? 5 : priceDiff <= 100 ? 4 : 2,
+      score: fairnessData
+        ? Math.max(1, Math.min(5, Math.ceil(fairnessData.fairness_score / 20)))
+        : (priceDiff <= 0 ? 5 : priceDiff <= 100 ? 4 : 2),
     },
     {
       name: "Safety",
@@ -66,8 +107,13 @@ const Summary = () => {
   if (listing.commuteMinutes <= 15) pros.push(`Short ${listing.commuteMinutes}-min commute`);
   else cons.push(`${listing.commuteMinutes}-min commute may be long`);
 
-  if (priceDiff <= 0) pros.push("Priced at or below market value");
-  else cons.push(`$${priceDiff} above Zillow estimate`);
+  if (fairnessData) {
+    if (fairnessData.fairness_score >= 80) pros.push("Exceptional market value");
+    else if (fairnessData.fairness_score < 40) cons.push("Priced significantly above market value");
+  } else {
+    if (priceDiff <= 0) pros.push("Priced at or below market value");
+    else cons.push(`$${priceDiff} above Zillow estimate`);
+  }
 
   if (listing.crimeScore >= 7) pros.push("Safe neighborhood");
   else cons.push("Safety score could be better");
