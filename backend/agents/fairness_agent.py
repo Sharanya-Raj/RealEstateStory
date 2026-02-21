@@ -5,8 +5,6 @@ import os
 import requests
 import sys
 
-from llm_client import generate_text
-
 logger = logging.getLogger("agents.fairness")
 
 # Add the market_fairness to the path
@@ -35,8 +33,7 @@ def analyze_fairness(listing: dict) -> dict:
         input_data = MarketFairnessInput(
             listing_id=l_id,
             listing_rent=rent,
-            zip_code=zip_code,
-            city_name=city_name
+            zip_code=city_name if city_name else zip_code  # ZORI uses city names, not zip codes
         )
         mf_result = run_market_fairness_agent(input_data)
         
@@ -63,6 +60,8 @@ def analyze_fairness(listing: dict) -> dict:
         {"month": "Apr", "price": rent},
     ]
 
+    api_key = os.environ.get("OPENROUTER_API_KEY")
+    
     try:
         # 1. Hallucinate Historical Data if ZORI failed
         if percentile == 50 and "error" in insight.lower():
@@ -73,15 +72,27 @@ Return strict JSON predicting realistic rent for the last 4 months and market pe
 {{"p": (integer 0-100), "h": [{{"month": "Jan", "price": (int)}}, {{"month": "Feb", "price": (int)}}, {{"month": "Mar", "price": (int)}}, {{"month": "Apr", "price": (int)}}]}}
 """
             try:
-                res_text = generate_text(prompt_data, model="gemini-2.5-flash", json_mode=True)
-                if res_text:
-                    ai_json = json.loads(res_text.replace("```json", "").replace("```", "").strip())
-                    percentile = ai_json.get("p", percentile)
-                    historical_prices = ai_json.get("h", historical_prices)
+                if api_key:
+                    response = requests.post(
+                        "https://openrouter.ai/api/v1/chat/completions",
+                        headers={"Authorization": f"Bearer {api_key}"},
+                        json={
+                            "model": "google/gemini-2.5-flash",
+                            "messages": [{"role": "user", "content": prompt_data}],
+                            "response_format": {"type": "json_object"}
+                        },
+                        timeout=15
+                    )
+                    if response.ok:
+                        res_text = response.json()["choices"][0]["message"]["content"]
+                        ai_json = json.loads(res_text.replace("```json", "").replace("```", "").strip())
+                        percentile = ai_json.get("p", percentile)
+                        historical_prices = ai_json.get("h", historical_prices)
             except Exception:
                 pass
 
-            # 2. Baron's Insight
+        # 2. Baron's Insight
+        if api_key:
             prompt = f"You are The Baron from Whisper of the Heart, a dapper aristocrat cat giving distinguished real estate advice. The history indicates {insight}. The rent is ${rent}. Give 1 elegant sentence telling the user if this is a fair market value."
             response = requests.post(
                 "https://openrouter.ai/api/v1/chat/completions",
