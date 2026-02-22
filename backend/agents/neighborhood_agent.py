@@ -190,11 +190,25 @@ def analyze_neighborhood(listing: dict) -> dict:
                 timeout=15,
             )
             if resp.ok:
-                summary = resp.json()["choices"][0]["message"]["content"].strip().replace('"', '')
+                llm_summary = resp.json()["choices"][0]["message"]["content"].strip().replace('"', '')
+                if llm_summary:  # Only use LLM result if non-empty
+                    summary = llm_summary
             else:
                 logger.warning("Neighborhood LLM failed: %s", resp.status_code)
         except Exception as e:
             logger.warning("Neighborhood LLM error: %s", e)
+    
+    # Enhanced fallback if LLM didn't provide a good summary
+    if summary == _default_summary(crime_rating):
+        logger.info("AGENT: neighborhood using enhanced fallback summary")
+        if crime_rating > 8 and walk_score > 70:
+            summary = f"What a lovely neighborhood! With a {crime_rating:.0f}/10 safety rating and walkability score of {walk_score}, everything you need is right at your doorstep."
+        elif crime_rating > 8:
+            summary = f"A very safe area with a {crime_rating:.0f}/10 rating! Though walkability is moderate, the peace of mind is worth it."
+        elif walk_score > 80:
+            summary = f"Incredibly walkable with a score of {walk_score}! You can reach shops, cafes, and transit stops without breaking a sweat."
+        elif walk_score < 40:
+            summary = f"This area has a walk score of {walk_score}, so you'll definitely need a car or rely on transit to get around."
 
     return {
         "safety": {
@@ -205,6 +219,7 @@ def analyze_neighborhood(listing: dict) -> dict:
         "hasGym":     has_gym,
         "hasGrocery": has_grocery,
         "walkScore":  walk_score,
+        "llm_insight": summary,  # Include for consistency with other agents
     }
 
 

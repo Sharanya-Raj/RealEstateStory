@@ -127,7 +127,19 @@ def analyze_budget(listing: dict, target_budget: float) -> dict:
         f"Total true monthly outlay including transport and groceries is ~${total_all:.0f}. "
         f"Give 1 punchy sentence telling them if it's a smart financial fit."
     )
-    insight_text = generate_text(prompt, model="gemini-flash-latest") or ""
+    insight_text = generate_text(prompt, model="gemini-flash-latest")
+    
+    # Fallback insight if LLM fails
+    if not insight_text or not insight_text.strip():
+        logger.warning("AGENT: budget LLM returned empty, using fallback")
+        overage = total_housing - target_budget
+        if overage > 0:
+            insight_text = f"This place costs ${int(overage)} more than your budget. You'd be working overtime just to make rent."
+        elif total_housing < target_budget * 0.7:
+            savings = target_budget - total_housing
+            insight_text = f"Smart choice! This leaves you ${int(savings)}/month for savings or fun. That's the kind of financial cushion every student needs."
+        else:
+            insight_text = f"At {ratio_pct}% of your budget, this is {ratio_label}. Budget carefully for other expenses."
 
     return {
         "matchScore": budget_fit,

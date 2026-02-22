@@ -16,10 +16,19 @@ _OPENROUTER_MODELS = {
 
 
 def _use_openrouter() -> bool:
-    """True if we should use OpenRouter instead of direct Google Gemini."""
-    use = os.environ.get("USE_OPENROUTER", "").lower() in ("1", "true", "yes")
-    has_key = bool(os.environ.get("OPENROUTER_API_KEY") or os.environ.get("OPEN_ROUTER_API_KEY"))
-    return use and has_key
+    """
+    True if we should use OpenRouter instead of direct Google Gemini.
+    
+    Uses OpenRouter when:
+    1. USE_OPENROUTER=1 is explicitly set, OR
+    2. GEMINI_API_KEY is not available but OPENROUTER_API_KEY is (automatic fallback)
+    """
+    has_openrouter_key = bool(os.environ.get("OPENROUTER_API_KEY") or os.environ.get("OPEN_ROUTER_API_KEY"))
+    explicit_use = os.environ.get("USE_OPENROUTER", "").lower() in ("1", "true", "yes")
+    has_gemini_key = bool(os.environ.get("GEMINI_API_KEY"))
+    
+    # Use OpenRouter if explicitly requested OR if it's the only available option
+    return has_openrouter_key and (explicit_use or not has_gemini_key)
 
 
 def _get_openrouter_text(prompt: str, model: str, json_mode: bool = False) -> str | None:
