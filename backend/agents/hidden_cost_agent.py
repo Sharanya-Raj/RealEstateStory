@@ -260,12 +260,19 @@ def analyze_hidden_costs(listing: dict) -> dict:
                 data = response.json()
                 content = data["choices"][0]["message"]["content"]
                 result = json.loads(content)
+                
+                # Handle case where LLM returns a list instead of dict
+                if isinstance(result, list):
+                    logger.warning("[HIDDEN_COST] LLM returned list instead of dict, using fallback")
+                    result = {}
+                
                 unstructured_fees = float(result.get('estimated_unstructured_fees', 0.0))
                 if result.get('has_hidden_fee_warnings'):
                     gemini_insight = result.get('analysis_reasoning', '')
                 
         except Exception as e:
-            gemini_insight = f"OpenRouter analysis failed: {str(e)}"
+            logger.warning("[HIDDEN_COST] OpenRouter analysis failed: %s", e)
+            gemini_insight = f"Description analysis unavailable (check logs for details)"
     
     true_cost = rent + parking + amenities + utilities + unstructured_fees
 

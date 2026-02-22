@@ -144,6 +144,16 @@ The rent is ${rent}. Give 1 elegant sentence telling the user if this is a fair 
             if response.ok:
                 data = response.json()
                 insight = data["choices"][0]["message"]["content"].strip().replace('"', '')
+        
+        # Fallback insight if LLM fails
+        if not insight or insight == "In line with current market trends":
+            if fairness_score < 40:
+                insight = f"This rental sits at the {percentile:.0f}th percentile — notably above typical market rates for the area. Consider negotiating."
+            elif fairness_score > 70:
+                insight = f"A splendid find! At the {percentile:.0f}th percentile, this represents excellent value compared to similar properties."
+            else:
+                insight = f"Fair market value. The rent aligns with the {percentile:.0f}th percentile for this neighborhood."
+                
     except Exception as e:
         logger.warning("Fairness Baron insight error: %s", e)
                 

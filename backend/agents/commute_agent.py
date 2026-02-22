@@ -200,6 +200,18 @@ def analyze_commute(listing: dict, college: str = "") -> dict:
                 logger.warning("[COMMUTE] LLM API failed: %s", response.status_code)
         except Exception as e:
             logger.warning("[COMMUTE] LLM exception: %s", e)
+    
+    # Fallback insight if LLM failed
+    if not insight_text:
+        destination = college if college else "campus"
+        if transit_time < 30:
+            insight_text = f"A swift {transit_time}-minute journey to {destination}. Your commute will be a breeze!"
+        elif transit_time < 45:
+            insight_text = f"A {transit_time}-minute commute to {destination} — manageable with good planning."
+        elif transit_time < 60:
+            insight_text = f"The {transit_time}-minute trek to {destination} is lengthy. Consider your schedule carefully."
+        else:
+            insight_text = f"Fair warning: {transit_time} minutes to {destination}. This commute will take a toll on your time and energy."
 
     return {
         "driving": driving_time,
