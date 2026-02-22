@@ -1,0 +1,6159 @@
+{
+  "total_analyzed": 50,
+  "listings": [
+    {
+      "listing": {
+        "id": "apt_real_7",
+        "name": "The Raye",
+        "address": "1000 Vermella Dr, New Brunswick, NJ 08901",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": "08901",
+        "base_rent": 2500,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: The Raye",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/meadow.png",
+        "_lat": 40.4805539,
+        "_lon": -74.4255688,
+        "walk_score": 85,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_7",
+        "rank": 50,
+        "name": "1000 Vermella Dr Apartments",
+        "address": "1000 Vermella Dr, New Brunswick, NJ 08901, New Brunswick, NJ 08901",
+        "rent": 2500,
+        "trueCost": 2698.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 85,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: The Raye",
+        "historicalInsight": "Its percentile rank of 37 indicates this may not be the fairest deal.",
+        "historicalTrend": "down",
+        "historicalPercent": 37.19215274658855,
+        "costBreakdown": {
+          "rent": 2500.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "At $2500 rent and $2698 true cost, consider its impact on your budget.",
+        "commute": {
+          "driving": "9 mins",
+          "transit": "12 mins",
+          "walking": "170 mins",
+          "biking": "9 mins",
+          "walkScore": 85,
+          "llm_insight": "A 9-minute commute is generally convenient for getting to Rutgers."
+        },
+        "safety": {
+          "score": 7,
+          "nearestPolice": "0.4 mi",
+          "summary": "A walk score of 85 suggests good walkability for errands and leisure."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2250.0
+          },
+          {
+            "month": "Apr",
+            "price": 2500.0
+          }
+        ],
+        "percentile": 37.19215274658855,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Worth further evaluation, especially for its location and walkability, but carefully consider other options.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2698.0,
+          "llmTrueCost": 2698.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_40",
+        "name": "Douglass Gardens",
+        "address": "462 Hamilton St, Somerset, NJ 08873",
+        "city": "Somerset",
+        "state": "NJ",
+        "zip": "08873",
+        "base_rent": 2499,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Douglass Gardens",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/seaside.png",
+        "_lat": 40.4955171,
+        "_lon": -74.4619513,
+        "walk_score": 100,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_40",
+        "rank": 50,
+        "name": "462 Hamilton St Apartments",
+        "address": "462 Hamilton St, Somerset, NJ 08873, Somerset, NJ 08873",
+        "rent": 2499,
+        "trueCost": 2697.0,
+        "matchScore": 100,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 100,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Douglass Gardens",
+        "historicalInsight": "A percentile rank of 100 suggests excellent value and desirability.",
+        "historicalTrend": "down",
+        "historicalPercent": 100.0,
+        "costBreakdown": {
+          "rent": 2499.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "At $2499 rent and $2697 true cost, factor it into your monthly expenses.",
+        "commute": {
+          "driving": "9 mins",
+          "transit": "12 mins",
+          "walking": "200 mins",
+          "biking": "9 mins",
+          "walkScore": 100,
+          "llm_insight": "A 9-minute commute is generally convenient for getting to Rutgers."
+        },
+        "safety": {
+          "score": 8,
+          "nearestPolice": "0.4 mi",
+          "summary": "A walk score of 100 indicates a walker's paradise for daily errands."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2249.1
+          },
+          {
+            "month": "Apr",
+            "price": 2499.0
+          }
+        ],
+        "percentile": 100.0,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "A top-tier option due to its outstanding walkability and overall desirability.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2697.0,
+          "llmTrueCost": 2697.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_12",
+        "name": "Premier Properties of New Brunswick",
+        "address": "205 Easton Ave, New Brunswick, NJ 08901",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": "08901",
+        "base_rent": 2450,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Premier Properties of New Brunswick",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/snowy.png",
+        "_lat": 40.500763,
+        "_lon": -74.4561982,
+        "walk_score": 100,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_12",
+        "rank": 50,
+        "name": "205 Easton Ave Apartments",
+        "address": "205 Easton Ave, New Brunswick, NJ 08901, New Brunswick, NJ 08901",
+        "rent": 2450,
+        "trueCost": 2648.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 100,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Premier Properties of New Brunswick",
+        "historicalInsight": "Its percentile rank of 35 indicates this may not be the fairest deal.",
+        "historicalTrend": "down",
+        "historicalPercent": 34.948309691656775,
+        "costBreakdown": {
+          "rent": 2450.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "At $2450 rent and $2648 true cost, make sure it aligns with spending.",
+        "commute": {
+          "driving": "7 mins",
+          "transit": "9 mins",
+          "walking": "200 mins",
+          "biking": "7 mins",
+          "walkScore": 100,
+          "llm_insight": "A 7-minute commute is quite close and efficient for getting to Rutgers."
+        },
+        "safety": {
+          "score": 9,
+          "nearestPolice": "0.4 mi",
+          "summary": "A walk score of 100 indicates a walker's paradise for daily errands."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2205.0
+          },
+          {
+            "month": "Apr",
+            "price": 2450.0
+          }
+        ],
+        "percentile": 34.948309691656775,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "The very short commute along with excellent walkability are highly attractive.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2648.0,
+          "llmTrueCost": 2648.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_28",
+        "name": "Sofia South Plainfield",
+        "address": "513 Calderone Ct, South Plainfield, NJ 07080",
+        "city": "South Plainfield",
+        "state": "NJ",
+        "zip": "07080",
+        "base_rent": 2450,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Sofia South Plainfield",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/seaside.png",
+        "_lat": 40.569713,
+        "_lon": -74.4246948,
+        "walk_score": 43,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_28",
+        "rank": 50,
+        "name": "513 Calderone Ct Apartments",
+        "address": "513 Calderone Ct, South Plainfield, NJ 07080, South Plainfield, NJ 07080",
+        "rent": 2450,
+        "trueCost": 2873.0,
+        "matchScore": 100,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 43,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Sofia South Plainfield",
+        "historicalInsight": "Its percentile rank of 47 suggests an average deal.",
+        "historicalTrend": "down",
+        "historicalPercent": 47.08491130157465,
+        "costBreakdown": {
+          "rent": 2450.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "At $2450 rent and $2873 true cost, analyze total cost relative to your income.",
+        "commute": {
+          "driving": "16 mins",
+          "transit": "22 mins",
+          "walking": "86 mins",
+          "biking": "16 mins",
+          "walkScore": 43,
+          "llm_insight": "A 16-minute commute suggests a moderate travel time to Rutgers."
+        },
+        "safety": {
+          "score": 6,
+          "nearestPolice": "0.4 mi",
+          "summary": "A walk score of 43 suggests that many errands might require a car."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2205.0
+          },
+          {
+            "month": "Apr",
+            "price": 2450.0
+          }
+        ],
+        "percentile": 47.08491130157465,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Weigh the commute and relatively lower walkability against the rent.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 85.0,
+              "source": "estimated",
+              "note": "Low walkability \u2014 street or lot parking likely needed"
+            },
+            {
+              "category": "Transport (NJ Transit)",
+              "amount": 140.0,
+              "source": "estimated",
+              "note": "Monthly pass for low-walkability area (20 min commute)"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2873.0,
+          "llmTrueCost": 2873.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_19",
+        "name": "The Edge at Raritan Heights",
+        "address": "11 US Highway 1, New Brunswick, NJ 08901",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": "08901",
+        "base_rent": 2400,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: The Edge at Raritan Heights",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/meadow.png",
+        "_lat": 40.5204169,
+        "_lon": -74.4645303,
+        "walk_score": 89,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_19",
+        "rank": 50,
+        "name": "11 US Highway 1 Apartments",
+        "address": "11 US Highway 1, New Brunswick, NJ 08901, New Brunswick, NJ 08901",
+        "rent": 2400,
+        "trueCost": 2598.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 89,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: The Edge at Raritan Heights",
+        "historicalInsight": "Its percentile rank of 33 indicates this may not be the fairest deal.",
+        "historicalTrend": "down",
+        "historicalPercent": 32.704466636725,
+        "costBreakdown": {
+          "rent": 2400.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "At $2400 rent and $2598 true cost, consider the overall affordability.",
+        "commute": {
+          "driving": "0 mins",
+          "transit": "0 mins",
+          "walking": "178 mins",
+          "biking": "0 mins",
+          "walkScore": 89,
+          "llm_insight": "A 0-minute commute indicates you are exceptionally close to Rutgers."
+        },
+        "safety": {
+          "score": 6,
+          "nearestPolice": "0.4 mi",
+          "summary": "A walk score of 89 suggests a very walkable neighborhood for most errands."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2160.0
+          },
+          {
+            "month": "Apr",
+            "price": 2400.0
+          }
+        ],
+        "percentile": 32.704466636725,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Being right near Rutgers is a major perk and worth a look.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2598.0,
+          "llmTrueCost": 2598.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_50",
+        "name": "Millbrook Horizon",
+        "address": "601 Horizon Dr, Edison, NJ 08817",
+        "city": "Edison",
+        "state": "NJ",
+        "zip": "08817",
+        "base_rent": 2395,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Millbrook Horizon",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/urban.png",
+        "_lat": 40.5031071,
+        "_lon": -74.3750548,
+        "walk_score": 59,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_50",
+        "rank": 50,
+        "name": "601 Horizon Dr Apartments",
+        "address": "601 Horizon Dr, Edison, NJ 08817, Edison, NJ 08817",
+        "rent": 2395,
+        "trueCost": 2653.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 59,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Millbrook Horizon",
+        "historicalInsight": "Its percentile rank of 40 suggests it's not among the most competitive deals.",
+        "historicalTrend": "down",
+        "historicalPercent": 39.6841384754303,
+        "costBreakdown": {
+          "rent": 2395.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "At $2395 rent and $2653 true cost, evaluate within your budget.",
+        "commute": {
+          "driving": "17 mins",
+          "transit": "23 mins",
+          "walking": "118 mins",
+          "biking": "17 mins",
+          "walkScore": 59,
+          "llm_insight": "A 17-minute commute may require careful planning for your daily schedule."
+        },
+        "safety": {
+          "score": 6,
+          "nearestPolice": "0.4 mi",
+          "summary": "A walk score of 59 suggests some errands can be done on foot."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2155.5
+          },
+          {
+            "month": "Apr",
+            "price": 2395.0
+          }
+        ],
+        "percentile": 39.6841384754303,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Consider if the longer commute is acceptable given the rent and walkability.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Transport (occasional transit)",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Partial NJ Transit use estimated"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2653.0,
+          "llmTrueCost": 2653.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_11",
+        "name": "Merriewold",
+        "address": "433 River Rd, Highland Park, NJ 08904",
+        "city": "Highland Park",
+        "state": "NJ",
+        "zip": "08904",
+        "base_rent": 2394,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Merriewold",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/rainy.png",
+        "_lat": 40.5072975,
+        "_lon": -74.4420361,
+        "walk_score": 100,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_11",
+        "rank": 50,
+        "name": "433 River Rd Apartments",
+        "address": "433 River Rd, Highland Park, NJ 08904, Highland Park, NJ 08904",
+        "rent": 2394,
+        "trueCost": 2592.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 100,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Merriewold",
+        "historicalInsight": "Its percentile rank of 23 suggests this may not be the fairest deal.",
+        "historicalTrend": "down",
+        "historicalPercent": 22.545295678235416,
+        "costBreakdown": {
+          "rent": 2394.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "At $2394 rent and $2592 true cost, make sure it fits your spending plan.",
+        "commute": {
+          "driving": "6 mins",
+          "transit": "8 mins",
+          "walking": "200 mins",
+          "biking": "6 mins",
+          "walkScore": 100,
+          "llm_insight": "A 6-minute commute is very convenient for accessing Rutgers."
+        },
+        "safety": {
+          "score": 7,
+          "nearestPolice": "0.4 mi",
+          "summary": "A walk score of 100 indicates a walker's paradise for daily errands."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2154.6
+          },
+          {
+            "month": "Apr",
+            "price": 2394.0
+          }
+        ],
+        "percentile": 22.545295678235416,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "The excellent walkability and short commute make this an appealing location.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2592.0,
+          "llmTrueCost": 2592.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_26",
+        "name": "Millbrook Village",
+        "address": "97 Horizon Dr, Edison, NJ 08817",
+        "city": "Edison",
+        "state": "NJ",
+        "zip": "08817",
+        "base_rent": 2390,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Millbrook Village",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/urban.png",
+        "_lat": 40.5028352,
+        "_lon": -74.3756282,
+        "walk_score": 57,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_26",
+        "rank": 50,
+        "name": "97 Horizon Dr Apartments",
+        "address": "97 Horizon Dr, Edison, NJ 08817, Edison, NJ 08817",
+        "rent": 2390,
+        "trueCost": 2648.0,
+        "matchScore": 100,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 57,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Millbrook Village",
+        "historicalInsight": "Its percentile rank of 39 suggests it's not among the most competitive deals.",
+        "historicalTrend": "down",
+        "historicalPercent": 39.44471438675508,
+        "costBreakdown": {
+          "rent": 2390.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "At $2390 rent and $2648 true cost, determine if it's financially viable.",
+        "commute": {
+          "driving": "17 mins",
+          "transit": "23 mins",
+          "walking": "114 mins",
+          "biking": "17 mins",
+          "walkScore": 57,
+          "llm_insight": "A 17-minute commute may require careful planning for your daily schedule."
+        },
+        "safety": {
+          "score": 6,
+          "nearestPolice": "0.4 mi",
+          "summary": "A walk score of 57 suggests some errands can be done on foot."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2151.0
+          },
+          {
+            "month": "Apr",
+            "price": 2390.0
+          }
+        ],
+        "percentile": 39.44471438675508,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Evaluate if the rent justifies the commute and moderate walkability.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Transport (occasional transit)",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Partial NJ Transit use estimated"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2648.0,
+          "llmTrueCost": 2648.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_16",
+        "name": "The Harrison Somerset Apartment Homes",
+        "address": "575 Easton Ave, Somerset, NJ 08873",
+        "city": "Somerset",
+        "state": "NJ",
+        "zip": "08873",
+        "base_rent": 2375,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: The Harrison Somerset Apartment Homes",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/seaside.png",
+        "_lat": 40.5061507,
+        "_lon": -74.4705322,
+        "walk_score": 59,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_16",
+        "rank": 50,
+        "name": "575 Easton Ave Apartments",
+        "address": "575 Easton Ave, Somerset, NJ 08873, Somerset, NJ 08873",
+        "rent": 2375,
+        "trueCost": 2633.0,
+        "matchScore": 100,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 59,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: The Harrison Somerset Apartment Homes",
+        "historicalInsight": "A percentile rank of 100 suggests excellent value and desirability.",
+        "historicalTrend": "down",
+        "historicalPercent": 100.0,
+        "costBreakdown": {
+          "rent": 2375.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "At $2375 rent and $2633 true cost, factor this into your cost assessment.",
+        "commute": {
+          "driving": "5 mins",
+          "transit": "7 mins",
+          "walking": "118 mins",
+          "biking": "5 mins",
+          "walkScore": 59,
+          "llm_insight": "A 5-minute commute is extremely convenient for getting to Rutgers."
+        },
+        "safety": {
+          "score": 8,
+          "nearestPolice": "0.4 mi",
+          "summary": "A walk score of 59 suggests some errands can be done on foot."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2137.5
+          },
+          {
+            "month": "Apr",
+            "price": 2375.0
+          }
+        ],
+        "percentile": 100.0,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Definitely consider its fantastic location and desirability.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Transport (occasional transit)",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Partial NJ Transit use estimated"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2633.0,
+          "llmTrueCost": 2633.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_18",
+        "name": "Highland Manor Apartments",
+        "address": "330-344 Crowells Rd, Highland Park, NJ 08904",
+        "city": "Highland Park",
+        "state": "NJ",
+        "zip": "08904",
+        "base_rent": 2350,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Highland Manor Apartments",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/snowy.png",
+        "_lat": 40.4970663,
+        "_lon": -74.4156922,
+        "walk_score": 92,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_18",
+        "rank": 50,
+        "name": "330-344 Crowells Rd Apartments",
+        "address": "330-344 Crowells Rd, Highland Park, NJ 08904, Highland Park, NJ 08904",
+        "rent": 2350,
+        "trueCost": 2548.0,
+        "matchScore": 100,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 92,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Highland Manor Apartments",
+        "historicalInsight": "Its percentile rank of 21 indicates this may not be the fairest deal.",
+        "historicalTrend": "down",
+        "historicalPercent": 20.752483226338022,
+        "costBreakdown": {
+          "rent": 2350.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "At $2350 rent and $2548 true cost, consider it's impact on your budget.",
+        "commute": {
+          "driving": "12 mins",
+          "transit": "16 mins",
+          "walking": "184 mins",
+          "biking": "12 mins",
+          "walkScore": 92,
+          "llm_insight": "A 12-minute commute is a reasonable distance for accessing Rutgers."
+        },
+        "safety": {
+          "score": 8,
+          "nearestPolice": "0.4 mi",
+          "summary": "A walk score of 92 suggests a very walkable neighborhood for most errands."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2115.0
+          },
+          {
+            "month": "Apr",
+            "price": 2350.0
+          }
+        ],
+        "percentile": 20.752483226338022,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "The great walkability is balanced by the fairness and the longer commute.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2548.0,
+          "llmTrueCost": 2548.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_32",
+        "name": "66 Sicard St",
+        "address": "66 Sicard St, New Brunswick, NJ 08901",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": "08901",
+        "base_rent": 2350,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: 66 Sicard St",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/urban.png",
+        "_lat": 40.5031763,
+        "_lon": -74.454692,
+        "walk_score": 100,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_32",
+        "rank": 50,
+        "name": "66 Sicard St Apartments",
+        "address": "66 Sicard St, New Brunswick, NJ 08901, New Brunswick, NJ 08901",
+        "rent": 2350,
+        "trueCost": 2548.0,
+        "matchScore": 100,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 100,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: 66 Sicard St",
+        "historicalInsight": "The percentile indicates a less competitive listing relative to others.",
+        "historicalTrend": "down",
+        "historicalPercent": 30.46062358179323,
+        "costBreakdown": {
+          "rent": 2350.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The true cost is slightly higher than the rent, indicating additional expenses.",
+        "commute": {
+          "driving": "6 mins",
+          "transit": "8 mins",
+          "walking": "200 mins",
+          "biking": "6 mins",
+          "walkScore": 100,
+          "llm_insight": "A very short commute of 6 minutes is highly convenient for Rutgers."
+        },
+        "safety": {
+          "score": 9,
+          "nearestPolice": "0.4 mi",
+          "summary": "Located in a very walkable area of New Brunswick."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2115.0
+          },
+          {
+            "month": "Apr",
+            "price": 2350.0
+          }
+        ],
+        "percentile": 30.46062358179323,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Great location in terms of walkability and commute.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2548.0,
+          "llmTrueCost": 2548.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_52",
+        "name": "Hempstead Gardens",
+        "address": "7 Hempstead Dr, Somerset, NJ 08873",
+        "city": "Somerset",
+        "state": "NJ",
+        "zip": "08873",
+        "base_rent": 2330,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Hempstead Gardens",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/seaside.png",
+        "_lat": 40.4660321,
+        "_lon": -74.5021174,
+        "walk_score": 52,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_52",
+        "rank": 50,
+        "name": "7 Hempstead Dr Apartments",
+        "address": "7 Hempstead Dr, Somerset, NJ 08873, Somerset, NJ 08873",
+        "rent": 2330,
+        "trueCost": 2673.0,
+        "matchScore": 90,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 52,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Hempstead Gardens",
+        "historicalInsight": "This listing is more expensive compared to similar ones.",
+        "historicalTrend": "down",
+        "historicalPercent": 100.0,
+        "costBreakdown": {
+          "rent": 2330.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The true cost is noticeably higher than the base rent.",
+        "commute": {
+          "driving": "13 mins",
+          "transit": "18 mins",
+          "walking": "104 mins",
+          "biking": "13 mins",
+          "walkScore": 52,
+          "llm_insight": "The 13-minute commute to Rutgers is a bit longer."
+        },
+        "safety": {
+          "score": 5,
+          "nearestPolice": "0.4 mi",
+          "summary": "Walkability is moderate, which may require a car for some errands."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2097.0
+          },
+          {
+            "month": "Apr",
+            "price": 2330.0
+          }
+        ],
+        "percentile": 100.0,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Commute is a bit longer, but listing is among the most expensive ones in this list, given true cost.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 85.0,
+              "source": "estimated",
+              "note": "Low walkability \u2014 street or lot parking likely needed"
+            },
+            {
+              "category": "Transport (occasional transit)",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Partial NJ Transit use estimated"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2673.0,
+          "llmTrueCost": 2673.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_49",
+        "name": "Georgetown Apartments",
+        "address": "1470 Oak Tree Dr, North Brunswick, NJ 08902",
+        "city": "North Brunswick",
+        "state": "NJ",
+        "zip": "08902",
+        "base_rent": 2329,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Georgetown Apartments",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/meadow.png",
+        "_lat": 40.471544,
+        "_lon": -74.4906592,
+        "walk_score": 55,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_49",
+        "rank": 50,
+        "name": "1470 Oak Tree Dr Apartments",
+        "address": "1470 Oak Tree Dr, North Brunswick, NJ 08902, North Brunswick, NJ 08902",
+        "rent": 2329,
+        "trueCost": 2587.0,
+        "matchScore": 90,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 55,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Georgetown Apartments",
+        "historicalInsight": "Listing price is higher than average, considering percentile.",
+        "historicalTrend": "down",
+        "historicalPercent": 39.05215305143355,
+        "costBreakdown": {
+          "rent": 2329.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "True cost is higher than rent, due to other expenses.",
+        "commute": {
+          "driving": "12 mins",
+          "transit": "16 mins",
+          "walking": "110 mins",
+          "biking": "12 mins",
+          "walkScore": 55,
+          "llm_insight": "A 12-minute commute is a reasonable distance to Rutgers."
+        },
+        "safety": {
+          "score": 5,
+          "nearestPolice": "0.4 mi",
+          "summary": "The area is somewhat walkable, but not as convenient as downtown."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2096.1
+          },
+          {
+            "month": "Apr",
+            "price": 2329.0
+          }
+        ],
+        "percentile": 39.05215305143355,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "A bit outside the center, but reasonable commute.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Transport (occasional transit)",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Partial NJ Transit use estimated"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2587.0,
+          "llmTrueCost": 2587.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_30",
+        "name": "The Vue",
+        "address": "110 Somerset St, New Brunswick, NJ 08901",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": "08901",
+        "base_rent": 2320,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: The Vue",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/snowy.png",
+        "_lat": 40.49755,
+        "_lon": -74.4470519,
+        "walk_score": 100,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_30",
+        "rank": 50,
+        "name": "110 Somerset St Apartments",
+        "address": "110 Somerset St, New Brunswick, NJ 08901, New Brunswick, NJ 08901",
+        "rent": 2320,
+        "trueCost": 2518.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 100,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: The Vue",
+        "historicalInsight": "The percentile hints at a less in-demand property potentially offering better value.",
+        "historicalTrend": "down",
+        "historicalPercent": 29.114317748834168,
+        "costBreakdown": {
+          "rent": 2320.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The true cost is slightly higher than the rent, indicating extra expenses.",
+        "commute": {
+          "driving": "7 mins",
+          "transit": "9 mins",
+          "walking": "200 mins",
+          "biking": "7 mins",
+          "walkScore": 100,
+          "llm_insight": "The 7-minute commute is a quick trip to Rutgers."
+        },
+        "safety": {
+          "score": 9,
+          "nearestPolice": "0.4 mi",
+          "summary": "Located in an extremely walkable part of New Brunswick."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2088.0
+          },
+          {
+            "month": "Apr",
+            "price": 2320.0
+          }
+        ],
+        "percentile": 29.114317748834168,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Excellent location is the most walkable area near Rutgers.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2518.0,
+          "llmTrueCost": 2518.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_27",
+        "name": "Sofia South Plainfield",
+        "address": "513 Calderone Ct, South Plainfield, NJ 07080",
+        "city": "South Plainfield",
+        "state": "NJ",
+        "zip": "07080",
+        "base_rent": 2300,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Sofia South Plainfield",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/forest.png",
+        "_lat": 40.569713,
+        "_lon": -74.4246948,
+        "walk_score": 43,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_27",
+        "rank": 50,
+        "name": "513 Calderone Ct Apartments",
+        "address": "513 Calderone Ct, South Plainfield, NJ 07080, South Plainfield, NJ 07080",
+        "rent": 2300,
+        "trueCost": 2723.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 43,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Sofia South Plainfield",
+        "historicalInsight": "Despite lower rent, the higher true cost and percentile suggest it may not be the best value.",
+        "historicalTrend": "down",
+        "historicalPercent": 39.61032489535579,
+        "costBreakdown": {
+          "rent": 2300.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The true cost to live is substantially higher than the monthly rent.",
+        "commute": {
+          "driving": "16 mins",
+          "transit": "22 mins",
+          "walking": "86 mins",
+          "biking": "16 mins",
+          "walkScore": 43,
+          "llm_insight": "A 16-minute commute is on the longer side relative to the other listings."
+        },
+        "safety": {
+          "score": 6,
+          "nearestPolice": "0.4 mi",
+          "summary": "The lower walk score indicates a reliance on driving."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2070.0
+          },
+          {
+            "month": "Apr",
+            "price": 2300.0
+          }
+        ],
+        "percentile": 39.61032489535579,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Consider other locations closer to Rutgers.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 85.0,
+              "source": "estimated",
+              "note": "Low walkability \u2014 street or lot parking likely needed"
+            },
+            {
+              "category": "Transport (NJ Transit)",
+              "amount": 140.0,
+              "source": "estimated",
+              "note": "Monthly pass for low-walkability area (20 min commute)"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2723.0,
+          "llmTrueCost": 2723.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_36",
+        "name": "Highland Montgomery",
+        "address": "140-1H Montgomery St, Highland Park, NJ 08904",
+        "city": "Highland Park",
+        "state": "NJ",
+        "zip": "08904",
+        "base_rent": 2299,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Highland Montgomery",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/snowy.png",
+        "_lat": 40.5204169,
+        "_lon": -74.4645303,
+        "walk_score": 89,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_36",
+        "rank": 50,
+        "name": "140-1H Montgomery St Apartments",
+        "address": "140-1H Montgomery St, Highland Park, NJ 08904, Highland Park, NJ 08904",
+        "rent": 2299,
+        "trueCost": 2497.0,
+        "matchScore": 100,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 89,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Highland Montgomery",
+        "historicalInsight": "The percentile is lower suggesting this could be a good find.",
+        "historicalTrend": "down",
+        "historicalPercent": 18.674450611638772,
+        "costBreakdown": {
+          "rent": 2299.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The true cost is only slightly higher than the base rent.",
+        "commute": {
+          "driving": "0 mins",
+          "transit": "0 mins",
+          "walking": "178 mins",
+          "biking": "0 mins",
+          "walkScore": 89,
+          "llm_insight": "Extremely close to Rutgers with practically no commute."
+        },
+        "safety": {
+          "score": 6,
+          "nearestPolice": "0.4 mi",
+          "summary": "Very walkable location with good access to amenities."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2069.1
+          },
+          {
+            "month": "Apr",
+            "price": 2299.0
+          }
+        ],
+        "percentile": 18.674450611638772,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Excellent for anyone wanting to live close to Rutgers and willing to sacrafice fancy features.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2497.0,
+          "llmTrueCost": 2497.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_8",
+        "name": "Legacy Place",
+        "address": "1 Legacy Pl, East Brunswick, NJ 08816",
+        "city": "East Brunswick",
+        "state": "NJ",
+        "zip": "08816",
+        "base_rent": 2295,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Legacy Place",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/urban.png",
+        "_lat": 40.4549001,
+        "_lon": -74.4044448,
+        "walk_score": 100,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_8",
+        "rank": 50,
+        "name": "1 Legacy Pl Apartments",
+        "address": "1 Legacy Pl, East Brunswick, NJ 08816, East Brunswick, NJ 08816",
+        "rent": 2295,
+        "trueCost": 2493.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 100,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Legacy Place",
+        "historicalInsight": "The listing is not exceedingly well prices, indicating that there might be alternatives.",
+        "historicalTrend": "down",
+        "historicalPercent": 36.37440101162482,
+        "costBreakdown": {
+          "rent": 2295.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The total costs are somewhat higher than listed rent.",
+        "commute": {
+          "driving": "14 mins",
+          "transit": "19 mins",
+          "walking": "200 mins",
+          "biking": "14 mins",
+          "walkScore": 100,
+          "llm_insight": "A fourteen minute commute is potentially viable but could be a bit long."
+        },
+        "safety": {
+          "score": 6,
+          "nearestPolice": "0.4 mi",
+          "summary": "Located in a very walkable location with a high walk score."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2065.5
+          },
+          {
+            "month": "Apr",
+            "price": 2295.0
+          }
+        ],
+        "percentile": 36.37440101162482,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Good area if you want to live in a walkable location.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2493.0,
+          "llmTrueCost": 2493.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_44",
+        "name": "The Arbors At Franklin",
+        "address": "265 Franklin Blvd, Somerset, NJ 08873",
+        "city": "Somerset",
+        "state": "NJ",
+        "zip": "08873",
+        "base_rent": 2295,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: The Arbors At Franklin",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/urban.png",
+        "_lat": 40.4982233,
+        "_lon": -74.4755852,
+        "walk_score": 51,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_44",
+        "rank": 50,
+        "name": "265 Franklin Blvd Apartments",
+        "address": "265 Franklin Blvd, Somerset, NJ 08873, Somerset, NJ 08873",
+        "rent": 2295,
+        "trueCost": 2638.0,
+        "matchScore": 100,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 51,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: The Arbors At Franklin",
+        "historicalInsight": "True cost is rather high compared to similar locations.",
+        "historicalTrend": "down",
+        "historicalPercent": 100.0,
+        "costBreakdown": {
+          "rent": 2295.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The total cost might be higher than monthly rent.",
+        "commute": {
+          "driving": "6 mins",
+          "transit": "8 mins",
+          "walking": "102 mins",
+          "biking": "6 mins",
+          "walkScore": 51,
+          "llm_insight": "The commute is fairly short, making it ideal for commuting students."
+        },
+        "safety": {
+          "score": 9,
+          "nearestPolice": "0.4 mi",
+          "summary": "The neighborhood is somewhat walkable."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2065.5
+          },
+          {
+            "month": "Apr",
+            "price": 2295.0
+          }
+        ],
+        "percentile": 100.0,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Expensive for this area but commute is short.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 85.0,
+              "source": "estimated",
+              "note": "Low walkability \u2014 street or lot parking likely needed"
+            },
+            {
+              "category": "Transport (occasional transit)",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Partial NJ Transit use estimated"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2638.0,
+          "llmTrueCost": 2638.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_14",
+        "name": "The Highland Collection",
+        "address": "120 Harper St, Highland Park, NJ 08904",
+        "city": "Highland Park",
+        "state": "NJ",
+        "zip": "08904",
+        "base_rent": 2275,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: The Highland Collection",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/urban.png",
+        "_lat": 40.4939894,
+        "_lon": -74.4304449,
+        "walk_score": 100,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_14",
+        "rank": 50,
+        "name": "120 Harper St Apartments",
+        "address": "120 Harper St, Highland Park, NJ 08904, Highland Park, NJ 08904",
+        "rent": 2275,
+        "trueCost": 2473.0,
+        "matchScore": 100,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 100,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: The Highland Collection",
+        "historicalInsight": "Listing is one that is one of the great deals compared to other listings.",
+        "historicalTrend": "down",
+        "historicalPercent": 17.69655291060383,
+        "costBreakdown": {
+          "rent": 2275.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The true monthly cost of living is higher than rent.",
+        "commute": {
+          "driving": "9 mins",
+          "transit": "12 mins",
+          "walking": "200 mins",
+          "biking": "9 mins",
+          "walkScore": 100,
+          "llm_insight": "The commute is only nine minutes to the Rutgers Campus."
+        },
+        "safety": {
+          "score": 8,
+          "nearestPolice": "0.4 mi",
+          "summary": "All errands are likely able to be completed without a car."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2047.5
+          },
+          {
+            "month": "Apr",
+            "price": 2275.0
+          }
+        ],
+        "percentile": 17.69655291060383,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Good neighborhood, great commute, great deal.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2473.0,
+          "llmTrueCost": 2473.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_38",
+        "name": "10 Landing Lane",
+        "address": "10 Landing Ln, New Brunswick, NJ 08901",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": "08901",
+        "base_rent": 2270,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: 10 Landing Lane",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/urban.png",
+        "_lat": 40.5066011,
+        "_lon": -74.4644058,
+        "walk_score": 70,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_38",
+        "rank": 50,
+        "name": "10 Landing Ln Apartments",
+        "address": "10 Landing Ln, New Brunswick, NJ 08901, New Brunswick, NJ 08901",
+        "rent": 2270,
+        "trueCost": 2468.0,
+        "matchScore": 100,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 70,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: 10 Landing Lane",
+        "historicalInsight": "Slightly cheaper and comparable to other listings.",
+        "historicalTrend": "down",
+        "historicalPercent": 26.870474693902395,
+        "costBreakdown": {
+          "rent": 2270.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The true cost is only slightly higher than the base rent.",
+        "commute": {
+          "driving": "5 mins",
+          "transit": "7 mins",
+          "walking": "140 mins",
+          "biking": "5 mins",
+          "walkScore": 70,
+          "llm_insight": "Only a five minute commute to campus."
+        },
+        "safety": {
+          "score": 8,
+          "nearestPolice": "0.4 mi",
+          "summary": "Most errands will likely need no a car."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2043.0
+          },
+          {
+            "month": "Apr",
+            "price": 2270.0
+          }
+        ],
+        "percentile": 26.870474693902395,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Good area, great commute, good deal.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2468.0,
+          "llmTrueCost": 2468.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_2",
+        "name": "Durham Woods",
+        "address": "32-N N Reading Rd, Edison, NJ 08817",
+        "city": "Edison",
+        "state": "NJ",
+        "zip": "08817",
+        "base_rent": 2267,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Durham Woods",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/urban.png",
+        "_lat": 40.5204169,
+        "_lon": -74.4645303,
+        "walk_score": 89,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_2",
+        "rank": 50,
+        "name": "32-N N Reading Rd Apartments",
+        "address": "32-N N Reading Rd, Edison, NJ 08817, Edison, NJ 08817",
+        "rent": 2267,
+        "trueCost": 2465.0,
+        "matchScore": 100,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 89,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Durham Woods",
+        "historicalInsight": "This listing is less competitively priced than about 66% of other listings.",
+        "historicalTrend": "down",
+        "historicalPercent": 33.55488180534468,
+        "costBreakdown": {
+          "rent": 2267.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "This Edison location has a relatively affordable 'true cost' compared to its rent.",
+        "commute": {
+          "driving": "0 mins",
+          "transit": "0 mins",
+          "walking": "178 mins",
+          "biking": "0 mins",
+          "walkScore": 89,
+          "llm_insight": "The listing has a 0 minute commute."
+        },
+        "safety": {
+          "score": 6,
+          "nearestPolice": "0.4 mi",
+          "summary": "Edison offers a walkable experience with a score of 89."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2040.3
+          },
+          {
+            "month": "Apr",
+            "price": 2267.0
+          }
+        ],
+        "percentile": 33.55488180534468,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Reasonable value, prioritized for pedestrian-friendly preference in Edison.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2465.0,
+          "llmTrueCost": 2465.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_33",
+        "name": "Skyline Tower",
+        "address": "60 Paterson St, New Brunswick, NJ 08901",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": "08901",
+        "base_rent": 2250,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Skyline Tower",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/forest.png",
+        "_lat": 40.4946302,
+        "_lon": -74.4459237,
+        "walk_score": 100,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_33",
+        "rank": 50,
+        "name": "60 Paterson St Apartments",
+        "address": "60 Paterson St, New Brunswick, NJ 08901, New Brunswick, NJ 08901",
+        "rent": 2250,
+        "trueCost": 2448.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 100,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Skyline Tower",
+        "historicalInsight": "This listing is among the most competitively priced options.",
+        "historicalTrend": "down",
+        "historicalPercent": 25.972937471929686,
+        "costBreakdown": {
+          "rent": 2250.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "This New Brunswick apartment offers a close alignment of rent and true cost.",
+        "commute": {
+          "driving": "9 mins",
+          "transit": "12 mins",
+          "walking": "200 mins",
+          "biking": "9 mins",
+          "walkScore": 100,
+          "llm_insight": "This location is approximately a 9 minute commute."
+        },
+        "safety": {
+          "score": 9,
+          "nearestPolice": "0.4 mi",
+          "summary": "With a perfect walk score of 100, you'll be able to get pretty much anywhere by foot."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2025.0
+          },
+          {
+            "month": "Apr",
+            "price": 2250.0
+          }
+        ],
+        "percentile": 25.972937471929686,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Excellent location and value; a prime choice for Rutgers access.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2448.0,
+          "llmTrueCost": 2448.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_10",
+        "name": "Piscataway Park",
+        "address": "3060 New Brunswick Ave, Piscataway, NJ 08854",
+        "city": "Piscataway",
+        "state": "NJ",
+        "zip": "08854",
+        "base_rent": 2229,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Piscataway Park",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/seaside.png",
+        "_lat": 40.5715228,
+        "_lon": -74.4381727,
+        "walk_score": 42,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_10",
+        "rank": 50,
+        "name": "3060 New Brunswick Ave Apartments",
+        "address": "3060 New Brunswick Ave, Piscataway, NJ 08854, Piscataway, NJ 08854",
+        "rent": 2229,
+        "trueCost": 2652.0,
+        "matchScore": 100,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 42,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Piscataway Park",
+        "historicalInsight": "This listing is somewhat competitively priced.",
+        "historicalTrend": "down",
+        "historicalPercent": 28.850454517217802,
+        "costBreakdown": {
+          "rent": 2229.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The listing in Piscataway has a notable difference between rent and the total cost.",
+        "commute": {
+          "driving": "13 mins",
+          "transit": "18 mins",
+          "walking": "84 mins",
+          "biking": "13 mins",
+          "walkScore": 42,
+          "llm_insight": "Commuting will take about approximately 13 minutes from this location."
+        },
+        "safety": {
+          "score": 6,
+          "nearestPolice": "0.4 mi",
+          "summary": "A walk score of 42 suggests limited pedestrian-friendly amenities."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2006.1000000000001
+          },
+          {
+            "month": "Apr",
+            "price": 2229.0
+          }
+        ],
+        "percentile": 28.850454517217802,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Check on transportation, as walkability is limited here.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 85.0,
+              "source": "estimated",
+              "note": "Low walkability \u2014 street or lot parking likely needed"
+            },
+            {
+              "category": "Transport (NJ Transit)",
+              "amount": 140.0,
+              "source": "estimated",
+              "note": "Monthly pass for low-walkability area (20 min commute)"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2652.0,
+          "llmTrueCost": 2652.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_5",
+        "name": "The Quincy",
+        "address": "120 Neilson St, New Brunswick, NJ 08901",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": "08901",
+        "base_rent": 2216,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: The Quincy",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/rainy.png",
+        "_lat": 40.4932,
+        "_lon": -74.441596,
+        "walk_score": 100,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_5",
+        "rank": 50,
+        "name": "120 Neilson St Apartments",
+        "address": "120 Neilson St, New Brunswick, NJ 08901, New Brunswick, NJ 08901",
+        "rent": 2216,
+        "trueCost": 2414.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 100,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: The Quincy",
+        "historicalInsight": "This is among the best deals available currently.",
+        "historicalTrend": "down",
+        "historicalPercent": 24.44712419457608,
+        "costBreakdown": {
+          "rent": 2216.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "There is very little difference between the rent and true cost.",
+        "commute": {
+          "driving": "8 mins",
+          "transit": "11 mins",
+          "walking": "200 mins",
+          "biking": "8 mins",
+          "walkScore": 100,
+          "llm_insight": "This apartment is roughly 8 minutes away."
+        },
+        "safety": {
+          "score": 9,
+          "nearestPolice": "0.4 mi",
+          "summary": "With a perfect walk score of 100, you'll be able to get pretty much anywhere by foot."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1994.4
+          },
+          {
+            "month": "Apr",
+            "price": 2216.0
+          }
+        ],
+        "percentile": 24.44712419457608,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Very attractive for its prime location and reasonable price.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2414.0,
+          "llmTrueCost": 2414.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_23",
+        "name": "The Park at Franklin",
+        "address": "1 John F Kennedy Blvd, Somerset, NJ 08873",
+        "city": "Somerset",
+        "state": "NJ",
+        "zip": "08873",
+        "base_rent": 2195,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: The Park at Franklin",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/rainy.png",
+        "_lat": 40.510168,
+        "_lon": -74.491784,
+        "walk_score": 54,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_23",
+        "rank": 50,
+        "name": "1 John F Kennedy Blvd Apartments",
+        "address": "1 John F Kennedy Blvd, Somerset, NJ 08873, Somerset, NJ 08873",
+        "rent": 2195,
+        "trueCost": 2538.0,
+        "matchScore": 100,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 54,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: The Park at Franklin",
+        "historicalInsight": "This listing is more expensive than all other listings.",
+        "historicalTrend": "down",
+        "historicalPercent": 100.0,
+        "costBreakdown": {
+          "rent": 2195.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The total cost here is noticeably higher than the base rent.",
+        "commute": {
+          "driving": "8 mins",
+          "transit": "11 mins",
+          "walking": "108 mins",
+          "biking": "8 mins",
+          "walkScore": 54,
+          "llm_insight": "This Somerset location is approximately 8 minutes away."
+        },
+        "safety": {
+          "score": 6,
+          "nearestPolice": "0.4 mi",
+          "summary": "A score of 54 suggests a moderately walkable environment."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1975.5
+          },
+          {
+            "month": "Apr",
+            "price": 2195.0
+          }
+        ],
+        "percentile": 100.0,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Carefully consider if the location justifies the higher cost.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 85.0,
+              "source": "estimated",
+              "note": "Low walkability \u2014 street or lot parking likely needed"
+            },
+            {
+              "category": "Transport (occasional transit)",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Partial NJ Transit use estimated"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2538.0,
+          "llmTrueCost": 2538.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_6",
+        "name": "The Quincy",
+        "address": "120 Neilson St, New Brunswick, NJ 08901",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": "08901",
+        "base_rent": 2177,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: The Quincy",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/snowy.png",
+        "_lat": 40.4932,
+        "_lon": -74.441596,
+        "walk_score": 100,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_6",
+        "rank": 50,
+        "name": "120 Neilson St Apartments",
+        "address": "120 Neilson St, New Brunswick, NJ 08901, New Brunswick, NJ 08901",
+        "rent": 2177,
+        "trueCost": 2375.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 100,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: The Quincy",
+        "historicalInsight": "You're getting a better deal than almost 80% of other listers in the area.",
+        "historicalTrend": "down",
+        "historicalPercent": 22.6969266117293,
+        "costBreakdown": {
+          "rent": 2177.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "This option offers a balanced rent and associated costs.",
+        "commute": {
+          "driving": "8 mins",
+          "transit": "11 mins",
+          "walking": "200 mins",
+          "biking": "8 mins",
+          "walkScore": 100,
+          "llm_insight": "Expect an 8 minute commute from this New Brunswick location."
+        },
+        "safety": {
+          "score": 9,
+          "nearestPolice": "0.4 mi",
+          "summary": "With a perfect walk score of 100, you'll be able to get pretty much anywhere by foot."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1959.3
+          },
+          {
+            "month": "Apr",
+            "price": 2177.0
+          }
+        ],
+        "percentile": 22.6969266117293,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Another excellent choice, highly walkable and well-priced.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2375.0,
+          "llmTrueCost": 2375.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_29",
+        "name": "Meadow View Apartments",
+        "address": "321 Crowells Rd, Highland Park, NJ 08904",
+        "city": "Highland Park",
+        "state": "NJ",
+        "zip": "08904",
+        "base_rent": 2175,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Meadow View Apartments",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/rainy.png",
+        "_lat": 40.496999,
+        "_lon": -74.415831,
+        "walk_score": 95,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_29",
+        "rank": 50,
+        "name": "321 Crowells Rd Apartments",
+        "address": "321 Crowells Rd, Highland Park, NJ 08904, Highland Park, NJ 08904",
+        "rent": 2175,
+        "trueCost": 2373.0,
+        "matchScore": 100,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 95,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Meadow View Apartments",
+        "historicalInsight": "This is a better deal than almost 90% of other listings.",
+        "historicalTrend": "down",
+        "historicalPercent": 13.621979156291573,
+        "costBreakdown": {
+          "rent": 2175.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The listing represents a good balance between rent and overall cost.",
+        "commute": {
+          "driving": "12 mins",
+          "transit": "16 mins",
+          "walking": "190 mins",
+          "biking": "12 mins",
+          "walkScore": 95,
+          "llm_insight": "The commute from Highland Park is about approximately 12 minutes."
+        },
+        "safety": {
+          "score": 8,
+          "nearestPolice": "0.4 mi",
+          "summary": "Walkability is very good in this area, indicated by the score of 95."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1957.5
+          },
+          {
+            "month": "Apr",
+            "price": 2175.0
+          }
+        ],
+        "percentile": 13.621979156291573,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Highly recommended; great walkability and overall value.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2373.0,
+          "llmTrueCost": 2373.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_21",
+        "name": "Gardens At Raritan",
+        "address": "1 Chester Cir, New Brunswick, NJ 08901",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": "08901",
+        "base_rent": 2158,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Gardens At Raritan",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/forest.png",
+        "_lat": 40.486288,
+        "_lon": -74.419626,
+        "walk_score": 82,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_21",
+        "rank": 50,
+        "name": "1 Chester Cir Apartments",
+        "address": "1 Chester Cir, New Brunswick, NJ 08901, New Brunswick, NJ 08901",
+        "rent": 2158,
+        "trueCost": 2356.0,
+        "matchScore": 100,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 82,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Gardens At Raritan",
+        "historicalInsight": "This rental is priced more competitively than the majority of other rentals.",
+        "historicalTrend": "down",
+        "historicalPercent": 21.844266250855224,
+        "costBreakdown": {
+          "rent": 2158.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The difference between rent and total cost is minimal.",
+        "commute": {
+          "driving": "9 mins",
+          "transit": "12 mins",
+          "walking": "164 mins",
+          "biking": "9 mins",
+          "walkScore": 82,
+          "llm_insight": "Expect a commute of approximately 9 minutes from this location."
+        },
+        "safety": {
+          "score": 7,
+          "nearestPolice": "0.4 mi",
+          "summary": "A walk score of 82 suggests a good environment for pedestrians."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1942.2
+          },
+          {
+            "month": "Apr",
+            "price": 2158.0
+          }
+        ],
+        "percentile": 21.844266250855224,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Good choice for a walkable lifestyle and cost near Rutgers.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2356.0,
+          "llmTrueCost": 2356.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_3",
+        "name": "Kensington Place",
+        "address": "527 Old Bridge Tpke, East Brunswick, NJ 08816",
+        "city": "East Brunswick",
+        "state": "NJ",
+        "zip": "08816",
+        "base_rent": 2148,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Kensington Place",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/forest.png",
+        "_lat": 40.4599527,
+        "_lon": -74.397428,
+        "walk_score": 100,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_3",
+        "rank": 50,
+        "name": "527 Old Bridge Tpke Apartments",
+        "address": "527 Old Bridge Tpke, East Brunswick, NJ 08816, East Brunswick, NJ 08816",
+        "rent": 2148,
+        "trueCost": 2346.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 100,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Kensington Place",
+        "historicalInsight": "This listing provides relatively good value compared to others.",
+        "historicalTrend": "down",
+        "historicalPercent": 29.240615848788714,
+        "costBreakdown": {
+          "rent": 2148.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The rent and true cost are closely aligned.",
+        "commute": {
+          "driving": "12 mins",
+          "transit": "16 mins",
+          "walking": "200 mins",
+          "biking": "12 mins",
+          "walkScore": 100,
+          "llm_insight": "This apartment is approximately 12 minutes away."
+        },
+        "safety": {
+          "score": 7,
+          "nearestPolice": "0.4 mi",
+          "summary": "With a perfect walk score of 100, you'll be able to get pretty much anywhere by foot."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1933.2
+          },
+          {
+            "month": "Apr",
+            "price": 2148.0
+          }
+        ],
+        "percentile": 29.240615848788714,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Excellent value and walkability; consider its location if that fits your needs.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2346.0,
+          "llmTrueCost": 2346.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_53",
+        "name": "Princeton Gardens",
+        "address": "7 Princeton Rd, Piscataway, NJ 08854",
+        "city": "Piscataway",
+        "state": "NJ",
+        "zip": "08854",
+        "base_rent": 2060,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Princeton Gardens",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/rainy.png",
+        "_lat": 40.5696708,
+        "_lon": -74.4372742,
+        "walk_score": 44,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_53",
+        "rank": 50,
+        "name": "7 Princeton Rd Apartments",
+        "address": "7 Princeton Rd, Piscataway, NJ 08854, Piscataway, NJ 08854",
+        "rent": 2060,
+        "trueCost": 2483.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 44,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Princeton Gardens",
+        "historicalInsight": "This property may not be as competitively priced.",
+        "historicalTrend": "down",
+        "historicalPercent": 20.976642577599225,
+        "costBreakdown": {
+          "rent": 2060.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The total cost listed is substantially higher than the rent for this Piscataway location.",
+        "commute": {
+          "driving": "13 mins",
+          "transit": "18 mins",
+          "walking": "88 mins",
+          "biking": "13 mins",
+          "walkScore": 44,
+          "llm_insight": "Commuting is expected to be approximately 13 minutes."
+        },
+        "safety": {
+          "score": 6,
+          "nearestPolice": "0.4 mi",
+          "summary": "The walk score of 44 indicates limited walkability."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1854.0
+          },
+          {
+            "month": "Apr",
+            "price": 2060.0
+          }
+        ],
+        "percentile": 20.976642577599225,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Consider transportation needs due to less walkable environment.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 85.0,
+              "source": "estimated",
+              "note": "Low walkability \u2014 street or lot parking likely needed"
+            },
+            {
+              "category": "Transport (NJ Transit)",
+              "amount": 140.0,
+              "source": "estimated",
+              "note": "Monthly pass for low-walkability area (20 min commute)"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2483.0,
+          "llmTrueCost": 2483.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_47",
+        "name": "Somerset Square",
+        "address": "1 Shepherd St, Franklin Township, NJ 08873",
+        "city": "Franklin Township",
+        "state": "NJ",
+        "zip": "08873",
+        "base_rent": 2023,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Somerset Square",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/rainy.png",
+        "_lat": 40.4826273,
+        "_lon": -74.4843417,
+        "walk_score": 51,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_47",
+        "rank": 50,
+        "name": "1 Shepherd St Apartments",
+        "address": "1 Shepherd St, Franklin Township, NJ 08873, Franklin Township, NJ 08873",
+        "rent": 2023,
+        "trueCost": 2366.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 51,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Somerset Square",
+        "historicalInsight": "It's in the 50th percentile; consider your priorities.",
+        "historicalTrend": "stable",
+        "historicalPercent": 50.0,
+        "costBreakdown": {
+          "rent": 2023.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The rent at $2023 is okay, but factor in the total cost.",
+        "commute": {
+          "driving": "10 mins",
+          "transit": "14 mins",
+          "walking": "102 mins",
+          "biking": "10 mins",
+          "walkScore": 51,
+          "llm_insight": "Commuting is convenient at 10 minutes."
+        },
+        "safety": {
+          "score": 6,
+          "nearestPolice": "0.4 mi",
+          "summary": "A walk score of 51 indicates some amenities nearby."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1820.7
+          },
+          {
+            "month": "Apr",
+            "price": 2023.0
+          }
+        ],
+        "percentile": 50.0,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Acceptable for overall living.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 85.0,
+              "source": "estimated",
+              "note": "Low walkability \u2014 street or lot parking likely needed"
+            },
+            {
+              "category": "Transport (occasional transit)",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Partial NJ Transit use estimated"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2366.0,
+          "llmTrueCost": 2366.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_51",
+        "name": "Hempstead Gardens",
+        "address": "7 Hempstead Dr, Somerset, NJ 08873",
+        "city": "Somerset",
+        "state": "NJ",
+        "zip": "08873",
+        "base_rent": 2020,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Hempstead Gardens",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/forest.png",
+        "_lat": 40.4660321,
+        "_lon": -74.5021174,
+        "walk_score": 52,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_51",
+        "rank": 50,
+        "name": "7 Hempstead Dr Apartments",
+        "address": "7 Hempstead Dr, Somerset, NJ 08873, Somerset, NJ 08873",
+        "rent": 2020,
+        "trueCost": 2363.0,
+        "matchScore": 90,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 52,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Hempstead Gardens",
+        "historicalInsight": "Being in the 100th percentile is certainly good!",
+        "historicalTrend": "down",
+        "historicalPercent": 100.0,
+        "costBreakdown": {
+          "rent": 2020.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "Rent is $2020, but evaluate the total monthly cost.",
+        "commute": {
+          "driving": "13 mins",
+          "transit": "18 mins",
+          "walking": "104 mins",
+          "biking": "13 mins",
+          "walkScore": 52,
+          "llm_insight": "Commute time is a bit longer at 13 minutes."
+        },
+        "safety": {
+          "score": 5,
+          "nearestPolice": "0.4 mi",
+          "summary": "Walk score of 52 suggests some walkability."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1818.0
+          },
+          {
+            "month": "Apr",
+            "price": 2020.0
+          }
+        ],
+        "percentile": 100.0,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Living would bring richness to the soul.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 85.0,
+              "source": "estimated",
+              "note": "Low walkability \u2014 street or lot parking likely needed"
+            },
+            {
+              "category": "Transport (occasional transit)",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Partial NJ Transit use estimated"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2363.0,
+          "llmTrueCost": 2363.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_22",
+        "name": "The Park at Franklin",
+        "address": "1 John F Kennedy Blvd, Somerset, NJ 08873",
+        "city": "Somerset",
+        "state": "NJ",
+        "zip": "08873",
+        "base_rent": 1995,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: The Park at Franklin",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/seaside.png",
+        "_lat": 40.510168,
+        "_lon": -74.491784,
+        "walk_score": 54,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_22",
+        "rank": 50,
+        "name": "1 John F Kennedy Blvd Apartments",
+        "address": "1 John F Kennedy Blvd, Somerset, NJ 08873, Somerset, NJ 08873",
+        "rent": 1995,
+        "trueCost": 2338.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 54,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: The Park at Franklin",
+        "historicalInsight": "This is in the 100th percentile, a steal!",
+        "historicalTrend": "down",
+        "historicalPercent": 100.0,
+        "costBreakdown": {
+          "rent": 1995.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "At $1995, rent is attractive, but monitor the total cost.",
+        "commute": {
+          "driving": "8 mins",
+          "transit": "11 mins",
+          "walking": "108 mins",
+          "biking": "8 mins",
+          "walkScore": 54,
+          "llm_insight": "Getting to Rutgers is approximately 8 minutes."
+        },
+        "safety": {
+          "score": 6,
+          "nearestPolice": "0.4 mi",
+          "summary": "A 54 walk score means some errands can be done by foot."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1795.5
+          },
+          {
+            "month": "Apr",
+            "price": 1995.0
+          }
+        ],
+        "percentile": 100.0,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "A valuable place for growth!",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 85.0,
+              "source": "estimated",
+              "note": "Low walkability \u2014 street or lot parking likely needed"
+            },
+            {
+              "category": "Transport (occasional transit)",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Partial NJ Transit use estimated"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2338.0,
+          "llmTrueCost": 2338.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_9",
+        "name": "Piscataway Park",
+        "address": "3060 New Brunswick Ave, Piscataway, NJ 08854",
+        "city": "Piscataway",
+        "state": "NJ",
+        "zip": "08854",
+        "base_rent": 1979,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Piscataway Park",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/forest.png",
+        "_lat": 40.5715228,
+        "_lon": -74.4381727,
+        "walk_score": 42,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_9",
+        "rank": 50,
+        "name": "3060 New Brunswick Ave Apartments",
+        "address": "3060 New Brunswick Ave, Piscataway, NJ 08854, Piscataway, NJ 08854",
+        "rent": 1979,
+        "trueCost": 2402.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 42,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Piscataway Park",
+        "historicalInsight": "This is below average in terms of value.",
+        "historicalTrend": "down",
+        "historicalPercent": 17.20280371896547,
+        "costBreakdown": {
+          "rent": 1979.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The rent is lower at $1979, review the total monthly cost.",
+        "commute": {
+          "driving": "13 mins",
+          "transit": "18 mins",
+          "walking": "84 mins",
+          "biking": "13 mins",
+          "walkScore": 42,
+          "llm_insight": "The commute is 13 minutes."
+        },
+        "safety": {
+          "score": 6,
+          "nearestPolice": "0.4 mi",
+          "summary": "The Walk Score is low at 42."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1781.1000000000001
+          },
+          {
+            "month": "Apr",
+            "price": 1979.0
+          }
+        ],
+        "percentile": 17.20280371896547,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "A balanced place for living.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 85.0,
+              "source": "estimated",
+              "note": "Low walkability \u2014 street or lot parking likely needed"
+            },
+            {
+              "category": "Transport (NJ Transit)",
+              "amount": 140.0,
+              "source": "estimated",
+              "note": "Monthly pass for low-walkability area (20 min commute)"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2402.0,
+          "llmTrueCost": 2402.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_34",
+        "name": "The Brunswick",
+        "address": "100 Hiram Sq, New Brunswick, NJ 08901",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": "08901",
+        "base_rent": 1964,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: The Brunswick",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/seaside.png",
+        "_lat": 40.4948793,
+        "_lon": -74.4402425,
+        "walk_score": 100,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_34",
+        "rank": 50,
+        "name": "100 Hiram Sq Apartments",
+        "address": "100 Hiram Sq, New Brunswick, NJ 08901, New Brunswick, NJ 08901",
+        "rent": 1964,
+        "trueCost": 2162.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 100,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: The Brunswick",
+        "historicalInsight": "A great deal for the price if prioritizing walkability!",
+        "historicalTrend": "down",
+        "historicalPercent": 13.13815519771995,
+        "costBreakdown": {
+          "rent": 1964.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The rent is just $1964; is the total cost reasonable?",
+        "commute": {
+          "driving": "8 mins",
+          "transit": "11 mins",
+          "walking": "200 mins",
+          "biking": "8 mins",
+          "walkScore": 100,
+          "llm_insight": "Commuting to Rutgers is convenient at 8 minutes."
+        },
+        "safety": {
+          "score": 8,
+          "nearestPolice": "0.4 mi",
+          "summary": "Perfect walk score; you can run all errands by foot!"
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1767.6000000000001
+          },
+          {
+            "month": "Apr",
+            "price": 1964.0
+          }
+        ],
+        "percentile": 13.13815519771995,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "An enchanted place of wonder!",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2162.0,
+          "llmTrueCost": 2162.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_31",
+        "name": "66 Sicard St",
+        "address": "66 Sicard St, New Brunswick, NJ 08901",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": "08901",
+        "base_rent": 1950,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: 66 Sicard St",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/meadow.png",
+        "_lat": 40.5031763,
+        "_lon": -74.454692,
+        "walk_score": 100,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_31",
+        "rank": 50,
+        "name": "66 Sicard St Apartments",
+        "address": "66 Sicard St, New Brunswick, NJ 08901, New Brunswick, NJ 08901",
+        "rent": 1950,
+        "trueCost": 2148.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 100,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: 66 Sicard St",
+        "historicalInsight": "This is a very good value proposition.",
+        "historicalTrend": "down",
+        "historicalPercent": 12.509879142339052,
+        "costBreakdown": {
+          "rent": 1950.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "At $1950, rent is affordable; check total expenses.",
+        "commute": {
+          "driving": "6 mins",
+          "transit": "8 mins",
+          "walking": "200 mins",
+          "biking": "6 mins",
+          "walkScore": 100,
+          "llm_insight": "Just a 6 minute commute is an excellent perk."
+        },
+        "safety": {
+          "score": 9,
+          "nearestPolice": "0.4 mi",
+          "summary": "An optimal walk score; everything is close by!"
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1755.0
+          },
+          {
+            "month": "Apr",
+            "price": 1950.0
+          }
+        ],
+        "percentile": 12.509879142339052,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "A place that will bring peace of mind.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2148.0,
+          "llmTrueCost": 2148.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_17",
+        "name": "Highland Manor Apartments",
+        "address": "330-344 Crowells Rd, Highland Park, NJ 08904",
+        "city": "Highland Park",
+        "state": "NJ",
+        "zip": "08904",
+        "base_rent": 1925,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Highland Manor Apartments",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/rainy.png",
+        "_lat": 40.4970663,
+        "_lon": -74.4156922,
+        "walk_score": 92,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_17",
+        "rank": 50,
+        "name": "330-344 Crowells Rd Apartments",
+        "address": "330-344 Crowells Rd, Highland Park, NJ 08904, Highland Park, NJ 08904",
+        "rent": 1925,
+        "trueCost": 2123.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 92,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Highland Manor Apartments",
+        "historicalInsight": "This is a pretty exceptional value!",
+        "historicalTrend": "down",
+        "historicalPercent": 3.43554477051093,
+        "costBreakdown": {
+          "rent": 1925.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "Rent is cheap at $1925, be sure to check total cost.",
+        "commute": {
+          "driving": "12 mins",
+          "transit": "16 mins",
+          "walking": "184 mins",
+          "biking": "12 mins",
+          "walkScore": 92,
+          "llm_insight": "Commuting takes 12 minutes."
+        },
+        "safety": {
+          "score": 8,
+          "nearestPolice": "0.4 mi",
+          "summary": "With a 92, you will probably enjoy running errands."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1732.5
+          },
+          {
+            "month": "Apr",
+            "price": 1925.0
+          }
+        ],
+        "percentile": 3.43554477051093,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Worthwhile if you are prioritizing a deal.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2123.0,
+          "llmTrueCost": 2123.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_4",
+        "name": "Pleasant View Gardens",
+        "address": "258 Carlton Ave, Piscataway, NJ 08854",
+        "city": "Piscataway",
+        "state": "NJ",
+        "zip": "08854",
+        "base_rent": 1909,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Pleasant View Gardens",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/seaside.png",
+        "_lat": 40.5684691,
+        "_lon": -74.4417066,
+        "walk_score": 43,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_4",
+        "rank": 50,
+        "name": "258 Carlton Ave Apartments",
+        "address": "258 Carlton Ave, Piscataway, NJ 08854, Piscataway, NJ 08854",
+        "rent": 1909,
+        "trueCost": 2332.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 43,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Pleasant View Gardens",
+        "historicalInsight": "This may not be such a great deal.",
+        "historicalTrend": "down",
+        "historicalPercent": 13.941461495454815,
+        "costBreakdown": {
+          "rent": 1909.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "Rent is $1909; but the true cost might be higher.",
+        "commute": {
+          "driving": "12 mins",
+          "transit": "16 mins",
+          "walking": "86 mins",
+          "biking": "12 mins",
+          "walkScore": 43,
+          "llm_insight": "Commuting in 12 minutes gives you flexibility."
+        },
+        "safety": {
+          "score": 8,
+          "nearestPolice": "0.4 mi",
+          "summary": "A walk score of 43 means a car is often needed."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1718.1000000000001
+          },
+          {
+            "month": "Apr",
+            "price": 1909.0
+          }
+        ],
+        "percentile": 13.941461495454815,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Acceptable for minimalistic living.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 85.0,
+              "source": "estimated",
+              "note": "Low walkability \u2014 street or lot parking likely needed"
+            },
+            {
+              "category": "Transport (NJ Transit)",
+              "amount": 140.0,
+              "source": "estimated",
+              "note": "Monthly pass for low-walkability area (20 min commute)"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2332.0,
+          "llmTrueCost": 2332.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_1",
+        "name": "Durham Woods",
+        "address": "32-N N Reading Rd, Edison, NJ 08817",
+        "city": "Edison",
+        "state": "NJ",
+        "zip": "08817",
+        "base_rent": 1904,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Durham Woods",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/meadow.png",
+        "_lat": 40.5204169,
+        "_lon": -74.4645303,
+        "walk_score": 89,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_1",
+        "rank": 50,
+        "name": "32-N N Reading Rd Apartments",
+        "address": "32-N N Reading Rd, Edison, NJ 08817, Edison, NJ 08817",
+        "rent": 1904,
+        "trueCost": 2102.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 89,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Durham Woods",
+        "historicalInsight": "This will be a good deal.",
+        "historicalTrend": "down",
+        "historicalPercent": 16.17269296752371,
+        "costBreakdown": {
+          "rent": 1904.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "Rent at $1904 is alright; ensure total cost fits your budget.",
+        "commute": {
+          "driving": "0 mins",
+          "transit": "0 mins",
+          "walking": "178 mins",
+          "biking": "0 mins",
+          "walkScore": 89,
+          "llm_insight": "Zero commute time - perfect for remote students!"
+        },
+        "safety": {
+          "score": 6,
+          "nearestPolice": "0.4 mi",
+          "summary": "A walk score of 89 suggests many walkable amenities."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1713.6000000000001
+          },
+          {
+            "month": "Apr",
+            "price": 1904.0
+          }
+        ],
+        "percentile": 16.17269296752371,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Overall, a great choice.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2102.0,
+          "llmTrueCost": 2102.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_46",
+        "name": "Raritan Crossing Apartment Homes",
+        "address": "18 Regency Manor Drive, New Brunswick, NJ 08901",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": "08901",
+        "base_rent": 1900,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Raritan Crossing Apartment Homes",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/seaside.png",
+        "_lat": 40.4864595,
+        "_lon": -74.4144895,
+        "walk_score": 64,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_46",
+        "rank": 50,
+        "name": "18 Regency Manor Drive Apartments",
+        "address": "18 Regency Manor Drive, New Brunswick, NJ 08901, New Brunswick, NJ 08901",
+        "rent": 1900,
+        "trueCost": 2158.0,
+        "matchScore": 100,
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 64,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Raritan Crossing Apartment Homes",
+        "historicalInsight": "This option is fairly priced compared to others.",
+        "historicalTrend": "down",
+        "historicalPercent": 10.266036087407283,
+        "costBreakdown": {
+          "rent": 1900.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The rent here is rather affordable, check the total cost.",
+        "commute": {
+          "driving": "14 mins",
+          "transit": "19 mins",
+          "walking": "128 mins",
+          "biking": "14 mins",
+          "walkScore": 64,
+          "llm_insight": "At 14 minutes, commuting to campus involves travel."
+        },
+        "safety": {
+          "score": 7,
+          "nearestPolice": "0.4 mi",
+          "summary": "A walk score of 64 indicates a moderately walkable area."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1710.0
+          },
+          {
+            "month": "Apr",
+            "price": 1900.0
+          }
+        ],
+        "percentile": 10.266036087407283,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "A balanced place for living.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Transport (occasional transit)",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Partial NJ Transit use estimated"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2158.0,
+          "llmTrueCost": 2158.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_15",
+        "name": "The Harrison Somerset Apartment Homes",
+        "address": "575 Easton Ave, Somerset, NJ 08873",
+        "city": "Somerset",
+        "state": "NJ",
+        "zip": "08873",
+        "base_rent": 1885,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: The Harrison Somerset Apartment Homes",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/forest.png",
+        "_lat": 40.5061507,
+        "_lon": -74.4705322,
+        "walk_score": 59,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_15",
+        "rank": 50,
+        "name": "575 Easton Ave Apartments",
+        "address": "575 Easton Ave, Somerset, NJ 08873, Somerset, NJ 08873",
+        "rent": 1885,
+        "trueCost": 2143.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 59,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: The Harrison Somerset Apartment Homes",
+        "historicalInsight": "This listing is in the top percentile.",
+        "historicalTrend": "down",
+        "historicalPercent": 100.0,
+        "costBreakdown": {
+          "rent": 1885.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "Rent is $1885 with a true cost of $2143, indicating additional expenses.",
+        "commute": {
+          "driving": "5 mins",
+          "transit": "7 mins",
+          "walking": "118 mins",
+          "biking": "5 mins",
+          "walkScore": 59,
+          "llm_insight": "The 5 minute commute to Rutgers is very convenient."
+        },
+        "safety": {
+          "score": 8,
+          "nearestPolice": "0.4 mi",
+          "summary": "Somerset's walk score is decent at 59."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1696.5
+          },
+          {
+            "month": "Apr",
+            "price": 1885.0
+          }
+        ],
+        "percentile": 100.0,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Good overall, especially for commuting convenience, though factor in the added expenses.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Transport (occasional transit)",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Partial NJ Transit use estimated"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2143.0,
+          "llmTrueCost": 2143.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_48",
+        "name": "Georgetown Apartments",
+        "address": "1470 Oak Tree Dr, North Brunswick, NJ 08902",
+        "city": "North Brunswick",
+        "state": "NJ",
+        "zip": "08902",
+        "base_rent": 1859,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Georgetown Apartments",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/snowy.png",
+        "_lat": 40.471544,
+        "_lon": -74.4906592,
+        "walk_score": 55,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_48",
+        "rank": 50,
+        "name": "1470 Oak Tree Dr Apartments",
+        "address": "1470 Oak Tree Dr, North Brunswick, NJ 08902, North Brunswick, NJ 08902",
+        "rent": 1859,
+        "trueCost": 2117.0,
+        "matchScore": 90,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 55,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Georgetown Apartments",
+        "historicalInsight": "This listing is near the bottom percentile.",
+        "historicalTrend": "down",
+        "historicalPercent": 16.036046596227983,
+        "costBreakdown": {
+          "rent": 1859.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The true cost is $2117 for a rent of $1859.",
+        "commute": {
+          "driving": "12 mins",
+          "transit": "16 mins",
+          "walking": "110 mins",
+          "biking": "12 mins",
+          "walkScore": 55,
+          "llm_insight": "The commute is a moderate 12 minutes."
+        },
+        "safety": {
+          "score": 5,
+          "nearestPolice": "0.4 mi",
+          "summary": "North Brunswick's walk score is 55, indicating car dependency."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1673.1000000000001
+          },
+          {
+            "month": "Apr",
+            "price": 1859.0
+          }
+        ],
+        "percentile": 16.036046596227983,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Consider other options due to low percentile and car dependency.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Transport (occasional transit)",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Partial NJ Transit use estimated"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2117.0,
+          "llmTrueCost": 2117.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_35",
+        "name": "Highland Montgomery",
+        "address": "140-1H Montgomery St, Highland Park, NJ 08904",
+        "city": "Highland Park",
+        "state": "NJ",
+        "zip": "08904",
+        "base_rent": 1839,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Highland Montgomery",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/rainy.png",
+        "_lat": 40.5204169,
+        "_lon": -74.4645303,
+        "walk_score": 89,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_35",
+        "rank": 50,
+        "name": "140-1H Montgomery St Apartments",
+        "address": "140-1H Montgomery St, Highland Park, NJ 08904, Highland Park, NJ 08904",
+        "rent": 1839,
+        "trueCost": 2037.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 89,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Highland Montgomery",
+        "historicalInsight": "This is an absolute steal.",
+        "historicalTrend": "down",
+        "historicalPercent": 0.0,
+        "costBreakdown": {
+          "rent": 1839.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "Rent is competitively priced at $1839 with a true cost of $2037.",
+        "commute": {
+          "driving": "0 mins",
+          "transit": "0 mins",
+          "walking": "178 mins",
+          "biking": "0 mins",
+          "walkScore": 89,
+          "llm_insight": "A perfect commute of 0 minutes, right at Rutgers."
+        },
+        "safety": {
+          "score": 6,
+          "nearestPolice": "0.4 mi",
+          "summary": "Highland Park boasts a very walkable score of 89."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1655.1000000000001
+          },
+          {
+            "month": "Apr",
+            "price": 1839.0
+          }
+        ],
+        "percentile": 0.0,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Outstanding value! Zero commute and high walkability make this a top contender.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2037.0,
+          "llmTrueCost": 2037.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_39",
+        "name": "Douglass Gardens",
+        "address": "462 Hamilton St, Somerset, NJ 08873",
+        "city": "Somerset",
+        "state": "NJ",
+        "zip": "08873",
+        "base_rent": 1829,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Douglass Gardens",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/forest.png",
+        "_lat": 40.4955171,
+        "_lon": -74.4619513,
+        "walk_score": 100,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_39",
+        "rank": 50,
+        "name": "462 Hamilton St Apartments",
+        "address": "462 Hamilton St, Somerset, NJ 08873, Somerset, NJ 08873",
+        "rent": 1829,
+        "trueCost": 2027.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 100,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Douglass Gardens",
+        "historicalInsight": "This is in the top percentile.",
+        "historicalTrend": "down",
+        "historicalPercent": 100.0,
+        "costBreakdown": {
+          "rent": 1829.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The true cost is $2027 on a rent of $1829.",
+        "commute": {
+          "driving": "9 mins",
+          "transit": "12 mins",
+          "walking": "200 mins",
+          "biking": "9 mins",
+          "walkScore": 100,
+          "llm_insight": "The commute time to Rutgers is a reasonable 9 minutes."
+        },
+        "safety": {
+          "score": 8,
+          "nearestPolice": "0.4 mi",
+          "summary": "Somerset is a walker's paradise with a perfect score of 100."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1646.1000000000001
+          },
+          {
+            "month": "Apr",
+            "price": 1829.0
+          }
+        ],
+        "percentile": 100.0,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Excellent walkability and a great commute, making for a very desirable location.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2027.0,
+          "llmTrueCost": 2027.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_24",
+        "name": "Livingston Gardens",
+        "address": "1155 Livingston Ave, North Brunswick, NJ 08902",
+        "city": "North Brunswick",
+        "state": "NJ",
+        "zip": "08902",
+        "base_rent": 1825,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Livingston Gardens",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/snowy.png",
+        "_lat": 40.4658109,
+        "_lon": -74.4744306,
+        "walk_score": 69,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_24",
+        "rank": 50,
+        "name": "1155 Livingston Ave Apartments",
+        "address": "1155 Livingston Ave, North Brunswick, NJ 08902, North Brunswick, NJ 08902",
+        "rent": 1825,
+        "trueCost": 2083.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 69,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Livingston Gardens",
+        "historicalInsight": "The advertised rent is not a fair deal, based on the percentile.",
+        "historicalTrend": "down",
+        "historicalPercent": 14.37105166117056,
+        "costBreakdown": {
+          "rent": 1825.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The true cost brings this property to $2083 with a rent of $1825.",
+        "commute": {
+          "driving": "12 mins",
+          "transit": "16 mins",
+          "walking": "138 mins",
+          "biking": "12 mins",
+          "walkScore": 69,
+          "llm_insight": "Commuting to Rutgers will take approximately 12 minutes."
+        },
+        "safety": {
+          "score": 7,
+          "nearestPolice": "0.4 mi",
+          "summary": "North Brunswick has a walk score of 69."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1642.5
+          },
+          {
+            "month": "Apr",
+            "price": 1825.0
+          }
+        ],
+        "percentile": 14.37105166117056,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Better options are likely available due to lower percentile.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Transport (occasional transit)",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Partial NJ Transit use estimated"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2083.0,
+          "llmTrueCost": 2083.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_25",
+        "name": "Millbrook Village",
+        "address": "97 Horizon Dr, Edison, NJ 08817",
+        "city": "Edison",
+        "state": "NJ",
+        "zip": "08817",
+        "base_rent": 1825,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Millbrook Village",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/meadow.png",
+        "_lat": 40.5028352,
+        "_lon": -74.3756282,
+        "walk_score": 57,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_25",
+        "rank": 50,
+        "name": "97 Horizon Dr Apartments",
+        "address": "97 Horizon Dr, Edison, NJ 08817, Edison, NJ 08817",
+        "rent": 1825,
+        "trueCost": 2083.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 57,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Millbrook Village",
+        "historicalInsight": "The rent price is actually not the best deal.",
+        "historicalTrend": "down",
+        "historicalPercent": 12.389792366455236,
+        "costBreakdown": {
+          "rent": 1825.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "Budget accordingly for a true cost of $2083 on a listed rent of $1825.",
+        "commute": {
+          "driving": "17 mins",
+          "transit": "23 mins",
+          "walking": "114 mins",
+          "biking": "17 mins",
+          "walkScore": 57,
+          "llm_insight": "The commute is a little lengthy at 17 minutes."
+        },
+        "safety": {
+          "score": 6,
+          "nearestPolice": "0.4 mi",
+          "summary": "Edison's walk score leaves something to be desired at 57."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1642.5
+          },
+          {
+            "month": "Apr",
+            "price": 1825.0
+          }
+        ],
+        "percentile": 12.389792366455236,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "The commute is a significant drawback.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Transport (occasional transit)",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Partial NJ Transit use estimated"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2083.0,
+          "llmTrueCost": 2083.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_13",
+        "name": "The Highland Collection",
+        "address": "120 Harper St, Highland Park, NJ 08904",
+        "city": "Highland Park",
+        "state": "NJ",
+        "zip": "08904",
+        "base_rent": 1775,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: The Highland Collection",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/meadow.png",
+        "_lat": 40.4939894,
+        "_lon": -74.4304449,
+        "walk_score": 100,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_13",
+        "rank": 50,
+        "name": "120 Harper St Apartments",
+        "address": "120 Harper St, Highland Park, NJ 08904, Highland Park, NJ 08904",
+        "rent": 1775,
+        "trueCost": 1973.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 100,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: The Highland Collection",
+        "historicalInsight": "The listing is in the bottom percentile.",
+        "historicalTrend": "down",
+        "historicalPercent": 0.0,
+        "costBreakdown": {
+          "rent": 1775.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The true cost of rent is $1973, versus the listed $1775.",
+        "commute": {
+          "driving": "9 mins",
+          "transit": "12 mins",
+          "walking": "200 mins",
+          "biking": "9 mins",
+          "walkScore": 100,
+          "llm_insight": "The commute of only 9 minutes is not bad at all."
+        },
+        "safety": {
+          "score": 8,
+          "nearestPolice": "0.4 mi",
+          "summary": "Perfect walkability with a score of 100."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1597.5
+          },
+          {
+            "month": "Apr",
+            "price": 1775.0
+          }
+        ],
+        "percentile": 0.0,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Great for walking and close enough to Rutgers, definitely an option.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 1973.0,
+          "llmTrueCost": 1973.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_20",
+        "name": "Gardens At Raritan",
+        "address": "1 Chester Cir, New Brunswick, NJ 08901",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": "08901",
+        "base_rent": 1742,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Gardens At Raritan",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/urban.png",
+        "_lat": 40.486288,
+        "_lon": -74.419626,
+        "walk_score": 82,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_20",
+        "rank": 50,
+        "name": "1 Chester Cir Apartments",
+        "address": "1 Chester Cir, New Brunswick, NJ 08901, New Brunswick, NJ 08901",
+        "rent": 1742,
+        "trueCost": 1940.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 82,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Gardens At Raritan",
+        "historicalInsight": "The rent price is in the bottom percentile.",
+        "historicalTrend": "down",
+        "historicalPercent": 3.1754920338228807,
+        "costBreakdown": {
+          "rent": 1742.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "Expect to pay $1940 overall versus the advertised $1742.",
+        "commute": {
+          "driving": "9 mins",
+          "transit": "12 mins",
+          "walking": "164 mins",
+          "biking": "9 mins",
+          "walkScore": 82,
+          "llm_insight": "The commute is a reasonable 9 minutes to the school."
+        },
+        "safety": {
+          "score": 7,
+          "nearestPolice": "0.4 mi",
+          "summary": "The neighborhood is walkable with a score over 80."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1567.8
+          },
+          {
+            "month": "Apr",
+            "price": 1742.0
+          }
+        ],
+        "percentile": 3.1754920338228807,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "A good choice for residents seeking to walk.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 1940.0,
+          "llmTrueCost": 1940.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_37",
+        "name": "10 Landing Lane",
+        "address": "10 Landing Ln, New Brunswick, NJ 08901",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": "08901",
+        "base_rent": 1680,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: 10 Landing Lane",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/meadow.png",
+        "_lat": 40.5066011,
+        "_lon": -74.4644058,
+        "walk_score": 70,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_37",
+        "rank": 50,
+        "name": "10 Landing Ln Apartments",
+        "address": "10 Landing Ln, New Brunswick, NJ 08901, New Brunswick, NJ 08901",
+        "rent": 1680,
+        "trueCost": 1878.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 70,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: 10 Landing Lane",
+        "historicalInsight": "One of the better deals.",
+        "historicalTrend": "down",
+        "historicalPercent": 0.3931266457074827,
+        "costBreakdown": {
+          "rent": 1680.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "Remember that the listed rent is only $1680, whereas $1878 is the true cost.",
+        "commute": {
+          "driving": "5 mins",
+          "transit": "7 mins",
+          "walking": "140 mins",
+          "biking": "5 mins",
+          "walkScore": 70,
+          "llm_insight": "This property is a quick 5 minute drive from school."
+        },
+        "safety": {
+          "score": 8,
+          "nearestPolice": "0.4 mi",
+          "summary": "The walk score is decent at 70."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1512.0
+          },
+          {
+            "month": "Apr",
+            "price": 1680.0
+          }
+        ],
+        "percentile": 0.3931266457074827,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Recommended for location and value.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 1878.0,
+          "llmTrueCost": 1878.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "apt_real_45",
+        "name": "Raritan Crossing Apartment Homes",
+        "address": "18 Regency Manor Drive, New Brunswick, NJ 08901",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": "08901",
+        "base_rent": 1600,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "pet_friendly": false,
+        "has_gym": true,
+        "avg_utilities": 120,
+        "description": "Property from Apartments.com: Raritan Crossing Apartment Homes",
+        "latitude": 40.5204169,
+        "longitude": -74.4645303,
+        "image_url": "/assets/houses/forest.png",
+        "_lat": 40.4864595,
+        "_lon": -74.4144895,
+        "walk_score": 64,
+        "has_grocery_nearby": true
+      },
+      "insights": {
+        "id": "apt_real_45",
+        "rank": 50,
+        "name": "18 Regency Manor Drive Apartments",
+        "address": "18 Regency Manor Drive, New Brunswick, NJ 08901, New Brunswick, NJ 08901",
+        "rent": 1600,
+        "trueCost": 1858.0,
+        "matchScore": 100,
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "sqft": 800,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 64,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Property from Apartments.com: Raritan Crossing Apartment Homes",
+        "historicalInsight": "A very good price indeed.",
+        "historicalTrend": "down",
+        "historicalPercent": 0.0,
+        "costBreakdown": {
+          "rent": 1600.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "Budget an extra $258 on top of the $1600 sticker price.",
+        "commute": {
+          "driving": "14 mins",
+          "transit": "19 mins",
+          "walking": "128 mins",
+          "biking": "14 mins",
+          "walkScore": 64,
+          "llm_insight": "Reaching Rutgers takes 14 minutes."
+        },
+        "safety": {
+          "score": 7,
+          "nearestPolice": "0.4 mi",
+          "summary": "Quite walkable, although not extremely."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 1440.0
+          },
+          {
+            "month": "Apr",
+            "price": 1600.0
+          }
+        ],
+        "percentile": 0.0,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "A solid pick for students on a budget.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Transport (occasional transit)",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Partial NJ Transit use estimated"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 1858.0,
+          "llmTrueCost": 1858.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    }
+  ]
+}

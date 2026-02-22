@@ -1,0 +1,1643 @@
+{
+  "total_analyzed": 12,
+  "listings": [
+    {
+      "listing": {
+        "id": "NB001",
+        "address": "150 George St",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": 8901,
+        "bedrooms": 2,
+        "bathrooms": 1.0,
+        "sqft": 850,
+        "base_rent": 2400,
+        "has_gym": true,
+        "has_grocery_nearby": true,
+        "pet_friendly": true,
+        "parking_fee": 150,
+        "amenity_fee": 0,
+        "avg_utilities": 120,
+        "walk_score": 35,
+        "transit_score": 85,
+        "crime_rating": 6,
+        "transit_time_to_hub": 5,
+        "description": "A sun-drenched corner unit just steps from the College Ave campus. Features hardwood floors and a view of the river that feels like a scene from a Ghibli film.",
+        "_lat": 40.4865737,
+        "_lon": -74.4396067
+      },
+      "insights": {
+        "id": "NB001",
+        "rank": 50,
+        "name": "150 George St Apartments",
+        "address": "150 George St, New Brunswick, NJ 8901",
+        "rent": 2400,
+        "trueCost": 2888.0,
+        "matchScore": 90,
+        "bedrooms": 2,
+        "bathrooms": 1.0,
+        "sqft": 850,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 35,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": true,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "A sun-drenched corner unit just steps from the College Ave campus. Features hardwood floors and a view of the river that feels like a scene from a Ghibli film.",
+        "historicalInsight": "This property is relatively affordable, compared to other options nearby.",
+        "historicalTrend": "down",
+        "historicalPercent": 32.704466636725,
+        "costBreakdown": {
+          "rent": 2400.0,
+          "utilities": 120.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "150 George St has a reasonable rent, but factor in the extra costs to accurately judge the overall expense.",
+        "commute": {
+          "driving": "15 mins",
+          "transit": "25 mins",
+          "walking": "70 mins",
+          "biking": "15 mins",
+          "walkScore": 35,
+          "llm_insight": "The commute to Princeton is a manageable 15 minutes."
+        },
+        "safety": {
+          "score": 5,
+          "nearestPolice": "0.4 mi",
+          "summary": "The neighborhood's walkability is quite low, but the surrounding area can still be explored."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2160.0
+          },
+          {
+            "month": "Apr",
+            "price": 2400.0
+          }
+        ],
+        "percentile": 32.704466636725,
+        "pros": [
+          "Pet friendly"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "A practical choice, balances cost and convenience.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 120.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 150.0,
+              "source": "listed",
+              "note": "Monthly fee"
+            },
+            {
+              "category": "Transport (NJ Transit)",
+              "amount": 140.0,
+              "source": "estimated",
+              "note": "Monthly pass for low-walkability area (5 min commute)"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2888.0,
+          "llmTrueCost": 2888.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "NB003",
+        "address": "12 Prosper St",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": 8901,
+        "bedrooms": 3,
+        "bathrooms": 2.0,
+        "sqft": 1200,
+        "base_rent": 3200,
+        "has_gym": false,
+        "has_grocery_nearby": true,
+        "pet_friendly": true,
+        "parking_fee": 0,
+        "amenity_fee": 0,
+        "avg_utilities": 180,
+        "walk_score": 35,
+        "transit_score": 80,
+        "crime_rating": 6,
+        "transit_time_to_hub": 8,
+        "description": "A charming historic house with a wrap-around porch. It has a magical, slightly overgrown garden perfect for summer studying.",
+        "_lat": 40.500424,
+        "_lon": -74.4520586
+      },
+      "insights": {
+        "id": "NB003",
+        "rank": 50,
+        "name": "12 Prosper St Apartments",
+        "address": "12 Prosper St, New Brunswick, NJ 8901",
+        "rent": 3200,
+        "trueCost": 3718.0,
+        "matchScore": 90,
+        "bedrooms": 3,
+        "bathrooms": 2.0,
+        "sqft": 1200,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 35,
+        "hasGym": false,
+        "hasGrocery": true,
+        "petFriendly": true,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "A charming historic house with a wrap-around porch. It has a magical, slightly overgrown garden perfect for summer studying.",
+        "historicalInsight": "Higher rent could mean this is a luxury option with added amenities.",
+        "historicalTrend": "up",
+        "historicalPercent": 68.60595551563335,
+        "costBreakdown": {
+          "rent": 3200.0,
+          "utilities": 180.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "12 Prosper St carries a considerable rent, meaning it's important to consider overall affordability.",
+        "commute": {
+          "driving": "15 mins",
+          "transit": "25 mins",
+          "walking": "70 mins",
+          "biking": "15 mins",
+          "walkScore": 35,
+          "llm_insight": "The commute to Princeton is a manageable 15 minutes."
+        },
+        "safety": {
+          "score": 5,
+          "nearestPolice": "0.4 mi",
+          "summary": "The neighborhood's walkability is quite low, but the surrounding area can still be explored."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2880.0
+          },
+          {
+            "month": "Apr",
+            "price": 3200.0
+          }
+        ],
+        "percentile": 68.60595551563335,
+        "pros": [
+          "Pet friendly"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "A more expensive choice; consider value versus budget.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 180.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 85.0,
+              "source": "estimated",
+              "note": "Low walkability \u2014 street or lot parking likely needed"
+            },
+            {
+              "category": "Transport (NJ Transit)",
+              "amount": 140.0,
+              "source": "estimated",
+              "note": "Monthly pass for low-walkability area (8 min commute)"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            },
+            {
+              "category": "Gym Membership",
+              "amount": 35.0,
+              "source": "estimated",
+              "note": "No on-site gym \u2014 local membership (Planet Fitness / YMCA avg)"
+            }
+          ],
+          "structuredTrueCost": 3718.0,
+          "llmTrueCost": 3718.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "ED001",
+        "address": "2200 Northview Dr",
+        "city": "Edison",
+        "state": "NJ",
+        "zip": 8817,
+        "bedrooms": 2,
+        "bathrooms": 2.0,
+        "sqft": 1100,
+        "base_rent": 2650,
+        "has_gym": true,
+        "has_grocery_nearby": true,
+        "pet_friendly": true,
+        "parking_fee": 50,
+        "amenity_fee": 50,
+        "avg_utilities": 140,
+        "walk_score": 35,
+        "transit_score": 30,
+        "crime_rating": 3,
+        "transit_time_to_hub": 15,
+        "description": "Modern luxury living near the Edison train station. Extremely quiet and safe, with a fitness center that overlooks a peaceful meadow.",
+        "_lat": 0,
+        "_lon": 0
+      },
+      "insights": {
+        "id": "ED001",
+        "rank": 50,
+        "name": "2200 Northview Dr Apartments",
+        "address": "2200 Northview Dr, Edison, NJ 8817",
+        "rent": 2650,
+        "trueCost": 3108.0,
+        "matchScore": 90,
+        "bedrooms": 2,
+        "bathrooms": 2.0,
+        "sqft": 1100,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 35,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": true,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Modern luxury living near the Edison train station. Extremely quiet and safe, with a fitness center that overlooks a peaceful meadow.",
+        "historicalInsight": "This property is a midpoint choice in terms of rental cost.",
+        "historicalTrend": "down",
+        "historicalPercent": 51.89476699786652,
+        "costBreakdown": {
+          "rent": 2650.0,
+          "utilities": 140.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "2200 Northview Dr is moderately priced, but include extra costs when budgeting.",
+        "commute": {
+          "driving": "15 mins",
+          "transit": "25 mins",
+          "walking": "70 mins",
+          "biking": "15 mins",
+          "walkScore": 35,
+          "llm_insight": "The commute to Princeton is a manageable 15 minutes."
+        },
+        "safety": {
+          "score": 5,
+          "nearestPolice": "0.4 mi",
+          "summary": "The neighborhood's walkability is quite low, but the surrounding area can still be explored."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2385.0
+          },
+          {
+            "month": "Apr",
+            "price": 2650.0
+          }
+        ],
+        "percentile": 51.89476699786652,
+        "pros": [
+          "Pet friendly"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Worth considering, ensure all conveniences and safety features meet requirements.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 140.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 50.0,
+              "source": "listed",
+              "note": "Monthly fee"
+            },
+            {
+              "category": "Amenity Fee",
+              "amount": 50.0,
+              "source": "listed",
+              "note": ""
+            },
+            {
+              "category": "Transport (NJ Transit)",
+              "amount": 140.0,
+              "source": "estimated",
+              "note": "Monthly pass for low-walkability area (15 min commute)"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 3108.0,
+          "llmTrueCost": 3108.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "NW002",
+        "address": "15 Washington St",
+        "city": "Newark",
+        "state": "NJ",
+        "zip": 7102,
+        "bedrooms": 2,
+        "bathrooms": 1.0,
+        "sqft": 900,
+        "base_rent": 2300,
+        "has_gym": true,
+        "has_grocery_nearby": true,
+        "pet_friendly": true,
+        "parking_fee": 175,
+        "amenity_fee": 0,
+        "avg_utilities": 130,
+        "walk_score": 35,
+        "transit_score": 98,
+        "crime_rating": 6,
+        "transit_time_to_hub": 8,
+        "description": "Historic charm meets modern convenience. The high ceilings make the space feel as vast as a forest clearing.",
+        "_lat": 40.7442925,
+        "_lon": -74.1709015
+      },
+      "insights": {
+        "id": "NW002",
+        "rank": 50,
+        "name": "15 Washington St Apartments",
+        "address": "15 Washington St, Newark, NJ 7102",
+        "rent": 2300,
+        "trueCost": 2823.0,
+        "matchScore": 90,
+        "bedrooms": 2,
+        "bathrooms": 1.0,
+        "sqft": 900,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 35,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": true,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Historic charm meets modern convenience. The high ceilings make the space feel as vast as a forest clearing.",
+        "historicalInsight": "This property is an affordable option, comparatively.",
+        "historicalTrend": "stable",
+        "historicalPercent": 59.15566139572212,
+        "costBreakdown": {
+          "rent": 2300.0,
+          "utilities": 130.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "15 Washington St offers relatively low rent, so budget extras accordingly.",
+        "commute": {
+          "driving": "15 mins",
+          "transit": "25 mins",
+          "walking": "70 mins",
+          "biking": "15 mins",
+          "walkScore": 35,
+          "llm_insight": "The commute to Princeton is a manageable 15 minutes."
+        },
+        "safety": {
+          "score": 5,
+          "nearestPolice": "0.4 mi",
+          "summary": "The neighborhood's walkability is quite low, but the surrounding area can still be explored."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2070.0
+          },
+          {
+            "month": "Apr",
+            "price": 2300.0
+          }
+        ],
+        "percentile": 59.15566139572212,
+        "pros": [
+          "Pet friendly"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Could be ideal for budget-conscious renters.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 130.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 175.0,
+              "source": "listed",
+              "note": "Monthly fee"
+            },
+            {
+              "category": "Transport (NJ Transit)",
+              "amount": 140.0,
+              "source": "estimated",
+              "note": "Monthly pass for low-walkability area (8 min commute)"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2823.0,
+          "llmTrueCost": 2823.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "NB004",
+        "address": "192 Somerset St",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": 8901,
+        "bedrooms": 2,
+        "bathrooms": 1.0,
+        "sqft": 820,
+        "base_rent": 2550,
+        "has_gym": true,
+        "has_grocery_nearby": true,
+        "pet_friendly": true,
+        "parking_fee": 100,
+        "amenity_fee": 50,
+        "avg_utilities": 115,
+        "walk_score": 35,
+        "transit_score": 88,
+        "crime_rating": 6,
+        "transit_time_to_hub": 3,
+        "description": "Modern building with a secret rooftop garden. It's the perfect spot for watching the stars on a clear New Jersey night.",
+        "_lat": 40.4950777,
+        "_lon": -74.4521468
+      },
+      "insights": {
+        "id": "NB004",
+        "rank": 50,
+        "name": "192 Somerset St Apartments",
+        "address": "192 Somerset St, New Brunswick, NJ 8901",
+        "rent": 2550,
+        "trueCost": 3033.0,
+        "matchScore": 90,
+        "bedrooms": 2,
+        "bathrooms": 1.0,
+        "sqft": 820,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 35,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": true,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Modern building with a secret rooftop garden. It's the perfect spot for watching the stars on a clear New Jersey night.",
+        "historicalInsight": "A mid-range choice, ensuring it's not overpriced is a must.",
+        "historicalTrend": "down",
+        "historicalPercent": 39.43599580152032,
+        "costBreakdown": {
+          "rent": 2550.0,
+          "utilities": 115.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "192 Somerset St is moderately priced; consider total cost before deciding.",
+        "commute": {
+          "driving": "15 mins",
+          "transit": "25 mins",
+          "walking": "70 mins",
+          "biking": "15 mins",
+          "walkScore": 35,
+          "llm_insight": "The commute to Princeton is a manageable 15 minutes."
+        },
+        "safety": {
+          "score": 5,
+          "nearestPolice": "0.4 mi",
+          "summary": "The neighborhood's walkability is quite low, but the surrounding area can still be explored."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2295.0
+          },
+          {
+            "month": "Apr",
+            "price": 2550.0
+          }
+        ],
+        "percentile": 39.43599580152032,
+        "pros": [
+          "Pet friendly"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "A balanced choice, affordability considered.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 115.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 100.0,
+              "source": "listed",
+              "note": "Monthly fee"
+            },
+            {
+              "category": "Amenity Fee",
+              "amount": 50.0,
+              "source": "listed",
+              "note": ""
+            },
+            {
+              "category": "Transport (NJ Transit)",
+              "amount": 140.0,
+              "source": "estimated",
+              "note": "Monthly pass for low-walkability area (3 min commute)"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 3033.0,
+          "llmTrueCost": 3033.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "ED003",
+        "address": "55 Old Post Rd",
+        "city": "Edison",
+        "state": "NJ",
+        "zip": 8817,
+        "bedrooms": 3,
+        "bathrooms": 2.0,
+        "sqft": 1400,
+        "base_rent": 3300,
+        "has_gym": false,
+        "has_grocery_nearby": true,
+        "pet_friendly": true,
+        "parking_fee": 50,
+        "amenity_fee": 0,
+        "avg_utilities": 210,
+        "walk_score": 35,
+        "transit_score": 25,
+        "crime_rating": 2,
+        "transit_time_to_hub": 25,
+        "description": "A massive family-sized apartment with huge closets. It feels like a safe harbor after a long day of commuting.",
+        "_lat": 40.506376,
+        "_lon": -74.3917391
+      },
+      "insights": {
+        "id": "ED003",
+        "rank": 50,
+        "name": "55 Old Post Rd Apartments",
+        "address": "55 Old Post Rd, Edison, NJ 8817",
+        "rent": 3300,
+        "trueCost": 3813.0,
+        "matchScore": 90,
+        "bedrooms": 3,
+        "bathrooms": 2.0,
+        "sqft": 1400,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 35,
+        "hasGym": false,
+        "hasGrocery": true,
+        "petFriendly": true,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "A massive family-sized apartment with huge closets. It feels like a safe harbor after a long day of commuting.",
+        "historicalInsight": "The higher cost means it potentially includes more amenities.",
+        "historicalTrend": "up",
+        "historicalPercent": 83.0198985256451,
+        "costBreakdown": {
+          "rent": 3300.0,
+          "utilities": 210.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "55 Old Post Rd features high rent, prioritize full affordability evaluation.",
+        "commute": {
+          "driving": "15 mins",
+          "transit": "25 mins",
+          "walking": "70 mins",
+          "biking": "15 mins",
+          "walkScore": 35,
+          "llm_insight": "The commute to Princeton is a manageable 15 minutes."
+        },
+        "safety": {
+          "score": 5,
+          "nearestPolice": "0.4 mi",
+          "summary": "The neighborhood's walkability is quite low, but the surrounding area can still be explored."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2970.0
+          },
+          {
+            "month": "Apr",
+            "price": 3300.0
+          }
+        ],
+        "percentile": 83.0198985256451,
+        "pros": [
+          "Pet friendly"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "A luxury option; evaluate if the cost aligns with requirements.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 210.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 50.0,
+              "source": "listed",
+              "note": "Monthly fee"
+            },
+            {
+              "category": "Transport (NJ Transit)",
+              "amount": 140.0,
+              "source": "estimated",
+              "note": "Monthly pass for low-walkability area (25 min commute)"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            },
+            {
+              "category": "Gym Membership",
+              "amount": 35.0,
+              "source": "estimated",
+              "note": "No on-site gym \u2014 local membership (Planet Fitness / YMCA avg)"
+            }
+          ],
+          "structuredTrueCost": 3813.0,
+          "llmTrueCost": 3813.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "NW003",
+        "address": "40 Clinton St",
+        "city": "Newark",
+        "state": "NJ",
+        "zip": 7102,
+        "bedrooms": 2,
+        "bathrooms": 2.0,
+        "sqft": 1000,
+        "base_rent": 2600,
+        "has_gym": true,
+        "has_grocery_nearby": true,
+        "pet_friendly": true,
+        "parking_fee": 150,
+        "amenity_fee": 50,
+        "avg_utilities": 145,
+        "walk_score": 35,
+        "transit_score": 94,
+        "crime_rating": 7,
+        "transit_time_to_hub": 12,
+        "description": "A renovated warehouse unit with iron beams and a story in every brick. Very close to the Prudential Center.",
+        "_lat": 40.7360631,
+        "_lon": -74.1696728
+      },
+      "insights": {
+        "id": "NW003",
+        "rank": 50,
+        "name": "40 Clinton St Apartments",
+        "address": "40 Clinton St, Newark, NJ 7102",
+        "rent": 2600,
+        "trueCost": 3163.0,
+        "matchScore": 90,
+        "bedrooms": 2,
+        "bathrooms": 2.0,
+        "sqft": 1000,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 35,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": true,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "A renovated warehouse unit with iron beams and a story in every brick. Very close to the Prudential Center.",
+        "historicalInsight": "This property might be priced higher due to location or features.",
+        "historicalTrend": "up",
+        "historicalPercent": 76.65422592559892,
+        "costBreakdown": {
+          "rent": 2600.0,
+          "utilities": 145.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "40 Clinton St has a mid-range rent; consider associated costs for full budget.",
+        "commute": {
+          "driving": "15 mins",
+          "transit": "25 mins",
+          "walking": "70 mins",
+          "biking": "15 mins",
+          "walkScore": 35,
+          "llm_insight": "The commute to Princeton is a manageable 15 minutes."
+        },
+        "safety": {
+          "score": 5,
+          "nearestPolice": "0.4 mi",
+          "summary": "The neighborhood's walkability is quite low, but the surrounding area can still be explored."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2340.0
+          },
+          {
+            "month": "Apr",
+            "price": 2600.0
+          }
+        ],
+        "percentile": 76.65422592559892,
+        "pros": [
+          "Pet friendly"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Evaluate cost-effectiveness and location to see if the price is worth it.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 145.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 150.0,
+              "source": "listed",
+              "note": "Monthly fee"
+            },
+            {
+              "category": "Amenity Fee",
+              "amount": 50.0,
+              "source": "listed",
+              "note": ""
+            },
+            {
+              "category": "Transport (NJ Transit)",
+              "amount": 140.0,
+              "source": "estimated",
+              "note": "Monthly pass for low-walkability area (12 min commute)"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 3163.0,
+          "llmTrueCost": 3163.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "NB006",
+        "address": "22 Wyckoff St",
+        "city": "New Brunswick",
+        "state": "NJ",
+        "zip": 8901,
+        "bedrooms": 2,
+        "bathrooms": 1.0,
+        "sqft": 900,
+        "base_rent": 2700,
+        "has_gym": true,
+        "has_grocery_nearby": true,
+        "pet_friendly": true,
+        "parking_fee": 125,
+        "amenity_fee": 25,
+        "avg_utilities": 130,
+        "walk_score": 35,
+        "transit_score": 78,
+        "crime_rating": 5,
+        "transit_time_to_hub": 15,
+        "description": "A brand new development with large windows and a communal kitchen that brings residents together like a big family.",
+        "_lat": 40.5007163,
+        "_lon": -74.4546665
+      },
+      "insights": {
+        "id": "NB006",
+        "rank": 50,
+        "name": "22 Wyckoff St Apartments",
+        "address": "22 Wyckoff St, New Brunswick, NJ 8901",
+        "rent": 2700,
+        "trueCost": 3198.0,
+        "matchScore": 90,
+        "bedrooms": 2,
+        "bathrooms": 1.0,
+        "sqft": 900,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 35,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": true,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "A brand new development with large windows and a communal kitchen that brings residents together like a big family.",
+        "historicalInsight": "This is a moderately priced rental; look for unique perks.",
+        "historicalTrend": "down",
+        "historicalPercent": 46.16752496631564,
+        "costBreakdown": {
+          "rent": 2700.0,
+          "utilities": 130.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "22 Wyckoff St's moderate rent requires considering all included costs.",
+        "commute": {
+          "driving": "15 mins",
+          "transit": "25 mins",
+          "walking": "70 mins",
+          "biking": "15 mins",
+          "walkScore": 35,
+          "llm_insight": "The commute to Princeton is a manageable 15 minutes."
+        },
+        "safety": {
+          "score": 5,
+          "nearestPolice": "0.4 mi",
+          "summary": "The neighborhood's walkability is quite low, but the surrounding area can still be explored."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2430.0
+          },
+          {
+            "month": "Apr",
+            "price": 2700.0
+          }
+        ],
+        "percentile": 46.16752496631564,
+        "pros": [
+          "Pet friendly"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Assess fully for affordability and amenities.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 130.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 125.0,
+              "source": "listed",
+              "note": "Monthly fee"
+            },
+            {
+              "category": "Amenity Fee",
+              "amount": 25.0,
+              "source": "listed",
+              "note": ""
+            },
+            {
+              "category": "Transport (NJ Transit)",
+              "amount": 140.0,
+              "source": "estimated",
+              "note": "Monthly pass for low-walkability area (15 min commute)"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 3198.0,
+          "llmTrueCost": 3198.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "ED005",
+        "address": "2000 Route 27",
+        "city": "Edison",
+        "state": "NJ",
+        "zip": 8817,
+        "bedrooms": 2,
+        "bathrooms": 1.5,
+        "sqft": 1000,
+        "base_rent": 2450,
+        "has_gym": true,
+        "has_grocery_nearby": true,
+        "pet_friendly": false,
+        "parking_fee": 0,
+        "amenity_fee": 0,
+        "avg_utilities": 135,
+        "walk_score": 35,
+        "transit_score": 40,
+        "crime_rating": 3,
+        "transit_time_to_hub": 10,
+        "description": "Conveniently located for commuters. The thick walls keep it as quiet as a mountaintop house despite being near the main road.",
+        "_lat": 0,
+        "_lon": 0
+      },
+      "insights": {
+        "id": "ED005",
+        "rank": 50,
+        "name": "2000 Route 27 Apartments",
+        "address": "2000 Route 27, Edison, NJ 8817",
+        "rent": 2450,
+        "trueCost": 2888.0,
+        "matchScore": 90,
+        "bedrooms": 2,
+        "bathrooms": 1.5,
+        "sqft": 1000,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 35,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": false,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Conveniently located for commuters. The thick walls keep it as quiet as a mountaintop house despite being near the main road.",
+        "historicalInsight": "The percentile suggests that other units offer more relative advantages.",
+        "historicalTrend": "down",
+        "historicalPercent": 42.317803450857724,
+        "costBreakdown": {
+          "rent": 2450.0,
+          "utilities": 135.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "This is one of the cheaper options, but consider if it's the best value.",
+        "commute": {
+          "driving": "15 mins",
+          "transit": "25 mins",
+          "walking": "70 mins",
+          "biking": "15 mins",
+          "walkScore": 35,
+          "llm_insight": "Commuting to Princeton will take about as long as other locations in this list."
+        },
+        "safety": {
+          "score": 5,
+          "nearestPolice": "0.4 mi",
+          "summary": "A car is more important than walking in this location."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2205.0
+          },
+          {
+            "month": "Apr",
+            "price": 2450.0
+          }
+        ],
+        "percentile": 42.317803450857724,
+        "pros": [
+          "Standard rental"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "This location is an okay deal, but not outstanding.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 135.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 85.0,
+              "source": "estimated",
+              "note": "Low walkability \u2014 street or lot parking likely needed"
+            },
+            {
+              "category": "Transport (NJ Transit)",
+              "amount": 140.0,
+              "source": "estimated",
+              "note": "Monthly pass for low-walkability area (10 min commute)"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 2888.0,
+          "llmTrueCost": 2888.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "NW006",
+        "address": "15 Ferry St",
+        "city": "Newark",
+        "state": "NJ",
+        "zip": 7105,
+        "bedrooms": 2,
+        "bathrooms": 1.0,
+        "sqft": 880,
+        "base_rent": 2450,
+        "has_gym": false,
+        "has_grocery_nearby": true,
+        "pet_friendly": true,
+        "parking_fee": 0,
+        "amenity_fee": 0,
+        "avg_utilities": 140,
+        "walk_score": 35,
+        "transit_score": 90,
+        "crime_rating": 5,
+        "transit_time_to_hub": 5,
+        "description": "In the heart of the Ironbound. Walking distance to the best Portuguese food in the world.",
+        "_lat": 40.7324874,
+        "_lon": -74.1634086
+      },
+      "insights": {
+        "id": "NW006",
+        "rank": 50,
+        "name": "15 Ferry St Apartments",
+        "address": "15 Ferry St, Newark, NJ 7105",
+        "rent": 2450,
+        "trueCost": 2928.0,
+        "matchScore": 90,
+        "bedrooms": 2,
+        "bathrooms": 1.0,
+        "sqft": 880,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 35,
+        "hasGym": false,
+        "hasGrocery": true,
+        "petFriendly": true,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "In the heart of the Ironbound. Walking distance to the best Portuguese food in the world.",
+        "historicalInsight": "This percentile indicates that other properties may offer better value for the price.",
+        "historicalTrend": "up",
+        "historicalPercent": 67.90494366066052,
+        "costBreakdown": {
+          "rent": 2450.0,
+          "utilities": 140.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "Although the rent is comparable to similar listings, the total true cost is a little on the high side.",
+        "commute": {
+          "driving": "15 mins",
+          "transit": "25 mins",
+          "walking": "70 mins",
+          "biking": "15 mins",
+          "walkScore": 35,
+          "llm_insight": "Princeton is only a short commute away."
+        },
+        "safety": {
+          "score": 5,
+          "nearestPolice": "0.4 mi",
+          "summary": "Getting around without a car might be challenging at this location."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2205.0
+          },
+          {
+            "month": "Apr",
+            "price": 2450.0
+          }
+        ],
+        "percentile": 67.90494366066052,
+        "pros": [
+          "Pet friendly"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "If you prioritize other factors besides bang-for-buck, this location is worth a look.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 140.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 85.0,
+              "source": "estimated",
+              "note": "Low walkability \u2014 street or lot parking likely needed"
+            },
+            {
+              "category": "Transport (NJ Transit)",
+              "amount": 140.0,
+              "source": "estimated",
+              "note": "Monthly pass for low-walkability area (5 min commute)"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            },
+            {
+              "category": "Gym Membership",
+              "amount": 35.0,
+              "source": "estimated",
+              "note": "No on-site gym \u2014 local membership (Planet Fitness / YMCA avg)"
+            }
+          ],
+          "structuredTrueCost": 2928.0,
+          "llmTrueCost": 2928.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "ED006",
+        "address": "100 Wood Ave",
+        "city": "Edison",
+        "state": "NJ",
+        "zip": 8830,
+        "bedrooms": 2,
+        "bathrooms": 2.0,
+        "sqft": 1150,
+        "base_rent": 2800,
+        "has_gym": true,
+        "has_grocery_nearby": true,
+        "pet_friendly": true,
+        "parking_fee": 75,
+        "amenity_fee": 40,
+        "avg_utilities": 155,
+        "walk_score": 35,
+        "transit_score": 45,
+        "crime_rating": 2,
+        "transit_time_to_hub": 10,
+        "description": "Sleek and modern with a focus on convenience. The MetroPark station is just a short hop away.",
+        "_lat": 40.570192,
+        "_lon": -74.335411
+      },
+      "insights": {
+        "id": "ED006",
+        "rank": 50,
+        "name": "100 Wood Ave Apartments",
+        "address": "100 Wood Ave, Edison, NJ 8830",
+        "rent": 2800,
+        "trueCost": 3288.0,
+        "matchScore": 90,
+        "bedrooms": 2,
+        "bathrooms": 2.0,
+        "sqft": 1150,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 35,
+        "hasGym": true,
+        "hasGrocery": true,
+        "petFriendly": true,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "Sleek and modern with a focus on convenience. The MetroPark station is just a short hop away.",
+        "historicalInsight": "There may be better deals for the true cost on this list.",
+        "historicalTrend": "stable",
+        "historicalPercent": 59.07748965812311,
+        "costBreakdown": {
+          "rent": 2800.0,
+          "utilities": 155.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "With a higher true cost, ensure the amenities justify the extra expense.",
+        "commute": {
+          "driving": "15 mins",
+          "transit": "25 mins",
+          "walking": "70 mins",
+          "biking": "15 mins",
+          "walkScore": 35,
+          "llm_insight": "Getting to Princeton takes about 15 minutes."
+        },
+        "safety": {
+          "score": 5,
+          "nearestPolice": "0.4 mi",
+          "summary": "You'll need a car to run most errands here."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2520.0
+          },
+          {
+            "month": "Apr",
+            "price": 2800.0
+          }
+        ],
+        "percentile": 59.07748965812311,
+        "pros": [
+          "Pet friendly"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "This listing might not be the best value compared to others.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 155.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 75.0,
+              "source": "listed",
+              "note": "Monthly fee"
+            },
+            {
+              "category": "Amenity Fee",
+              "amount": 40.0,
+              "source": "listed",
+              "note": ""
+            },
+            {
+              "category": "Transport (NJ Transit)",
+              "amount": 140.0,
+              "source": "estimated",
+              "note": "Monthly pass for low-walkability area (10 min commute)"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            }
+          ],
+          "structuredTrueCost": 3288.0,
+          "llmTrueCost": 3288.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    },
+    {
+      "listing": {
+        "id": "ED007",
+        "address": "500 Inman Ave",
+        "city": "Edison",
+        "state": "NJ",
+        "zip": 8820,
+        "bedrooms": 2,
+        "bathrooms": 1.0,
+        "sqft": 950,
+        "base_rent": 2300,
+        "has_gym": false,
+        "has_grocery_nearby": true,
+        "pet_friendly": true,
+        "parking_fee": 0,
+        "amenity_fee": 0,
+        "avg_utilities": 130,
+        "walk_score": 35,
+        "transit_score": 25,
+        "crime_rating": 2,
+        "transit_time_to_hub": 22,
+        "description": "A suburban paradise. Quiet, leafy streets and a community pool that feels like a hidden lagoon.",
+        "_lat": 40.5962523,
+        "_lon": -74.3854557
+      },
+      "insights": {
+        "id": "ED007",
+        "rank": 50,
+        "name": "500 Inman Ave Apartments",
+        "address": "500 Inman Ave, Edison, NJ 8820",
+        "rent": 2300,
+        "trueCost": 2768.0,
+        "matchScore": 90,
+        "bedrooms": 2,
+        "bathrooms": 1.0,
+        "sqft": 950,
+        "distanceToCampus": "2.0 mi",
+        "walkScore": 35,
+        "hasGym": false,
+        "hasGrocery": true,
+        "petFriendly": true,
+        "amenities": [
+          "In-unit Laundry",
+          "Dishwasher",
+          "Air Conditioning"
+        ],
+        "description": "A suburban paradise. Quiet, leafy streets and a community pool that feels like a hidden lagoon.",
+        "historicalInsight": "This is the least advantageous location on the list for the cost, so carefully consider if the budget is worth it.",
+        "historicalTrend": "down",
+        "historicalPercent": 35.13508079060112,
+        "costBreakdown": {
+          "rent": 2300.0,
+          "utilities": 130.0,
+          "transportation": 80,
+          "groceries": 200
+        },
+        "budgetInsight": "The lower rent contributes to the lowest overall cost among these listings, but consider why.",
+        "commute": {
+          "driving": "15 mins",
+          "transit": "25 mins",
+          "walking": "70 mins",
+          "biking": "15 mins",
+          "walkScore": 35,
+          "llm_insight": "The commute time matches the other properties on the list."
+        },
+        "safety": {
+          "score": 5,
+          "nearestPolice": "0.4 mi",
+          "summary": "Walking isn't a useful way to travel in this area."
+        },
+        "historicalPrices": [
+          {
+            "month": "Jan",
+            "price": 2070.0
+          },
+          {
+            "month": "Apr",
+            "price": 2300.0
+          }
+        ],
+        "percentile": 35.13508079060112,
+        "pros": [
+          "Pet friendly"
+        ],
+        "cons": [
+          "No major red flags"
+        ],
+        "sophieSummary": "Check out why this property has a low percentile before committing.",
+        "voiceoverBase64": null,
+        "audioStreams": {},
+        "images": [],
+        "agenticBreakdown": {
+          "items": [
+            {
+              "category": "Utilities",
+              "amount": 130.0,
+              "source": "listed",
+              "note": "As stated by landlord"
+            },
+            {
+              "category": "Parking",
+              "amount": 85.0,
+              "source": "estimated",
+              "note": "Low walkability \u2014 street or lot parking likely needed"
+            },
+            {
+              "category": "Transport (NJ Transit)",
+              "amount": 140.0,
+              "source": "estimated",
+              "note": "Monthly pass for low-walkability area (22 min commute)"
+            },
+            {
+              "category": "Internet",
+              "amount": 60.0,
+              "source": "estimated",
+              "note": "Avg NJ broadband \u2014 Optimum/Verizon FiOS ($50\u201380/mo)"
+            },
+            {
+              "category": "Renter's Insurance",
+              "amount": 18.0,
+              "source": "estimated",
+              "note": "Standard NJ renter's insurance ($15\u201325/mo)"
+            },
+            {
+              "category": "Gym Membership",
+              "amount": 35.0,
+              "source": "estimated",
+              "note": "No on-site gym \u2014 local membership (Planet Fitness / YMCA avg)"
+            }
+          ],
+          "structuredTrueCost": 2768.0,
+          "llmTrueCost": 2768.0,
+          "reasoning": "Structured analysis (batch mode).",
+          "negotiationTips": [],
+          "riskFlags": []
+        }
+      }
+    }
+  ]
+}
