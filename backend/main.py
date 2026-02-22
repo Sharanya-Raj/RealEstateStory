@@ -322,24 +322,28 @@ class PipelineRequest(BaseModel):
     roommates: str = "solo"
     parking: str = "not_needed"
     max_distance_miles: float = 30.0
+    mock: bool = False
 
 @app.post("/api/pipeline")
 def run_full_pipeline(request: PipelineRequest):
     """
     Single endpoint: scrape → run agents → return combined results.
     Listings are only returned after all agents have processed them.
+    When mock=True, skips scraping/Supabase and reads only from CSV.
     """
+    mode_label = "CSV-ONLY" if request.mock else "LIVE"
     logger.info(
-        "POST /api/pipeline  college=%r  budget=%.0f  roommates=%s  parking=%s  dist=%.0f",
-        request.college, request.budget, request.roommates, request.parking, request.max_distance_miles,
+        "POST /api/pipeline [%s]  college=%r  budget=%.0f  roommates=%s  parking=%s  dist=%.0f",
+        mode_label, request.college, request.budget, request.roommates, request.parking, request.max_distance_miles,
     )
 
     # Step 1: Scrape / fetch listings
-    logger.info("  [PIPELINE] Step 1: Fetching listings...")
+    logger.info("  [PIPELINE] Step 1: Fetching listings (%s)...", mode_label)
     raw_listings = get_all_listings(
         college=request.college,
         radius=request.max_distance_miles,
         max_price=request.budget,
+        mock=request.mock,
     )
 
     if not raw_listings:
@@ -703,18 +707,20 @@ _listings_logger = logging.getLogger("api.listings")
 @app.get("/api/listings")
 def get_all_listings(college: str = None, radius: float = 50.0, max_price: float = 99999, mock: bool = False):
     """
-    Get listings.  Priority order:
-      1. Apartments.com scraper  (Selenium + Playwright)
+    Get listings.  Priority order (when mock=False):
+      1. Apartments.com scraper  (Selenium + Playwright, or local cache)
       2. Supabase database
       3. CSV file  (LAST RESORT — only if all live sources fail)
+    When mock=True, skips straight to CSV.
     """
+    mode_label = "CSV-ONLY" if mock else "LIVE"
     logger.info(
-        "GET /api/listings  college=%r  radius=%.1f  max_price=%.0f",
-        college, radius, max_price,
+        "GET /api/listings [%s]  college=%r  radius=%.1f  max_price=%.0f",
+        mode_label, college, radius, max_price,
     )
     _listings_logger.info(
-        "REQUEST: college=%r  radius=%.1f  max_price=%.0f",
-        college, radius, max_price,
+        "REQUEST [%s]: college=%r  radius=%.1f  max_price=%.0f",
+        mode_label, college, radius, max_price,
     )
 
     # Geocode college once — reused by scrapers + CSV fallback
@@ -729,7 +735,9 @@ def get_all_listings(college: str = None, radius: float = 50.0, max_price: float
             _listings_logger.warning("College geocoding failed for %r: %s", college, e)
 
     # ── 1. Apartments.com ──────────────────────────────────────────────
-    if college and get_apartmentsdotcom is not None:
+    if mock:
+        _listings_logger.info("SCRAPER + DB SKIPPED — mock/CSV-only mode")
+    elif college and get_apartmentsdotcom is not None:
         try:
             adc_max_price = max_price if max_price < 99999 else None
             _listings_logger.info("SCRAPER Apartments.com: scraping near %r (max_price=%s)", college, adc_max_price)
@@ -778,7 +786,9 @@ def get_all_listings(college: str = None, radius: float = 50.0, max_price: float
 
     # ── 2. Supabase ────────────────────────────────────────────────────
     supabase_url = os.environ.get("SUPABASE_URL")
-    if supabase_url:
+    if mock:
+        pass  # already logged skip above
+    elif supabase_url:
         try:
             try:
                 from db import get_college_coords, get_nearby_listings, get_all_listings as db_get_all
@@ -801,10 +811,11 @@ def get_all_listings(college: str = None, radius: float = 50.0, max_price: float
     else:
         _listings_logger.info("DATABASE: Supabase SKIPPED — SUPABASE_URL not set")
 
-    # ── 3. CSV FALLBACK (last resort) ──────────────────────────────────
-    _listings_logger.warning(
-        "FALLBACK: All live sources failed. Loading CSV as last resort."
-    )
+    # ── 3. CSV FALLBACK ──────────────────────────────────────────────
+    if mock:
+        _listings_logger.info("CSV MODE: Loading listings from CSV (mock/CSV-only mode)")
+    else:
+        _listings_logger.warning("FALLBACK: All live sources failed. Loading CSV as last resort.")
     try:
         csv_path = os.path.join(os.path.dirname(__file__), "data", "listings.csv")
         df = pd.read_csv(csv_path)
