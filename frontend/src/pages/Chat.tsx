@@ -101,11 +101,15 @@ const Chat = () => {
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                   className="w-24 h-24 mx-auto mb-4 rounded-3xl bg-black/40 border border-white/20 flex items-center justify-center overflow-hidden shadow-xl"
                 >
-                  {chatAgent.image ? (
-                    <img src={chatAgent.image} alt={chatAgent.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <span className="text-5xl drop-shadow-md">{chatAgent.emoji}</span>
-                  )}
+                  {(() => {
+                    // Use the public howl image explicitly for the chat sidebar
+                    const howlPublic = new URL('/images/howl.PNG', import.meta.url).href;
+                    const src = chatAgent.character === 'Howl' ? howlPublic : chatAgent.image;
+                    if (src) {
+                      return <img src={src} alt={chatAgent.name} className="w-full h-full object-cover" />;
+                    }
+                    return <span className="text-5xl drop-shadow-md">{chatAgent.emoji}</span>;
+                  })()}
                 </motion.div>
                 <h2 className="font-playfair text-3xl font-bold text-white mb-1 drop-shadow-md">{chatAgent.character}</h2>
                 <p className="text-xs text-blue-300 font-bold uppercase tracking-widest drop-shadow-sm">{chatAgent.movie}</p>

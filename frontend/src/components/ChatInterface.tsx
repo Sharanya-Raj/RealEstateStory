@@ -36,8 +36,8 @@ const ChatInterface = ({ onSend, messages, isLoading }: ChatInterfaceProps) => {
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 && (
           <div className="text-center py-24 px-4 flex flex-col items-center">
-            <div className="w-20 h-20 rounded-3xl bg-black/40 border border-white/20 flex items-center justify-center text-4xl mb-6 shadow-xl">
-              ✨
+            <div className="w-20 h-20 rounded-3xl bg-black/40 border border-white/20 flex items-center justify-center text-4xl mb-6 shadow-xl overflow-hidden">
+              <img src="/images/howl.PNG" alt="Howl" className="w-full h-full object-cover" />
             </div>
             <p className="font-playfair text-2xl font-bold text-white mb-2 drop-shadow-md">Howl awaits your questions...</p>
             <p className="text-slate-300 font-medium max-w-sm mx-auto drop-shadow-sm">Ask about commute secrets, contract shadows, or why the boiler man likes this place.</p>
