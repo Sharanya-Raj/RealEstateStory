@@ -135,10 +135,11 @@ def get_apartmentsdotcom(location, max_price: float | None = None):
     univ_slug = location.replace(" ", "-").lower()
 
 
-    if location=="Rutgers University":
-        base_url = f"https://www.apartments.com/off-campus-housing/nj/new-brunswick/rutgers-university/"
-    elif location=="New Jersey Institute of Technology":
-        base_url = f"https://www.apartments.com/off-campus-housing/nj/newark/new-jersey-institute-of-technology/"
+    loc_lower = location.strip().lower()
+    if "rutgers" in loc_lower and "university" in loc_lower:
+        base_url = "https://www.apartments.com/off-campus-housing/nj/new-brunswick/rutgers-university/"
+    elif "new jersey institute" in loc_lower or "njit" in loc_lower:
+        base_url = "https://www.apartments.com/off-campus-housing/nj/newark/new-jersey-institute-of-technology/"
     elif city:
         base_url = f"https://www.apartments.com/off-campus-housing/{state}/{city}/{univ_slug}/"
     else:
