@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight, Loader2, Volume2, Play, Pause } from "lucide-react";
 import { useEffect, useRef, useCallback, useState } from "react";
 import VoiceWaveform from "./VoiceWaveform";
+import { api } from "@/lib/api";
 
 interface AgentSceneProps {
   agent: Agent;
@@ -60,9 +61,15 @@ const AgentScene = ({
 
   // Auto-play the agent's unique voice whenever a new scene renders
   const playAudio = useCallback(() => {
-    if (!audioBase64) return;
     try {
-      const src = `data:audio/mp3;base64,${audioBase64}`;
+      let src = "";
+      if (audioBase64) {
+        src = `data:audio/mp3;base64,${audioBase64}`;
+      } else {
+        // Fallback to real-time ElevenLabs generation
+        src = api.getVoiceUrl(dialogue, agent.id);
+      }
+
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.src = src;
@@ -79,7 +86,7 @@ const AgentScene = ({
     } catch (e) {
       console.warn("Could not play agent audio:", e);
     }
-  }, [audioBase64]);
+  }, [audioBase64, dialogue, agent.id]);
 
   const togglePlayback = () => {
     if (!audioRef.current) {
@@ -132,7 +139,7 @@ const AgentScene = ({
           <p className="text-sm text-slate-300 max-w-sm font-medium leading-relaxed drop-shadow-sm">{agent.description}</p>
 
           {/* Audio controls & Waveform */}
-          {audioBase64 && !isLoading && (
+          {!isLoading && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}

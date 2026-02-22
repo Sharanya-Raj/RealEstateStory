@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Home } from "lucide-react";
+import { ArrowLeft, Home, Database, Sparkles } from "lucide-react";
+import { usePreferences } from "../contexts/PreferencesContext";
 
 interface GhibliLayoutProps {
   children: ReactNode;
@@ -10,6 +11,7 @@ interface GhibliLayoutProps {
 
 const GhibliLayout = ({ children, showNav = true, showBack = false }: GhibliLayoutProps) => {
   const navigate = useNavigate();
+  const { mockMode, setMockMode } = usePreferences();
 
   return (
     <div
@@ -53,6 +55,31 @@ const GhibliLayout = ({ children, showNav = true, showBack = false }: GhibliLayo
                 <span className="font-playfair text-base font-semibold text-white tracking-tight drop-shadow-md">
                   The Spirited Oracle
                 </span>
+              </button>
+            </div>
+
+            {/* Mock Mode Toggle */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setMockMode(!mockMode)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-300 ${
+                  mockMode 
+                    ? "bg-blue-500/20 border-blue-400/50 text-blue-200 shadow-[0_0_15px_rgba(96,165,250,0.2)]" 
+                    : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10"
+                }`}
+                title={mockMode ? "Running in Demo Mode (Mock Data)" : "Running in Real Mode (Live Data/Supabase)"}
+              >
+                {mockMode ? (
+                  <>
+                    <Sparkles size={14} className="text-blue-400 animate-pulse" />
+                    <span className="text-xs font-bold uppercase tracking-wider">Demo Mode</span>
+                  </>
+                ) : (
+                  <>
+                    <Database size={14} />
+                    <span className="text-xs font-medium uppercase tracking-wider">Real Mode</span>
+                  </>
+                )}
               </button>
             </div>
           </div>

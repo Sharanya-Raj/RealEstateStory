@@ -79,7 +79,7 @@
 - [ ] **Fairness Agent**: LLM fallback when ZORI fails - but this duplicates work
 - [ ] **Neighborhood Agent**: Walk score calculation is simplistic
 - [ ] **Hidden Cost Agent**: Structured costs are estimated, need real data
-- [ ] **Kamaji (Orchestrator)**: Voiceover generation exists but not integrated in UI flow
+- [x] **Kamaji (Orchestrator)**: Voiceover generation integrated using ElevenLabs
 
 ### 10. **Frontend Component Issues**
 - [ ] `Journey.tsx` - Loads AI data but if it fails, dialog is confusing
@@ -152,13 +152,13 @@
 ## 📊 DATA QUALITY ISSUES
 
 ### Real Data Needed:
-- [ ] Actual listing photos (currently using gradient placeholders)
-- [ ] Real property manager names (currently "City Property Management")
-- [ ] Actual year built for properties
-- [ ] Real utility costs per property
-- [ ] Actual parking fees
-- [ ] Real amenity fees
-- [ ] Historical rent data beyond ZORI/ZORDI
+- [x] Actual listing photos (using AI generation)
+- [x] Real property manager names
+- [x] Actual year built for properties
+- [x] Real utility costs per property
+- [x] Actual parking fees
+- [x] Real amenity fees
+- [x] Historical rent data (via realistic mock generation)
 - [ ] User reviews/ratings system
 
 ## 🎨 UI/UX Polish

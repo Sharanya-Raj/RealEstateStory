@@ -12,6 +12,8 @@ async function handleResponse(response: Response) {
   return response.json();
 }
 
+const getMockMode = () => localStorage.getItem("spirited_oracle_mock_mode") === "true";
+
 export const api = {
   /**
    * Fetch all listings with optional filters
@@ -23,6 +25,7 @@ export const api = {
       if (params.radius) url.searchParams.set("radius", String(params.radius));
       if (params.max_price) url.searchParams.set("max_price", String(params.max_price));
     }
+    if (getMockMode()) url.searchParams.set("mock", "true");
     const response = await fetch(url.toString());
     return handleResponse(response);
   },
@@ -31,7 +34,9 @@ export const api = {
    * Fetch a single listing by ID
    */
   getListing: async (id: string) => {
-    const response = await fetch(`${API_BASE_URL}/api/listings/${id}`);
+    const url = new URL(`${API_BASE_URL}/api/listings/${id}`);
+    if (getMockMode()) url.searchParams.set("mock", "true");
+    const response = await fetch(url.toString());
     return handleResponse(response);
   },
 
@@ -42,7 +47,7 @@ export const api = {
     const response = await fetch(`${API_BASE_URL}/api/fairness`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ ...data, mock: getMockMode() }),
     });
     return handleResponse(response);
   },
@@ -59,7 +64,7 @@ export const api = {
     const response = await fetch(`${API_BASE_URL}/api/evaluate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ ...data, mock: getMockMode() }),
     });
     return handleResponse(response);
   },
@@ -71,8 +76,15 @@ export const api = {
     const response = await fetch(`${API_BASE_URL}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ ...data, mock: getMockMode() }),
     });
     return handleResponse(response);
+  },
+
+  /**
+   * Get the URL for the TTS endpoint
+   */
+  getVoiceUrl: (text: string, agentType: string = "default") => {
+    return `${API_BASE_URL}/api/tts?text=${encodeURIComponent(text)}&agent=${encodeURIComponent(agentType)}`;
   },
 };

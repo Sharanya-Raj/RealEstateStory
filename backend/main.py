@@ -1,5 +1,7 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
+from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
+import io
 from pydantic import BaseModel, Field
 from typing import Any, Dict, List, Optional
 import math
@@ -26,9 +28,15 @@ from market_fairness.schema import MarketFairnessInput, MarketFairnessOutput
 from market_fairness.handler import run_market_fairness_agent
 from agents.kamaji import aggregate_insights, aggregate_insights_batch
 from agents.neighborhood_agent import analyze_nearby
-from services.apartmentsdotcom import get_apartmentsdotcom
+try:
+    from services.apartmentsdotcom import get_apartmentsdotcom
+except ImportError:
+    print("[WARNING] Scraper dependencies missing. Real Mode (Scraper) will be unavailable.")
+    get_apartmentsdotcom = None
+
 from services.geolocate import get_coordinates
 from data_loader import get_listings
+from services.voice_service import generate_voice
 
 # Load environment variables from .env file
 load_dotenv()
@@ -62,6 +70,7 @@ class ListingQuery(BaseModel):
     address: str = Field(description="The address to search for (e.g., '123 Main St, Edison NJ'). In our mock dataset, we will try to match the city or zip.")
     budget: float = Field(default=1500.0, description="The user's monthly budget for the rental.")
     mock_data: Optional[dict] = Field(default=None, description="Optional payload containing frontend mock data to analyze directly.")
+    mock: bool = False
 
 # --- MCP Tools (Ported from server.py) ---
 
@@ -95,47 +104,52 @@ def search_and_analyze_property(query: ListingQuery) -> str:
     matched_listings = []
     
     use_scraper = os.environ.get("USE_APARTMENTS_COM", "1").lower() in ("1", "true", "yes")
-    if use_scraper:
-        try:
-            real_apts = get_apartmentsdotcom(query.address, max_price=query.budget)
-            if real_apts:
-                for i, apt in enumerate(real_apts):
-                    # Mapping logic consolidated from server.py
-                    price_str = re.sub(r"[^\d]", "", apt.price or "")
-                    base_rent = int(price_str) if price_str else 1500
-                    addr_str = apt.address or ""
-                    zip_match = re.search(r"\b\d{5}(?:-\d{4})?\b", addr_str)
-                    zipcode = zip_match.group(0)[:5] if zip_match else "00000"
-                    
-                    # More robust city/state parsing: "Address, City, ST ZIP"
-                    city = "Unknown"
-                    state = "NJ"
-                    city_state_match = re.search(r",\s*([^,]+),\s*([A-Z]{2})\b", addr_str)
-                    if city_state_match:
-                        city = city_state_match.group(1).strip()
-                        state = city_state_match.group(2).strip()
-                    
-                    matched_listings.append({
-                        "id": f"apt_real_{i + 1}",
-                        "name": apt.name,
-                        "address": apt.address,
-                        "city": city,
-                        "state": state,
-                        "zip": zipcode,
-                        "base_rent": base_rent,
-                        "bedrooms": apt.bedrooms,
-                        "bathrooms": 1,
-                        "sqft": 800,
-                        "pet_friendly": "pet" in (getattr(apt, 'amenities', []) or []),
-                        "has_gym": "gym" in (getattr(apt, 'amenities', []) or []),
-                        "avg_utilities": 120,
-                        "description": f"Property from {apt.source}: {apt.name}",
-                        "latitude": getattr(apt, "latitude", None),
-                        "longitude": getattr(apt, "longitude", None),
-                        "image_url": IMAGE_ASSETS[i % len(IMAGE_ASSETS)]
-                    })
-        except Exception:
-            pass
+    use_mock = query.mock or os.environ.get("USE_MOCK_DATA", "0").lower() in ("1", "true", "yes")
+    
+    if use_scraper and not use_mock:
+        if get_apartmentsdotcom is None:
+            print("[INFO] Scraper is disabled because dependencies are missing.")
+        else:
+            try:
+                real_apts = get_apartmentsdotcom(query.address, max_price=query.budget)
+                if real_apts:
+                    for i, apt in enumerate(real_apts):
+                        # Mapping logic consolidated from server.py
+                        price_str = re.sub(r"[^\d]", "", apt.price or "")
+                        base_rent = int(price_str) if price_str else 1500
+                        addr_str = apt.address or ""
+                        zip_match = re.search(r"\b\d{5}(?:-\d{4})?\b", addr_str)
+                        zipcode = zip_match.group(0)[:5] if zip_match else "00000"
+                        
+                        # More robust city/state parsing: "Address, City, ST ZIP"
+                        city = "Unknown"
+                        state = "NJ"
+                        city_state_match = re.search(r",\s*([^,]+),\s*([A-Z]{2})\b", addr_str)
+                        if city_state_match:
+                            city = city_state_match.group(1).strip()
+                            state = city_state_match.group(2).strip()
+                        
+                        matched_listings.append({
+                            "id": f"apt_real_{i + 1}",
+                            "name": apt.name,
+                            "address": apt.address,
+                            "city": city,
+                            "state": state,
+                            "zip": zipcode,
+                            "base_rent": base_rent,
+                            "bedrooms": apt.bedrooms,
+                            "bathrooms": 1,
+                            "sqft": 800,
+                            "pet_friendly": "pet" in (getattr(apt, 'amenities', []) or []),
+                            "has_gym": "gym" in (getattr(apt, 'amenities', []) or []),
+                            "avg_utilities": 120,
+                            "description": f"Property from {apt.source}: {apt.name}",
+                            "latitude": getattr(apt, "latitude", None),
+                            "longitude": getattr(apt, "longitude", None),
+                            "image_url": IMAGE_ASSETS[i % len(IMAGE_ASSETS)]
+                        })
+            except Exception:
+                pass
 
     # Fallback to CSV if no listings found
     if not matched_listings:
@@ -182,6 +196,7 @@ class EvaluateRequest(BaseModel):
     budget: float
     mock_data: Dict[str, Any]
     college: str = ""
+    mock: bool = False
 
 def _translate_frontend_to_backend(frontend_data: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -406,16 +421,22 @@ def _map_supabase_to_listing(row: dict, college_coords: tuple = None) -> dict:
     }
 
 @app.get("/api/listings")
-def get_all_listings(college: str = None, radius: float = 50.0, max_price: float = 99999):
+def get_all_listings(college: str = None, radius: float = 50.0, max_price: float = 99999, mock: bool = False):
     """
     Get listings. If Supabase is configured and college is provided, uses geo-radius query.
     Otherwise falls back to CSV.
     """
-    # Try Supabase first
+    # Try Supabase first (if not in mock mode)
+    use_mock_env = os.environ.get("USE_MOCK_DATA", "0").lower() in ("1", "true", "yes")
+    is_mock = mock or use_mock_env
     supabase_url = os.environ.get("SUPABASE_URL")
-    if supabase_url:
+    if supabase_url and not is_mock:
         try:
-            from db import get_college_coords, get_nearby_listings, get_all_listings as db_get_all
+            try:
+                from db import get_college_coords, get_nearby_listings, get_all_listings as db_get_all
+            except ImportError:
+                print("[WARNING] Supabase dependencies missing. Real Mode (Database) will be unavailable.")
+                raise Exception("Supabase not installed")
 
             college_coords = None
             if college:
@@ -441,12 +462,18 @@ def get_all_listings(college: str = None, radius: float = 50.0, max_price: float
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/listings/{listing_id}")
-def get_listing(listing_id: str):
-    # Try Supabase first
+def get_listing(listing_id: str, mock: bool = False):
+    # Try Supabase first (if not in mock mode)
+    use_mock_env = os.environ.get("USE_MOCK_DATA", "0").lower() in ("1", "true", "yes")
+    is_mock = mock or use_mock_env
     supabase_url = os.environ.get("SUPABASE_URL")
-    if supabase_url:
+    if supabase_url and not is_mock:
         try:
-            from db import get_listing_by_id
+            try:
+                from db import get_listing_by_id
+            except ImportError:
+                print("[WARNING] Supabase dependencies missing. Real Mode (Database) will be unavailable.")
+                raise Exception("Supabase not installed")
             row = get_listing_by_id(listing_id)
             if row:
                 return _map_supabase_to_listing(row)
@@ -471,10 +498,25 @@ def get_listing(listing_id: str):
 def health_check():
     return {"status": "ok"}
 
+@app.get("/api/tts")
+def text_to_speech(text: str, agent: str = "default"):
+    """
+    Generates audio for the given text using ElevenLabs and streams it.
+    """
+    if not text:
+        raise HTTPException(status_code=400, detail="Text is required")
+    
+    audio_data = generate_voice(text, agent)
+    if not audio_data:
+        raise HTTPException(status_code=500, detail="Failed to generate voice")
+    
+    return StreamingResponse(io.BytesIO(audio_data), media_type="audio/mpeg")
+
 class ChatRequest(BaseModel):
     listing_id: str
     question: str
     listing_context: Dict[str, Any] = {}
+    mock: bool = False
 
 @app.post("/api/chat")
 def chat_with_howl(request: ChatRequest):

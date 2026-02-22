@@ -5,6 +5,7 @@ class MarketFairnessInput(BaseModel):
     listing_id: str
     listing_rent: float
     zip_code: str
+    mock: bool = False
 
 class MarketFairnessOutput(BaseModel):
     listing_id: str
