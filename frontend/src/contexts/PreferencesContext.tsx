@@ -39,7 +39,8 @@ const MOCK_MODE_KEY = "spirited_oracle_mock_mode";
 export const PreferencesProvider = ({ children }: { children: ReactNode }) => {
   const [preferences, setPreferencesState] = useState<UserPreferences | null>(() => {
     const saved = localStorage.getItem(PREFS_KEY);
-    return saved ? JSON.parse(saved) : null;
+    if (!saved) return null;
+    try { return JSON.parse(saved); } catch { return null; }
   });
   
   const [selectedListingId, setSelectedListingIdState] = useState<string | null>(() => {

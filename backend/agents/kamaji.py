@@ -239,7 +239,7 @@ Return ONLY valid JSON with this exact structure (one object per listing, same o
             if chunk_start > 0:
                 time.sleep(LLM_BATCH_DELAY)
             logger.info("API CALL: Batched LLM for listings %d-%d of %d (chunk size=%d)", chunk_start + 1, chunk_end, n, chunk_n)
-            raw = generate_text(prompt, model="gemini-flash-latest", json_mode=True)
+            raw = generate_text(prompt, model="gemini-2.5-flash", json_mode=True)
             if raw:
                 data = json.loads(raw.replace("```json", "").replace("```", "").strip())
                 arr = data.get("insights", [])
@@ -349,7 +349,7 @@ Based on your world knowledge of this area, provide educated estimates in strict
 {{"walk_score": (int 0-100), "driving_minutes_to_center": (int), "market_fairness_percentile": (int 0-100), "safety_score_out_of_10": (int 1-10)}}
 Return ONLY the valid JSON, no markdown."""
     try:
-        text = generate_text(completion_prompt, model="gemini-flash-latest", json_mode=True)
+        text = generate_text(completion_prompt, model="gemini-2.5-flash", json_mode=True)
         if text:
             clean_json = text.replace("```json", "").replace("```", "").strip()
             ai_data = json.loads(clean_json)
@@ -396,7 +396,7 @@ Return ONLY the valid JSON, no markdown."""
     # Generate dynamic LLM summary
     prompt = f"You are Kamaji from Spirited Away, a gruff but caring boiler man giving rental advice. Analyze these reports and give a 2-sentence final verdict on the property focusing on the Pros and Cons. Mention the Spirit Match score ({match_score}/100) and True Cost (${hidden['trueCost']}). Pros: {pros}. Cons: {cons}."
     
-    llm_summary = generate_text(prompt, model="gemini-flash-latest")
+    llm_summary = generate_text(prompt, model="gemini-2.5-flash")
     if llm_summary:
         summary_text = llm_summary.strip().replace('"', '')
     

@@ -127,7 +127,7 @@ def analyze_budget(listing: dict, target_budget: float) -> dict:
         f"Total true monthly outlay including transport and groceries is ~${total_all:.0f}. "
         f"Give 1 punchy sentence telling them if it's a smart financial fit."
     )
-    insight_text = generate_text(prompt, model="gemini-flash-latest")
+    insight_text = generate_text(prompt, model="gemini-2.5-flash")
     
     # Fallback insight if LLM fails
     if not insight_text or not insight_text.strip():

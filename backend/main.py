@@ -493,8 +493,6 @@ def evaluate_batch(request: BatchEvaluateRequest):
         logger.error("  -> BATCH FAILED: %s", e, exc_info=True)
         return {"error": str(e)}
 
-import pandas as pd
-import random
 
 
 def _map_scraped_to_listing(apt, idx: int = 0, college_coords: tuple = None) -> dict:
@@ -619,7 +617,7 @@ def _map_row_to_listing(row) -> dict:
         "rating": row.get("rating") if pd.notna(row.get("rating")) else 4.0,
         "imageGradient": gradient,
         "landlord": f"{city} Property Management",
-        "yearBuilt": int(row["year_built"]) if pd.notna(row.get("year_built")) else 2000,
+        "yearBuilt": int(row.get("year_built")) if pd.notna(row.get("year_built")) else 2000,
         "parkingIncluded": float(row["parking_fee"]) == 0,
         "utilitiesIncluded": float(row["avg_utilities"]) == 0,
         "petFriendly": row["pet_friendly"] in [True, "True", 1, "1"],
@@ -627,21 +625,15 @@ def _map_row_to_listing(row) -> dict:
         "securityDeposit": float(row["base_rent"]),
         "moveInDate": "2025-08-01",
         "zillowEstimate": float(row.get("zillow_estimate")) if pd.notna(row.get("zillow_estimate")) else float(row["base_rent"]),
-        "crimeScore": int(row["crime_rating"]) if pd.notna(row["crime_rating"]) else 7,
-        "walkScore": int(row["walk_score"]) if pd.notna(row["walk_score"]) else 70,
+        "crimeScore": int(row.get("crime_rating")) if pd.notna(row.get("crime_rating")) else 7,
+        "walkScore": int(row.get("walk_score")) if pd.notna(row.get("walk_score")) else 70,
         "nearbyGrocery": "Local Grocery (0.5 mi)" if row["has_grocery_nearby"] in [True, "True", 1, "1"] else "Supermarket (1.5 mi)",
         "nearbyGym": "On-site Gym" if row["has_gym"] in [True, "True", 1, "1"] else "Local Gym (1.0 mi)",
         "hiddenCosts": hidden_costs,
         "imageUrl": row.get("image_url") or IMAGE_ASSETS[hash(str(row["id"])) % len(IMAGE_ASSETS)],
     }
 
-def _haversine_miles(lat1, lon1, lat2, lon2):
-    """Haversine distance in miles between two lat/lon points."""
-    R = 3958.8  # Earth radius in miles
-    dlat = math.radians(lat2 - lat1)
-    dlon = math.radians(lon2 - lon1)
-    a = math.sin(dlat/2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon/2)**2
-    return R * 2 * math.asin(math.sqrt(a))
+# _haversine_miles is defined once at the top of this file (line ~105).
 
 def _map_supabase_to_listing(row: dict, college_coords: tuple = None) -> dict:
     """Convert a Supabase row to the frontend Listing shape."""

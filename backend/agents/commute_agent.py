@@ -212,7 +212,7 @@ def analyze_commute(listing: dict, college: str = "") -> dict:
         f"and the area has a walk score of {walk_score}/100. "
         f"Give 1 sentence advising the traveler on their commute options."
     )
-    insight_text = generate_text(prompt, model="gemini-flash-latest") or ""
+    insight_text = generate_text(prompt, model="gemini-2.5-flash") or ""
 
     # Fallback insight when no LLM key is configured — use _transit_mins (int, never a string)
     if not insight_text:

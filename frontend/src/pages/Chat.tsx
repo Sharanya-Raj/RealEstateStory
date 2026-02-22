@@ -139,7 +139,7 @@ const Chat = () => {
                 >
                   {(() => {
                     // Use the public howl image explicitly for the chat sidebar
-                    const howlPublic = new URL('/images/howl.PNG', import.meta.url).href;
+                    const howlPublic = '/images/howl.PNG';
                     const src = chatAgent.character === 'Howl' ? howlPublic : chatAgent.image;
                     if (src) {
                       return <img src={src} alt={chatAgent.name} className="w-full h-full object-cover" />;
