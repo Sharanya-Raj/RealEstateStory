@@ -3,7 +3,7 @@ import os
 import re
 import sys
 import time
-
+import undetected_chromedriver as uc
 from selenium import webdriver
 
 logger = logging.getLogger("services.apartmentsdotcom")
@@ -29,14 +29,15 @@ def _parse_beds(bed_text):
 def _get_driver():
     """Initialize a reusable headless Chrome driver."""
     options = Options()
-    options.add_argument("--headless")
+    # options.add_argument("--headless=new")
+    # options.add_argument("head")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument(
         "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
         "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
     )
-    return webdriver.Chrome(options=options)
+    return uc.Chrome(options=options)
 
 def _parse_price(price_str: str) -> int | None:
     """Parse price string like '$1,200' or '1200' to int. Returns None if unparseable."""
@@ -54,6 +55,8 @@ def get_apartmentsdotcom(location, max_price: float | None = None):
     logger.info("API: Apartments.com scrape starting for location=%r, max_price=%s", location, max_price)
     geo = geolocate.get_coordinates(location)
 
+
+    
     # geolocate returns (0,0,"") tuple on failure, or dict with latitude/longitude on success
     if not isinstance(geo, dict) or not geo.get("latitude") or not geo.get("longitude"):
         logger.warning("Apartments.com: Could not geocode location=%r (got %s)", location, type(geo).__name__)
@@ -63,11 +66,25 @@ def get_apartmentsdotcom(location, max_price: float | None = None):
     state = geo.get("state", "nj").lower()
     univ_slug = location.replace(" ", "-").lower()
 
-    # Base URL construction
-    if city:
-        base_url = f"https://www.apartments.com/off-campus-housing/{state}/{city}/{univ_slug}/"
+# Base URL construction
+    if location.lower() == "rutgers university":
+        # base_url = "https://www.apartments.com/off-campus-housing/nj/new-brunswick/rutgers-university/"
+        base_url = "https://www.apartments.com/new-brunswick-nj/"
+        
+        if not isinstance(geo, dict) or not geo.get("latitude"):
+            geo = {"latitude": 40.4862, "longitude": -74.4518, "city": "New Brunswick", "state": "nj"}
+
     else:
-        base_url = f"https://www.apartments.com/off-campus-housing/{state}/{univ_slug}/"
+        if not isinstance(geo, dict) or not geo.get("latitude") or not geo.get("longitude"):
+            logger.warning("Could not geocode location=%r", location)
+            return []
+        city = geo.get("city", "").replace(" ", "-").lower()
+        state = geo.get("state", "nj").lower()
+        univ_slug = location.replace(" ", "-").lower()
+        if city:
+            base_url = f"https://www.apartments.com/off-campus-housing/{state}/{city}/{univ_slug}/"
+        else:
+            base_url = f"https://www.apartments.com/off-campus-housing/{state}/{univ_slug}/"
 
     all_apartments = []
     current_page_url = base_url
@@ -77,7 +94,7 @@ def get_apartmentsdotcom(location, max_price: float | None = None):
         while current_page_url:
             logger.info("API: Apartments.com fetching page %s", current_page_url)
             driver.get(current_page_url)
-            time.sleep(5)  # Allow JS to load
+            time.sleep(10)  # Allow JS to load
             
             soup = BeautifulSoup(driver.page_source, "html.parser")
             listings = soup.find_all("article", attrs={"data-listingid": True})
@@ -157,5 +174,6 @@ def get_apartmentsdotcom(location, max_price: float | None = None):
 
 if __name__ == "__main__":
     results = get_apartmentsdotcom("Princeton University")
+    # results = get_apartmentsdotcom("Rutgers University")
     for apt in results:
         print(f"{apt.name} - {apt.price} - {apt.bedrooms} beds - {apt.address}")

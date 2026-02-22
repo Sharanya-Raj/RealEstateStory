@@ -81,7 +81,8 @@ def main():
     print("  Enter a University/location and rent budget to see the analysis")
     print("=" * 60)
 
-    uni = "princeton university"
+    # uni = "princeton university"
+    uni = "rutgers university"
     budget = 2500.0
 
     # When MCP_LOG_FILE is set, use DIRECT mode so server/agent logs are captured (subprocess logs aren't visible)
