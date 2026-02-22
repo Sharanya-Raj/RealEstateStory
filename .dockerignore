@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+backend/venv/
+backend/env/
+
+# Environment files (security)
+.env
+.env.local
+.env.production
+*.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Temporary files
+*.tmp
+*.temp
+nul
+
+# Downloaded files
+backend/downloaded_files/
+backend/services/downloaded_files/
+downloaded_files/
+
+# Logs
+backend/logs/
+*.log
+
+# Data (keep structure, ignore large files)
+backend/*.json
+backend/result*.json
+backend/craigslist_sample.json
+backend/test_out.json
+
+# Node modules (frontend will handle its own)
+node_modules/
+
+# Build outputs
+frontend/dist/
+frontend/build/
+
+# Cache
+.cache/
+*.cache
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Jupyter
+.ipynb_checkpoints/

@@ -1,0 +1,57 @@
+name: Deploy to Vultr
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 🚀 Deploy to Vultr Server
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.VULTR_HOST }}
+        username: ${{ secrets.VULTR_USERNAME }}
+        key: ${{ secrets.VULTR_SSH_KEY }}
+        port: ${{ secrets.VULTR_PORT || 22 }}
+        script: |
+          echo "📦 Pulling latest changes..."
+          cd ~/RealEstateStory
+          git pull origin main
+          
+          echo "🐳 Deploying with Docker..."
+          if [ -f "deploy-docker.sh" ]; then
+            chmod +x deploy-docker.sh
+            ./deploy-docker.sh
+          else
+            # Fallback to direct deployment
+            echo "🔧 Using PM2 deployment..."
+            cd backend
+            source venv/bin/activate
+            pip install -r requirements.txt
+            pm2 restart ghiblinest-api
+            
+            cd ../frontend
+            npm install
+            npm run build
+          fi
+          
+          echo "✅ Deployment complete!"
+          
+    - name: 🔍 Health Check
+      run: |
+        sleep 10
+        curl -f http://${{ secrets.VULTR_HOST }}:8000/health || exit 1
+        echo "✅ Backend is healthy"
+        
+    - name: 📢 Notify
+      if: always()
+      run: |
+        if [ ${{ job.status }} == 'success' ]; then
+          echo "✅ Deployment successful!"
+        else
+          echo "❌ Deployment failed!"
+        fi

@@ -1,0 +1,75 @@
+# Docker Compose configuration for production deployment on Vultr
+version: '3.8'
+
+services:
+  # Backend FastAPI service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ghiblinest-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # API Keys - these should be set via .env file
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      
+      # Database
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      
+      # Feature flags
+      - USE_OPENROUTER=${USE_OPENROUTER:-0}
+      - USE_APARTMENTS_COM=${USE_APARTMENTS_COM:-0}
+      - USE_MOCK_DATA=${USE_MOCK_DATA:-0}
+      - USE_MCP_CLIENT=${USE_MCP_CLIENT:-1}
+      
+      # Production settings
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=INFO
+    volumes:
+      # Mount data directory for CSV files
+      - ./backend/data:/app/data:ro
+      # Optional: Mount for persistent cache
+      - backend-cache:/app/cache
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - ghiblinest-network
+
+  # Frontend Vite/React service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
+    container_name: ghiblinest-frontend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - ghiblinest-network
+
+volumes:
+  backend-cache:
+    driver: local
+
+networks:
+  ghiblinest-network:
+    driver: bridge
