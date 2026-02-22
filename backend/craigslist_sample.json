@@ -1,0 +1,65 @@
+[
+  {
+    "position": "0",
+    "@type": "ListItem",
+    "item": {
+      "@context": "http://schema.org",
+      "name": "1 month free rent! 1st floor unit, shared laundry room, pets ok, train",
+      "numberOfBedrooms": 1,
+      "longitude": -74.4179024356573,
+      "@type": "Apartment",
+      "latitude": 40.7598984059221,
+      "numberOfBathroomsTotal": 1,
+      "address": {
+        "addressCountry": "",
+        "@type": "PostalAddress",
+        "postalCode": "",
+        "addressRegion": "NJ",
+        "addressLocality": "Madison",
+        "streetAddress": ""
+      }
+    }
+  },
+  {
+    "@type": "ListItem",
+    "position": "1",
+    "item": {
+      "numberOfBathroomsTotal": 1,
+      "address": {
+        "addressRegion": "NJ",
+        "addressLocality": "Morristown",
+        "streetAddress": "",
+        "addressCountry": "",
+        "@type": "PostalAddress",
+        "postalCode": ""
+      },
+      "latitude": 40.7994897895635,
+      "numberOfBedrooms": 2,
+      "@type": "Apartment",
+      "longitude": -74.4850433489605,
+      "name": "Duplex - Right Side",
+      "@context": "http://schema.org"
+    }
+  },
+  {
+    "@type": "ListItem",
+    "position": "2",
+    "item": {
+      "@context": "http://schema.org",
+      "name": "Central air hardwood floors pets ok top schools walk to train station",
+      "longitude": -74.4023025137701,
+      "@type": "Apartment",
+      "numberOfBedrooms": 2,
+      "latitude": 40.7004007496056,
+      "address": {
+        "streetAddress": "",
+        "addressLocality": "New Providence",
+        "addressRegion": "NJ",
+        "@type": "PostalAddress",
+        "postalCode": "",
+        "addressCountry": ""
+      },
+      "numberOfBathroomsTotal": 2
+    }
+  }
+]
