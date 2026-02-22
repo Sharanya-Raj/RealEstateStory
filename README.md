@@ -39,7 +39,7 @@ Meet the spirits who will guide your apartment search:
 
 ### 🛢️ Supabase + PostGIS Backend
 - **Geo-spatial queries** for nearby apartments using PostgreSQL PostGIS
-- **Automated Craigslist scraper** populates database with New Jersey listings near 20 universities
+- **Automated Apartments.com scraper** populates database with New Jersey listings near 20 universities
 - **RPC functions** for efficient upsert operations and distance-based searches
 - **Real-time data sync** with scraped listings updated periodically
 
@@ -136,7 +136,7 @@ npm install
 npm run dev  # Starts on http://localhost:8080
 ```
 
-### 4. Run Craigslist Scraper (Optional)
+### 4. Run Apartments.com Scraper (Optional)
 ```bash
 cd backend/scripts
 python scrape_nj.py  # Populates Supabase with NJ listings
@@ -267,7 +267,7 @@ backend/
 ├── market_fairness/         # ZORI calculations
 ├── services/
 │   ├── apartmentsdotcom.py  # Selenium scraper
-│   ├── craigslist.py        # Craigslist scraper
+│   ├── ghibli_scraper.py    # (removed — Apartments.com is the primary scraper)
 │   ├── geolocate.py         # Nominatim geocoding
 │   └── voice_service.py     # ElevenLabs TTS
 ├── scripts/
@@ -310,7 +310,7 @@ frontend/src/
 
 ### Scraper Issues
 - **"Function not found" error:** Ensure you've run `supabase_migration.sql` in your Supabase SQL Editor
-- **All coordinates are 0.0:** Craigslist may have changed their JSON-LD structure; check `services/craigslist.py` for extraction logic
+- **All coordinates are 0.0:** Check `services/apartmentsdotcom.py` parsing logic and geocoding
 - **Chrome driver errors:** Install Chrome and chromedriver if using `USE_APARTMENTS_COM=1`
 
 ### API Errors

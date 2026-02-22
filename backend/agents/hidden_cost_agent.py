@@ -6,6 +6,7 @@ import os
 logger = logging.getLogger("agents.hidden_cost")
 import requests
 from pydantic import BaseModel
+from llm_client import generate_text
 
 class GeminiFeeExtraction(BaseModel):
     has_hidden_fee_warnings: bool
@@ -137,10 +138,6 @@ def _agentic_cost_analysis(
         reasoning        – the model's chain-of-thought
     Returns an empty dict on failure so the caller can degrade gracefully.
     """
-    api_key = os.environ.get("OPENROUTER_API_KEY") or os.environ.get("OPEN_ROUTER_API_KEY")
-    if not api_key:
-        logger.info("[HIDDEN_COST] No OPENROUTER_API_KEY; skipping agentic analysis")
-        return {}
 
     listing_context = {
         "address":             listing.get("address"),
@@ -193,24 +190,12 @@ Return ONLY valid JSON matching this schema exactly:
 }}"""
 
     try:
-        logger.info("API CALL: Gemini agentic hidden-cost analysis for %s", listing.get("address"))
-        response = requests.post(
-            "https://openrouter.ai/api/v1/chat/completions",
-            headers={"Authorization": f"Bearer {api_key}"},
-            json={
-                "model": "google/gemini-2.5-flash",
-                "messages": [{"role": "user", "content": prompt}],
-                "response_format": {"type": "json_object"},
-            },
-            timeout=20,
-        )
-        if not response.ok:
-            logger.warning("[HIDDEN_COST] Agentic API non-OK: %s", response.status_code)
+        logger.info("API CALL: LLM agentic hidden-cost analysis for %s", listing.get("address"))
+        raw = generate_text(prompt, model="gemini-2.5-flash", json_mode=True)
+        if not raw:
+            logger.info("[HIDDEN_COST] LLM unavailable; skipping agentic analysis")
             return {}
-
-        data = response.json()
-        content = data["choices"][0]["message"]["content"]
-        result = json.loads(content)
+        result = json.loads(raw)
         logger.info("[HIDDEN_COST] Agentic analysis complete. llmTrueCost=%s", result.get("llmTrueCost"))
         return result
     except Exception as e:
@@ -236,43 +221,30 @@ def analyze_hidden_costs(listing: dict) -> dict:
     
     description = listing.get('description', '')
     
-    # Analyze description for unstructured fees (Gemini or OpenRouter)
+    # Analyze description for unstructured fees via LLM (Gemini or OpenRouter)
     unstructured_fees = 0.0
     gemini_insight = "No unstructured text provided."
-    
-    api_key = os.environ.get("OPENROUTER_API_KEY") or os.environ.get("OPEN_ROUTER_API_KEY")
-    if api_key and description:
+
+    if description:
         try:
-            prompt = f"Analyze this rental property description and identify any hidden monthly fees or strict penalties (e.g. pet rent, mandatory valet trash) that are not base rent. Estimate their monthly cost. Return JSON matching the schema. Description: {description}"
-            
-            response = requests.post(
-                "https://openrouter.ai/api/v1/chat/completions",
-                headers={"Authorization": f"Bearer {api_key}"},
-                json={
-                    "model": "google/gemini-2.5-flash",
-                    "messages": [{"role": "user", "content": prompt}],
-                    "response_format": {"type": "json_object"}
-                },
-                timeout=10
+            prompt = (
+                f"Analyze this rental property description and identify any hidden monthly fees or strict "
+                f"penalties (e.g. pet rent, mandatory valet trash) that are not base rent. Estimate their "
+                f"monthly cost. Return JSON matching the schema. Description: {description}"
             )
-            
-            if response.ok:
-                data = response.json()
-                content = data["choices"][0]["message"]["content"]
-                result = json.loads(content)
-                
+            raw = generate_text(prompt, model="gemini-2.5-flash", json_mode=True)
+            if raw:
+                result = json.loads(raw)
                 # Handle case where LLM returns a list instead of dict
                 if isinstance(result, list):
                     logger.warning("[HIDDEN_COST] LLM returned list instead of dict, using fallback")
                     result = {}
-                
                 unstructured_fees = float(result.get('estimated_unstructured_fees', 0.0))
                 if result.get('has_hidden_fee_warnings'):
                     gemini_insight = result.get('analysis_reasoning', '')
-                
         except Exception as e:
-            logger.warning("[HIDDEN_COST] OpenRouter analysis failed: %s", e)
-            gemini_insight = f"Description analysis unavailable (check logs for details)"
+            logger.warning("[HIDDEN_COST] Description analysis failed: %s", e)
+            gemini_insight = "Description analysis unavailable (check logs for details)"
     
     true_cost = rent + parking + amenities + utilities + unstructured_fees
 

@@ -3,7 +3,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import GhibliLayout from "@/components/GhibliLayout";
 import { type Listing } from "@/types/listing";
-import { api } from "@/lib/api";
+import { api, getScraperName } from "@/lib/api";
 import { usePreferences } from "@/contexts/PreferencesContext";
 import { summaryAgent } from "@/data/agents";
 import {
@@ -21,7 +21,7 @@ const Summary = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { preferences, aiPayload } = usePreferences();
+  const { preferences, aiPayload, getCachedListings } = usePreferences();
 
   const fairnessData = location.state?.fairnessData;
 
@@ -29,7 +29,20 @@ const Summary = () => {
   const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
-    api.getListing(id!)
+    if (!id) return;
+
+    const scraperKey = getScraperName(preferences?.college || "");
+    const cached = getCachedListings(scraperKey);
+    if (cached) {
+      const found = cached.find((l: any) => l.id === id);
+      if (found) {
+        setListing(found);
+        setIsFetching(false);
+        return;
+      }
+    }
+
+    api.getListing(id)
       .then(data => {
         setListing(data);
         setIsFetching(false);
@@ -39,7 +52,7 @@ const Summary = () => {
         setListing(null);
         setIsFetching(false);
       });
-  }, [id]);
+  }, [id, preferences?.college, getCachedListings]);
 
   // Play Kamaji's voiceover if available - moved up to follow Rules of Hooks
   useEffect(() => {
@@ -92,11 +105,15 @@ const Summary = () => {
       ...listing.hiddenCosts,
     ];
 
+  // Parse "X mins" strings from the commute agent into numbers for scoring
+  const drivingMins = parseInt(aiPayload?.commute?.driving ?? "30") || 30;
+  const commuteScore = drivingMins <= 15 ? 5 : drivingMins <= 25 ? 4 : 3;
+
   const scores = aiPayload ? [
-    { name: "Commute", score: aiPayload.commute.walking ? 4 : 3 },
+    { name: "Commute", score: commuteScore },
     { name: "Budget", score: Math.round(aiPayload.matchScore / 20) },
-    { name: "Fairness", score: aiPayload.percentile < 50 ? 5 : 3 },
-    { name: "Safety", score: aiPayload.safety.score || 5 },
+    { name: "Fairness", score: (aiPayload.percentile ?? 50) < 50 ? 5 : 3 },
+    { name: "Safety", score: aiPayload.safety?.score ?? 5 },
     { name: "Transparency", score: totalHidden < 100 ? 5 : 3 },
   ] : [
     { name: "Commute", score: listing.commuteMinutes <= 10 ? 5 : listing.commuteMinutes <= 20 ? 4 : 3 },

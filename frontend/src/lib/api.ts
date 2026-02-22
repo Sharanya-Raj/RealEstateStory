@@ -4,6 +4,18 @@
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
+const COLLEGE_SCRAPER_NAMES: Record<string, string> = {
+  "Rutgers University - New Brunswick": "Rutgers New Brunswick",
+  "Rutgers University - Newark": "Rutgers Newark",
+  "Rutgers University - Camden": "Rutgers Camden",
+  "New Jersey Institute of Technology (NJIT)": "NJIT",
+  "The College of New Jersey (TCNJ)": "The College of New Jersey",
+};
+
+export function getScraperName(college: string): string {
+  return COLLEGE_SCRAPER_NAMES[college] || college;
+}
+
 async function handleResponse(response: Response) {
   if (!response.ok) {
     const error = await response.json().catch(() => ({ error: "Unknown error" }));
@@ -12,11 +24,10 @@ async function handleResponse(response: Response) {
   return response.json();
 }
 
-const getMockMode = () => localStorage.getItem("spirited_oracle_mock_mode") === "true";
-
 export const api = {
   /**
-   * Fetch all listings with optional filters
+   * Fetch all listings with optional filters.
+   * Always hits live scrapers first; backend falls back to CSV only if they fail.
    */
   getListings: async (params?: { college?: string; radius?: number; max_price?: number }) => {
     const url = new URL(`${API_BASE_URL}/api/listings`);
@@ -25,7 +36,6 @@ export const api = {
       if (params.radius) url.searchParams.set("radius", String(params.radius));
       if (params.max_price) url.searchParams.set("max_price", String(params.max_price));
     }
-    if (getMockMode()) url.searchParams.set("mock", "true");
     const response = await fetch(url.toString());
     return handleResponse(response);
   },
@@ -35,7 +45,6 @@ export const api = {
    */
   getListing: async (id: string) => {
     const url = new URL(`${API_BASE_URL}/api/listings/${id}`);
-    if (getMockMode()) url.searchParams.set("mock", "true");
     const response = await fetch(url.toString());
     return handleResponse(response);
   },
@@ -47,7 +56,7 @@ export const api = {
     const response = await fetch(`${API_BASE_URL}/api/fairness`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...data, mock: getMockMode() }),
+      body: JSON.stringify(data),
     });
     return handleResponse(response);
   },
@@ -64,7 +73,43 @@ export const api = {
     const response = await fetch(`${API_BASE_URL}/api/evaluate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...data, mock: getMockMode() }),
+      body: JSON.stringify(data),
+    });
+    return handleResponse(response);
+  },
+
+  /**
+   * Batch-evaluate multiple listings through the agent pipeline
+   */
+  evaluateBatch: async (data: {
+    listings: any[];
+    budget: number;
+    college?: string;
+  }) => {
+    const response = await fetch(`${API_BASE_URL}/api/evaluate-batch`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    return handleResponse(response);
+  },
+
+  /**
+   * Full pipeline: scrape listings → run agents → return combined results.
+   * Listings are only returned after all agent analysis is complete.
+   */
+  runPipeline: async (data: {
+    college: string;
+    budget: number;
+    roommates?: string;
+    parking?: string;
+    max_distance_miles?: number;
+    mock?: boolean;
+  }) => {
+    const response = await fetch(`${API_BASE_URL}/api/pipeline`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
     });
     return handleResponse(response);
   },
@@ -76,7 +121,7 @@ export const api = {
     const response = await fetch(`${API_BASE_URL}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...data, mock: getMockMode() }),
+      body: JSON.stringify(data),
     });
     return handleResponse(response);
   },

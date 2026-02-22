@@ -1,26 +1,42 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import GhibliLayout from "@/components/GhibliLayout";
 import { type Listing } from "@/types/listing";
-import { api } from "@/lib/api";
+import { api, getScraperName } from "@/lib/api";
 import { usePreferences } from "@/contexts/PreferencesContext";
 import {
   MapPin, Bed, Bath, Ruler, Star, Car, Zap, PawPrint,
   Calendar, Shield, DollarSign, Sparkles, ArrowLeft,
-  Navigation, Wind, Cloud
+  Navigation, Wind, Cloud, TrendingUp, Wallet, CheckCircle, AlertTriangle
 } from "lucide-react";
 
 const ListingDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { setSelectedListingId } = usePreferences();
+  const { preferences, setSelectedListingId, setAiPayload, getAgentResult, setAgentResult, getCachedListings } = usePreferences();
 
   const [listing, setListing] = useState<Listing | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [agentData, setAgentData] = useState<any | null>(null);
+  const [isAgentLoading, setIsAgentLoading] = useState(false);
+  const agentFetchedForId = useRef<string | null>(null);
 
   useEffect(() => {
-    api.getListing(id!)
+    if (!id) return;
+
+    const scraperKey = getScraperName(preferences?.college || "");
+    const cached = getCachedListings(scraperKey);
+    if (cached) {
+      const found = cached.find((l: any) => l.id === id);
+      if (found) {
+        setListing(found);
+        setIsLoading(false);
+        return;
+      }
+    }
+
+    api.getListing(id)
       .then(data => {
         setListing(data);
         setIsLoading(false);
@@ -30,7 +46,47 @@ const ListingDetail = () => {
         setListing(null);
         setIsLoading(false);
       });
-  }, [id]);
+  }, [id, preferences?.college, getCachedListings]);
+
+  // Single consolidated effect: check cache first, only call API if nothing cached
+  useEffect(() => {
+    if (!id || !listing) return;
+
+    // Already have agent data for this listing
+    if (agentData?.id === listing.id) return;
+
+    // Check pipeline batch cache
+    const cached = getAgentResult(id);
+    if (cached) {
+      setAgentData(cached);
+      setAiPayload(cached);
+      return;
+    }
+
+    // No cached data — fetch individually (only once per listing)
+    if (agentFetchedForId.current === listing.id) return;
+    agentFetchedForId.current = listing.id;
+    setIsAgentLoading(true);
+
+    api.evaluateListing({
+      address: listing.address,
+      budget: preferences?.priceMax || 1500,
+      mock_data: listing,
+      college: getScraperName(preferences?.college || ""),
+    })
+      .then(data => {
+        if (!data.error) {
+          setAgentData(data);
+          setAgentResult(listing.id, data);
+          setAiPayload(data);
+        }
+      })
+      .catch(err => {
+        console.error("Agent evaluation failed:", err);
+        agentFetchedForId.current = null;
+      })
+      .finally(() => setIsAgentLoading(false));
+  }, [id, listing, agentData, preferences?.priceMax, preferences?.college, getAgentResult, setAgentResult, setAiPayload]);
 
   if (isLoading) {
     return (
@@ -65,6 +121,10 @@ const ListingDetail = () => {
   }
 
   const handleBeginJourney = () => {
+    const payload = agentData ?? getAgentResult(listing.id);
+    if (payload) {
+      setAiPayload(payload);
+    }
     setSelectedListingId(listing.id);
     navigate(`/journey/${listing.id}`);
   };
@@ -258,6 +318,130 @@ const ListingDetail = () => {
               </div>
             </motion.div>
           </div>
+
+          {/* ── AGENT INSIGHTS SECTION ── */}
+          {(isAgentLoading || agentData) && (
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.55 }}
+              className="oracle-glass-strong bg-black/40 border border-white/20 p-8 sm:p-10 rounded-[2.5rem] relative overflow-hidden shadow-2xl"
+            >
+              <div className="relative z-10">
+                <h2 className="font-sans text-2xl font-bold text-white mb-2 flex items-center gap-3 drop-shadow-md">
+                  <Sparkles className="text-sky-300" size={22} />
+                  Spirit Agent Analysis
+                </h2>
+                <p className="text-slate-400 text-sm mb-6">AI agents have evaluated this property for you</p>
+
+                {isAgentLoading && !agentData ? (
+                  <div className="flex flex-col items-center py-8 gap-4">
+                    <motion.div
+                      animate={{ y: [0, -8, 0], rotate: [0, 5, -5, 0] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="text-5xl"
+                    >
+                      🔮
+                    </motion.div>
+                    <p className="text-sky-300 font-semibold text-sm animate-pulse">Spirits are evaluating this sanctuary...</p>
+                  </div>
+                ) : agentData ? (
+                  <div className="space-y-6">
+                    {/* Top stats row */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {/* Match Score */}
+                      <div className="text-center p-4 rounded-2xl bg-black/50 border border-white/10">
+                        <div className="text-3xl font-bold text-white drop-shadow-md">{agentData.matchScore ?? "—"}%</div>
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-sky-300 mt-1">Spirit Match</div>
+                      </div>
+                      {/* True Cost */}
+                      <div className="text-center p-4 rounded-2xl bg-black/50 border border-white/10">
+                        <div className="text-3xl font-bold text-white drop-shadow-md flex items-center justify-center gap-1">
+                          <Wallet size={18} className="text-blue-300" />
+                          ${agentData.trueCost ? Math.round(agentData.trueCost).toLocaleString() : listing.price.toLocaleString()}
+                        </div>
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-blue-300 mt-1">True Cost/mo</div>
+                      </div>
+                      {/* Commute */}
+                      <div className="text-center p-4 rounded-2xl bg-black/50 border border-white/10">
+                        <div className="text-3xl font-bold text-white drop-shadow-md">{agentData.commute?.driving ?? `${listing.commuteMinutes}m`}</div>
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-300 mt-1">Drive Time</div>
+                      </div>
+                      {/* Safety */}
+                      <div className="text-center p-4 rounded-2xl bg-black/50 border border-white/10">
+                        <div className="text-3xl font-bold text-white drop-shadow-md flex items-center justify-center gap-1">
+                          <Shield size={18} className="text-emerald-300" />
+                          {agentData.safety?.score ?? listing.crimeScore}/10
+                        </div>
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-300 mt-1">Safety</div>
+                      </div>
+                    </div>
+
+                    {/* Market insight */}
+                    {agentData.historicalInsight && (
+                      <div className="p-4 rounded-2xl bg-black/50 border border-white/10">
+                        <div className="flex items-center gap-2 mb-2">
+                          <TrendingUp size={16} className="text-blue-300" />
+                          <span className="text-xs font-bold tracking-widest uppercase text-blue-300">Market Position</span>
+                          {agentData.percentile != null && (
+                            <span className="ml-auto text-sm font-bold text-white">{agentData.percentile}th percentile</span>
+                          )}
+                        </div>
+                        <p className="text-slate-300 text-sm leading-relaxed">{agentData.historicalInsight}</p>
+                      </div>
+                    )}
+
+                    {/* Budget insight */}
+                    {agentData.budgetInsight && (
+                      <div className="p-4 rounded-2xl bg-black/50 border border-white/10">
+                        <div className="flex items-center gap-2 mb-2">
+                          <DollarSign size={16} className="text-amber-300" />
+                          <span className="text-xs font-bold tracking-widest uppercase text-amber-300">Budget Analysis</span>
+                        </div>
+                        <p className="text-slate-300 text-sm leading-relaxed">{agentData.budgetInsight}</p>
+                      </div>
+                    )}
+
+                    {/* Pros & Cons */}
+                    {(agentData.pros?.length > 0 || agentData.cons?.length > 0) && (
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {agentData.pros?.length > 0 && (
+                          <div className="space-y-2">
+                            <span className="text-[10px] font-bold tracking-widest uppercase text-blue-300">Blessings</span>
+                            {agentData.pros.map((p: string) => (
+                              <div key={p} className="flex items-start gap-2 text-sm text-white">
+                                <CheckCircle className="h-4 w-4 text-blue-400 flex-shrink-0 mt-0.5" />
+                                <span>{p}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        {agentData.cons?.length > 0 && (
+                          <div className="space-y-2">
+                            <span className="text-[10px] font-bold tracking-widest uppercase text-amber-300">Cautions</span>
+                            {agentData.cons.map((c: string) => (
+                              <div key={c} className="flex items-start gap-2 text-sm text-white">
+                                <AlertTriangle className="h-4 w-4 text-amber-400 flex-shrink-0 mt-0.5" />
+                                <span>{c}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Kamaji summary */}
+                    {agentData.sophieSummary && (
+                      <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500/10 to-sky-500/10 border border-blue-400/20">
+                        <p className="text-sky-100 text-sm italic leading-relaxed">"{agentData.sophieSummary}"</p>
+                        <p className="text-[10px] font-bold tracking-widest uppercase text-sky-400 mt-2">— Kamaji, the Oracle</p>
+                      </div>
+                    )}
+                  </div>
+                ) : null}
+              </div>
+            </motion.div>
+          )}
 
           {/* CTA Footer */}
           <motion.div

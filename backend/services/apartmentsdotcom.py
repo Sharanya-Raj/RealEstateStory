@@ -1,3 +1,5 @@
+import dataclasses
+import json
 import logging
 import os
 import re
@@ -17,6 +19,41 @@ sys.path.insert(0, current_dir)
 
 from model import Apartment
 import geolocate
+
+SCRAPE_CACHE_DIR = os.path.join(os.path.dirname(current_dir), "data", "scrape_cache")
+
+
+def _cache_slug(location: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", location.strip().lower()).strip("-")
+
+
+def _load_cache(location: str) -> list[Apartment] | None:
+    slug = _cache_slug(location)
+    path = os.path.join(SCRAPE_CACHE_DIR, f"{slug}.json")
+    if not os.path.exists(path):
+        return None
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            rows = json.load(f)
+        apts = [Apartment(**row) for row in rows]
+        logger.info("SCRAPE CACHE HIT: loaded %d apartments from %s", len(apts), path)
+        return apts
+    except Exception as e:
+        logger.warning("SCRAPE CACHE: failed to read %s: %s", path, e)
+        return None
+
+
+def _save_cache(location: str, apartments: list[Apartment]) -> None:
+    os.makedirs(SCRAPE_CACHE_DIR, exist_ok=True)
+    slug = _cache_slug(location)
+    path = os.path.join(SCRAPE_CACHE_DIR, f"{slug}.json")
+    try:
+        rows = [dataclasses.asdict(a) for a in apartments]
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(rows, f, indent=2)
+        logger.info("SCRAPE CACHE SAVED: %d apartments → %s", len(apartments), path)
+    except Exception as e:
+        logger.warning("SCRAPE CACHE: failed to write %s: %s", path, e)
 
 
 def _parse_beds(bed_text):
@@ -138,6 +175,24 @@ def _get_driver():
     return uc.Chrome(options=options)
 
 
+def _filter_cached(apartments: list[Apartment], max_price: float | None, min_beds: int, require_parking: bool) -> list[Apartment]:
+    """Apply runtime filters to cached apartments."""
+    out = []
+    for apt in apartments:
+        if min_beds > 1 and apt.bedrooms < min_beds:
+            continue
+        if max_price is not None:
+            parsed = _parse_price(apt.price)
+            if parsed is not None and parsed > max_price:
+                continue
+        if require_parking:
+            amenity_text = " ".join(apt.amenities or []).lower()
+            if "parking" not in amenity_text:
+                continue
+        out.append(apt)
+    return out
+
+
 def get_apartmentsdotcom(
     location,
     max_price: float | None = None,
@@ -146,15 +201,26 @@ def get_apartmentsdotcom(
 ):
     """
     Scrape Apartments.com for listings near the given location.
-    Princeton University: uses undetected_chromedriver (uc) + Selenium.
-    Any other school: uses SeleniumBase (SB) + Playwright.
-    If max_price is set, only listings with price <= max_price are added.
-    Parsing is identical in both paths (BeautifulSoup).
+    Checks a local JSON cache first (instant for demos); if no cache,
+    scrapes live and saves results for next time.
     """
     logger.info(
-        "API: Apartments.com scrape starting for location=%r, max_price=%s, min_beds=%d, require_parking=%s",
+        "API: Apartments.com starting for location=%r, max_price=%s, min_beds=%d, parking=%s",
         location, max_price, min_beds, require_parking,
     )
+
+    # ── Check cache first ─────────────────────────────────────────────
+    cached = _load_cache(location)
+    if cached is not None:
+        filtered = _filter_cached(cached, max_price, min_beds, require_parking)
+        logger.info(
+            "SCRAPE CACHE: %d/%d apartments passed filters (max_price=%s, min_beds=%d)",
+            len(filtered), len(cached), max_price, min_beds,
+        )
+        return filtered
+
+    # ── No cache — scrape live ────────────────────────────────────────
+    logger.info("SCRAPE CACHE MISS for %r — scraping live", location)
     geo = geolocate.get_coordinates(location)
 
     if not isinstance(geo, dict) or not geo.get("latitude") or not geo.get("longitude"):
@@ -165,9 +231,8 @@ def get_apartmentsdotcom(
     state = geo.get("state", "nj").lower()
     univ_slug = location.replace(" ", "-").lower()
 
-
     loc_lower = location.strip().lower()
-    if "rutgers" in loc_lower and "university" in loc_lower:
+    if "rutgers" in loc_lower and ("university" in loc_lower or "new brunswick" in loc_lower):
         base_url = "https://www.apartments.com/off-campus-housing/nj/new-brunswick/rutgers-university/"
     elif "new jersey institute" in loc_lower or "njit" in loc_lower:
         base_url = "https://www.apartments.com/off-campus-housing/nj/newark/new-jersey-institute-of-technology/"
@@ -176,38 +241,11 @@ def get_apartmentsdotcom(
     else:
         base_url = f"https://www.apartments.com/off-campus-housing/{state}/{univ_slug}/"
 
+    # Scrape with NO price/bed filters so cache is reusable for any budget
+    all_apartments: list[Apartment] = []
 
-    all_apartments = []
-    is_princeton = "princeton" in location.lower() and "university" in location.lower()
-
-    # if is_princeton:
-    #     # Princeton: use undetected_chromedriver + Selenium (existing flow)
-    #     logger.info("Apartments.com: Princeton University — using uc/Selenium")
-    #     driver = _get_driver()
-    #     try:
-    #         current_page_url = base_url
-    #         while current_page_url:
-    #             logger.info("API: Apartments.com fetching page %s", current_page_url)
-    #             driver.get(current_page_url)
-    #             time.sleep(10)
-    #             soup = BeautifulSoup(driver.page_source, "html.parser")
-    #             page_apts = _parse_listings_from_soup(soup, geo, location, max_price, min_beds, require_parking)
-    #             all_apartments.extend(page_apts)
-    #             if not soup.find_all("article", attrs={"data-listingid": True}):
-    #                 logger.info("Apartments.com: No listings found on page, ending search")
-    #                 break
-    #             next_button = soup.select_one("a.next")
-    #             if next_button and next_button.get("href"):
-    #                 current_page_url = next_button.get("href")
-    #                 if not current_page_url.startswith("http"):
-    #                     current_page_url = "https://www.apartments.com" + current_page_url
-    #             else:
-    #                 current_page_url = None
-    #     finally:
-    #         driver.quit()
-    # else:
-        # Any other school: use SeleniumBase + Playwright
-    logger.info("Apartments.com: Other school — using SB + Playwright")
+    logger.info("Apartments.com: Using SB + Playwright for %r", location)
+    logger.info("Apartments.com: Target URL = %s", base_url)
     with SB(uc=True, headless=True) as sb:
         debugger_address = sb.driver.capabilities["goog:chromeOptions"]["debuggerAddress"]
         cdp_url = f"http://{debugger_address}"
@@ -224,8 +262,12 @@ def get_apartmentsdotcom(
                 page.wait_for_timeout(10000)
                 html = page.content()
                 soup = BeautifulSoup(html, "html.parser")
-                page_apts = _parse_listings_from_soup(soup, geo, location, max_price, min_beds, require_parking)
+                page_apts = _parse_listings_from_soup(
+                    soup, geo, location,
+                    max_price=None, min_beds=1, require_parking=False,
+                )
                 all_apartments.extend(page_apts)
+                logger.info("Apartments.com: Page parsed — %d new listings (%d total so far)", len(page_apts), len(all_apartments))
                 if not soup.find_all("article", attrs={"data-listingid": True}):
                     logger.info("Apartments.com: No listings found on page, ending search")
                     break
@@ -237,13 +279,30 @@ def get_apartmentsdotcom(
                 else:
                     current_page_url = None
 
-
     logger.info("API: Apartments.com scrape completed, total listings=%d", len(all_apartments))
-    return all_apartments
+
+    # Save unfiltered results to cache for future runs
+    if all_apartments:
+        _save_cache(location, all_apartments)
+
+    # Apply runtime filters before returning
+    return _filter_cached(all_apartments, max_price, min_beds, require_parking)
 
 
 if __name__ == "__main__":
-    # results = get_apartmentsdotcom("Princeton University")
-    results = get_apartmentsdotcom("Rutgers University")
-    for apt in results:
-        print(f"{apt.name} - {apt.price} - {apt.bedrooms} beds - {apt.address}")
+    import argparse
+    logging.basicConfig(level=logging.INFO, format="%(name)s | %(message)s")
+
+    parser = argparse.ArgumentParser(description="Scrape & cache apartments for demo")
+    parser.add_argument("--schools", nargs="*", default=["Princeton University", "Rutgers New Brunswick"],
+                        help="Schools to scrape (default: Princeton + Rutgers)")
+    args = parser.parse_args()
+
+    for school in args.schools:
+        print(f"\n{'='*60}")
+        print(f"  Scraping: {school}")
+        print(f"{'='*60}")
+        results = get_apartmentsdotcom(school)
+        print(f"\n  >> {len(results)} apartments scraped & cached for {school}")
+        for apt in results:
+            print(f"    {apt.name} - {apt.price} - {apt.bedrooms} beds - {apt.address}")

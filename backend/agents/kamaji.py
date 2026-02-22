@@ -42,9 +42,12 @@ def aggregate_insights_batch(
     if n == 0:
         return []
 
-    logger.info("BATCH PIPELINE: analyzing %d listings (1 geocode batch, 1 OSRM, 1 Overpass, 1 LLM)", n)
+    logger.info("=" * 60)
+    logger.info("BATCH PIPELINE START: %d listings, budget=$%.0f, college=%r", n, target_budget, college)
+    logger.info("=" * 60)
 
     # 1. Geocode: college once + all listing addresses
+    logger.info("[STEP 1/6] Geocoding college: %r", college)
     college_geo = get_coordinates(college) if college else None
     if not isinstance(college_geo, dict):
         college_geo = None
@@ -69,7 +72,7 @@ def aggregate_insights_batch(
         for L in listings
     ]
     n_need = sum(needs_geocode)
-    logger.info("Geocoding: %d/%d listings need geocoding (others already have unique coords)", n_need, n)
+    logger.info("[STEP 1/6] Geocoding: %d/%d listings need individual geocoding", n_need, n)
 
     addr_list = []
     for L in listings:
@@ -97,17 +100,25 @@ def aggregate_insights_batch(
     apt_coords = [(L["_lat"], L["_lon"]) for L in listings]
     listings_with_coords = [(L, L["_lat"], L["_lon"]) for L in listings]
 
+    logger.info("[STEP 1/6] Geocoding DONE — all %d listings have coordinates", n)
+
     # 2. OSRM Table: all apts → college
+    logger.info("[STEP 2/6] OSRM commute matrix: %d apartments → %r", n, college)
     commute_route_results = []
     if col_lat and col_lon and college:
         commute_route_results = _get_commute_matrix_batch(apt_coords, col_lon, col_lat)
     if len(commute_route_results) < n:
         commute_route_results = commute_route_results + [None] * (n - len(commute_route_results))
 
+    logger.info("[STEP 2/6] OSRM DONE — %d routes computed", len([r for r in commute_route_results if r]))
+
     # 3. Overpass batch
+    logger.info("[STEP 3/6] Overpass: fetching nearby amenities for %d locations", n)
     nearby_results = analyze_nearby_batch(listings_with_coords)
+    logger.info("[STEP 3/6] Overpass DONE — %d results", len(nearby_results))
 
     # 4. Per-listing deterministic: budget, fairness, hidden (structured)
+    logger.info("[STEP 4/6] Computing budget, fairness, hidden costs for each listing...")
     commutes = []
     budgets = []
     fairnesses = []
@@ -124,6 +135,7 @@ def aggregate_insights_batch(
             dk = route["distance_km"]
             driving_time = f"{dm} mins"
             transit_time = f"{int(dm * 1.4)} mins"
+            L["distanceMiles"] = round(dk * 0.621371, 1)  # real road distance
         commutes.append({
             "driving": driving_time,
             "transit": transit_time,
@@ -188,8 +200,11 @@ def aggregate_insights_batch(
             },
         })
 
+    logger.info("[STEP 4/6] Deterministic agents DONE — %d budgets, %d fairness, %d hidden", len(budgets), len(fairnesses), len(hiddens))
+
     # 5. Batched LLM calls for narrative insights (chunked to avoid rate limits)
     import time
+    logger.info("[STEP 5/6] LLM narrative insights: calling Gemini for %d listings...", n)
     llm_insights = [{} for _ in range(n)]
     LLM_BATCH_SIZE = int(os.environ.get("LLM_BATCH_SIZE", "8"))
     LLM_BATCH_DELAY = float(os.environ.get("LLM_BATCH_DELAY", "1.5"))
@@ -241,7 +256,10 @@ Return ONLY valid JSON with this exact structure (one object per listing, same o
         except Exception as e:
             logger.warning("Batched LLM chunk %d-%d failed: %s", chunk_start + 1, chunk_end, e)
 
+    logger.info("[STEP 5/6] LLM narrative insights DONE")
+
     # 6. Merge and build final results
+    logger.info("[STEP 6/6] Merging all agent results into final output...")
     results = []
     for i, L in enumerate(listings):
         li = llm_insights[i] if i < len(llm_insights) else {}
@@ -296,6 +314,14 @@ Return ONLY valid JSON with this exact structure (one object per listing, same o
             "images": [],
             "agenticBreakdown": hiddens[i]["agenticBreakdown"],
         })
+
+    logger.info("=" * 60)
+    logger.info("BATCH PIPELINE COMPLETE: %d results", len(results))
+    for i, r in enumerate(results[:5]):
+        logger.info("  [%d] %s  trueCost=$%s  match=%s%%", i, (r.get("address") or "?")[:50], r.get("trueCost"), r.get("matchScore"))
+    if len(results) > 5:
+        logger.info("  ... and %d more", len(results) - 5)
+    logger.info("=" * 60)
     return results
 
 

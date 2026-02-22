@@ -4,6 +4,8 @@ import os
 import re
 import requests
 
+from llm_client import generate_text
+
 logger = logging.getLogger("agents.commute")
 
 
@@ -15,42 +17,68 @@ def _get_commute_matrix_batch(
     """
     OSRM Table API: one call for all apartments to one destination (college).
     Returns list of {driving_mins, distance_km} or None per listing.
+    Coordinates at (0,0) are skipped to avoid poisoning the OSRM request.
     """
+    n_apts = len(apt_coords)
     if not apt_coords:
         return []
-    # Coords: apt1;apt2;...;college. Format: lon,lat
-    coord_str = ";".join(f"{lon},{lat}" for lat, lon in apt_coords) + f";{college_lon},{college_lat}"
-    n_apts = len(apt_coords)
-    sources = ";".join(str(i) for i in range(n_apts))
-    destinations = str(n_apts)
+
+    # Filter out (0,0) or obviously invalid coords — they cause OSRM 400
+    valid_indices = [
+        i for i, (lat, lon) in enumerate(apt_coords)
+        if lat and lon and abs(lat) > 0.1 and abs(lon) > 0.1
+    ]
+
+    if not valid_indices:
+        logger.warning("[COMMUTE] OSRM skipped — all %d apartments have invalid (0,0) coordinates", n_apts)
+        return [None] * n_apts
+
+    logger.info(
+        "API CALL: OSRM table (batch) %d apartments → college (%d skipped with bad coords)",
+        len(valid_indices), n_apts - len(valid_indices),
+    )
+
+    valid_coords = [apt_coords[i] for i in valid_indices]
+    coord_str = ";".join(f"{lon},{lat}" for lat, lon in valid_coords) + f";{college_lon},{college_lat}"
+    n_valid = len(valid_coords)
+    sources = ";".join(str(i) for i in range(n_valid))
+    destinations = str(n_valid)
     url = (
         f"http://router.project-osrm.org/table/v1/driving/{coord_str}"
         f"?sources={sources}&destinations={destinations}&annotations=duration,distance"
     )
     try:
-        logger.info("API CALL: OSRM table (batch) %d apartments → college", n_apts)
         resp = requests.get(url, timeout=30, headers={"User-Agent": "ghibli-nest-app"})
         if not resp.ok:
-            logger.warning("[COMMUTE] OSRM table non-OK: %s", resp.status_code)
+            logger.warning("[COMMUTE] OSRM table non-OK: %s (body: %s)", resp.status_code, resp.text[:200])
             return [None] * n_apts
         data = resp.json()
         if data.get("code") != "Ok":
+            logger.warning("[COMMUTE] OSRM code=%s", data.get("code"))
             return [None] * n_apts
         durations = data.get("durations") or []
         distances = data.get("distances") or []
-        results = []
-        for i in range(n_apts):
+
+        valid_results = []
+        for i in range(n_valid):
             dur = durations[i][0] if durations and durations[i] else None
             dist = distances[i][0] if distances and distances[i] else None
             if dur is not None and dist is not None:
-                results.append({
+                valid_results.append({
                     "driving_mins": int(dur / 60),
                     "distance_km": dist / 1000,
                 })
             else:
-                results.append(None)
-        logger.info("[COMMUTE] OSRM batch: %d/%d routes OK", sum(1 for r in results if r), n_apts)
-        return results
+                valid_results.append(None)
+
+        # Map results back to original indices
+        full_results: list[dict | None] = [None] * n_apts
+        for idx_in_valid, orig_idx in enumerate(valid_indices):
+            full_results[orig_idx] = valid_results[idx_in_valid]
+
+        ok = sum(1 for r in full_results if r)
+        logger.info("[COMMUTE] OSRM batch: %d/%d routes OK", ok, n_apts)
+        return full_results
     except Exception as e:
         logger.warning("[COMMUTE] OSRM table failed: %s", e)
         return [None] * n_apts
@@ -124,7 +152,10 @@ def analyze_commute(listing: dict, college: str = "") -> dict:
     Returns transit/driving/walking/biking times and a walk score.
     """
     # --- Hardcoded fallback values (existing logic preserved) ---
-    fallback_hub_mins = listing.get('transit_time_to_hub', 20)
+    fallback_hub_mins = int(listing.get('transit_time_to_hub', 20) or 20)
+    # Keep a numeric transit minutes alongside the display string so the fallback
+    # comparison below never crashes with a "str < int" TypeError.
+    _transit_mins = fallback_hub_mins
     driving_time  = f"{fallback_hub_mins // 2} mins"
     transit_time  = f"{fallback_hub_mins} mins"
     walking_time  = f"{fallback_hub_mins * 4} mins"
@@ -154,9 +185,10 @@ def analyze_commute(listing: dict, college: str = "") -> dict:
             driving_mins = real["driving_mins"]
             distance_km  = real["distance_km"]
 
+            _transit_mins = int(driving_mins * 1.4)   # numeric value for comparisons
             driving_time = f"{driving_mins} mins"
             # NJ suburban transit adds ~40% over driving on average
-            transit_time = f"{int(driving_mins * 1.4)} mins"
+            transit_time = f"{_transit_mins} mins"
             # Biking at 15 km/h
             biking_time  = f"{max(1, int(distance_km / 15 * 60))} mins"
             # Walking at 5 km/h
@@ -169,49 +201,30 @@ def analyze_commute(listing: dict, college: str = "") -> dict:
         else:
             logger.info("[COMMUTE] Real routing unavailable, using fallback heuristics")
 
-    # --- LLM insight (Gemini or OpenRouter) ---
+    # --- LLM insight via shared llm_client (supports both Gemini and OpenRouter) ---
     logger.info("AGENT: commute calling LLM (Conductor insight)")
-    insight_text = ""
-    api_key = os.environ.get("OPENROUTER_API_KEY")
-    if api_key:
-        try:
-            destination = college if college else "the university"
-            data_source = "real routing data" if used_real_data else "estimated data"
-            prompt = (
-                f"You are the Conductor from Spirited Away, speaking about a train journey. "
-                f"Based on {data_source}, the commute from this apartment to {destination} is: "
-                f"driving {driving_time}, transit {transit_time}, "
-                f"and the area has a walk score of {walk_score}/100. "
-                f"Give 1 sentence advising the traveler on their commute options."
-            )
-            response = requests.post(
-                "https://openrouter.ai/api/v1/chat/completions",
-                headers={"Authorization": f"Bearer {api_key}"},
-                json={
-                    "model": "google/gemini-2.5-flash",
-                    "messages": [{"role": "user", "content": prompt}]
-                },
-                timeout=15
-            )
-            if response.ok:
-                data = response.json()
-                insight_text = data["choices"][0]["message"]["content"].strip().replace('"', '')
-            else:
-                logger.warning("[COMMUTE] LLM API failed: %s", response.status_code)
-        except Exception as e:
-            logger.warning("[COMMUTE] LLM exception: %s", e)
-    
-    # Fallback insight if LLM failed
+    destination = college if college else "the university"
+    data_source = "real routing data" if used_real_data else "estimated data"
+    prompt = (
+        f"You are the Conductor from Spirited Away, speaking about a train journey. "
+        f"Based on {data_source}, the commute from this apartment to {destination} is: "
+        f"driving {driving_time}, transit {transit_time}, "
+        f"and the area has a walk score of {walk_score}/100. "
+        f"Give 1 sentence advising the traveler on their commute options."
+    )
+    insight_text = generate_text(prompt, model="gemini-flash-latest") or ""
+
+    # Fallback insight when no LLM key is configured — use _transit_mins (int, never a string)
     if not insight_text:
         destination = college if college else "campus"
-        if transit_time < 30:
-            insight_text = f"A swift {transit_time}-minute journey to {destination}. Your commute will be a breeze!"
-        elif transit_time < 45:
-            insight_text = f"A {transit_time}-minute commute to {destination} — manageable with good planning."
-        elif transit_time < 60:
-            insight_text = f"The {transit_time}-minute trek to {destination} is lengthy. Consider your schedule carefully."
+        if _transit_mins < 30:
+            insight_text = f"A swift {transit_time} journey to {destination}. Your commute will be a breeze!"
+        elif _transit_mins < 45:
+            insight_text = f"A {transit_time} commute to {destination} — manageable with good planning."
+        elif _transit_mins < 60:
+            insight_text = f"The {transit_time} trek to {destination} is lengthy. Consider your schedule carefully."
         else:
-            insight_text = f"Fair warning: {transit_time} minutes to {destination}. This commute will take a toll on your time and energy."
+            insight_text = f"Fair warning: {transit_time} to {destination}. This commute will take a toll on your time and energy."
 
     return {
         "driving": driving_time,

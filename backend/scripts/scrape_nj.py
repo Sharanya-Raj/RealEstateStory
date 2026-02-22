@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
 
-from services.craigslist import get_craigslist
+from services.apartmentsdotcom import get_apartmentsdotcom
 import requests
 
 logging.basicConfig(
@@ -66,7 +66,7 @@ def _parse_price(price_str: str) -> float | None:
 
 
 def scrape_and_store(university: str) -> int:
-    """Scrape one university using the Craigslist radius scraper and store in Supabase."""
+    """Scrape one university using Apartments.com and store in Supabase."""
     logger.info("Scraping: %s", university)
     
     # Verify Supabase credentials are loaded
@@ -78,7 +78,7 @@ def scrape_and_store(university: str) -> int:
         return 0
 
     try:
-        apartments = get_craigslist(university)
+        apartments = get_apartmentsdotcom(university)
     except Exception as e:
         logger.error("Scraper failed for %s: %s", university, e)
         return 0
@@ -149,7 +149,7 @@ def scrape_and_store(university: str) -> int:
                 "pet_friendly": any(x in amenity_str for x in ("pet", "dog", "cat")),
                 "has_gym": any(x in amenity_str for x in ("gym", "fitness")),
                 "description": f"Off-campus housing near {university}: {apt.name}",
-                "source": "Craigslist",
+                "source": "Apartments.com",
                 "latitude": lat if lat else None,
                 "longitude": lon if lon else None,
             }
@@ -221,7 +221,7 @@ def scrape_and_store(university: str) -> int:
 
 
 def main():
-    logger.info("🕷️  Starting NJ apartments scrape (Craigslist Radius mode)")
+    logger.info("Starting NJ apartments scrape (Apartments.com)")
     logger.info("Universities: %d", len(NJ_UNIVERSITIES))
     
     # Verify environment variables

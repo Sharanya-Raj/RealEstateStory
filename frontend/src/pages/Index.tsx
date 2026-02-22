@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import { usePreferences, UserPreferences } from "@/contexts/PreferencesContext";
 import { njColleges, amenitiesList } from "@/data/colleges";
-import { MapPin, Users, DollarSign, Car, Sparkles, Navigation } from "lucide-react";
+import { MapPin, Users, DollarSign, Car, Sparkles, Navigation, Database, Wifi } from "lucide-react";
 import { MagneticButton } from "@/components/MagneticButton";
 import heroBg from "@/assets/hero-bg.jpg";
 
@@ -121,7 +121,7 @@ const Particles = () => (
 
 const Index = () => {
   const navigate = useNavigate();
-  const { setPreferences } = usePreferences();
+  const { setPreferences, mockMode, setMockMode } = usePreferences();
 
   const [college, setCollege] = useState("");
   const [collegeCity, setCollegeCity] = useState("");
@@ -345,6 +345,43 @@ const Index = () => {
                       onChange={(e) => setMaxCommute(parseInt(e.target.value))}
                       className="w-full accent-ghibli-meadow" />
                     <div className="flex justify-between text-xs text-muted-foreground"><span>1 mi</span><span>30 mi</span></div>
+                  </div>
+
+                  {/* Data Source Toggle */}
+                  <div>
+                    <label className="flex items-center gap-2 font-quicksand font-semibold text-foreground mb-2">
+                      {mockMode ? <Database className="h-4 w-4 text-ghibli-amber" /> : <Wifi className="h-4 w-4 text-green-400" />}
+                      Data Source
+                    </label>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => setMockMode(false)}
+                        className={`flex-1 flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-quicksand text-sm transition-all duration-200 cursor-pointer ${
+                          !mockMode
+                            ? "bg-green-500/80 text-white shadow-lg shadow-green-500/30 border border-green-400/40"
+                            : "bg-blue-950/50 text-blue-200 hover:bg-blue-900/60 border border-blue-500/20"
+                        }`}
+                      >
+                        <Wifi className="h-4 w-4" />
+                        Live APIs
+                      </button>
+                      <button
+                        onClick={() => setMockMode(true)}
+                        className={`flex-1 flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-quicksand text-sm transition-all duration-200 cursor-pointer ${
+                          mockMode
+                            ? "bg-amber-500/80 text-white shadow-lg shadow-amber-500/30 border border-amber-400/40"
+                            : "bg-blue-950/50 text-blue-200 hover:bg-blue-900/60 border border-blue-500/20"
+                        }`}
+                      >
+                        <Database className="h-4 w-4" />
+                        CSV Only
+                      </button>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1.5">
+                      {mockMode
+                        ? "Uses pre-loaded CSV data — fast, no scraping. Agents still run analysis."
+                        : "Scrapes live listings from Apartments.com (slower, requires Chrome)."}
+                    </p>
                   </div>
 
                   {/* Submit */}

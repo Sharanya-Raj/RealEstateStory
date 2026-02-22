@@ -13,6 +13,7 @@ sys.path.append(os.path.join(current_dir, ".."))
 from market_fairness.handler import run_market_fairness_agent
 from market_fairness.schema import MarketFairnessInput
 from market_fairness.data_access import get_zori_history
+from llm_client import generate_text
 
 def analyze_fairness(listing: dict) -> dict:
     """
@@ -96,56 +97,37 @@ def analyze_fairness(listing: dict) -> dict:
             {"month": "Oct", "price": round(rent, 2)},
         ]
 
-    api_key = os.environ.get("OPENROUTER_API_KEY")
-
     try:
         # LLM fallback: generate historical data if ZORI had no data
-        if "error" in str(explanation).lower() and api_key:
+        if "error" in str(explanation).lower():
             logger.info("AGENT: fairness calling LLM for historical data (ZORI fallback)")
-            prompt_data = f"""
-You are a real estate AI. For the area of {city_name or zip_code} with current rent ${rent}:
-Return strict JSON predicting realistic rent for the last 4 months and market percentile:
-{{"p": (integer 0-100), "h": [{{"month": "Jan", "price": (int)}}, {{"month": "Feb", "price": (int)}}, {{"month": "Mar", "price": (int)}}, {{"month": "Apr", "price": (int)}}]}}
-"""
+            prompt_data = (
+                f"You are a real estate AI. For the area of {city_name or zip_code} with current rent ${rent}: "
+                f"Return strict JSON predicting realistic rent for the last 4 months and market percentile: "
+                f'{{ "p": (integer 0-100), "h": [{{"month": "Jan", "price": (int)}}, {{"month": "Feb", "price": (int)}}, '
+                f'{{"month": "Mar", "price": (int)}}, {{"month": "Apr", "price": (int)}}] }}'
+            )
             try:
-                response = requests.post(
-                    "https://openrouter.ai/api/v1/chat/completions",
-                    headers={"Authorization": f"Bearer {api_key}"},
-                    json={
-                        "model": "google/gemini-2.5-flash",
-                        "messages": [{"role": "user", "content": prompt_data}],
-                        "response_format": {"type": "json_object"}
-                    },
-                    timeout=15
-                )
-                if response.ok:
-                    res_text = response.json()["choices"][0]["message"]["content"]
-                    ai_json = json.loads(res_text.replace("```json", "").replace("```", "").strip())
+                raw = generate_text(prompt_data, model="gemini-2.5-flash", json_mode=True)
+                if raw:
+                    ai_json = json.loads(raw.replace("```json", "").replace("```", "").strip())
                     percentile = ai_json.get("p", percentile)
                     historical_prices = ai_json.get("h", historical_prices)
             except Exception:
                 pass
 
         # 2. Baron's Insight — LLM generates character-themed summary
-        if api_key:
-            prompt = f"""You are The Baron from Whisper of the Heart, a dapper aristocrat cat giving distinguished real estate advice. 
-The market analysis shows: fairness score {fairness_score:.0f}/100, percentile {percentile:.0f}th. 
-Details: {explanation.get('details', insight)}
-The rent is ${rent}. Give 1 elegant sentence telling the user if this is a fair market value."""
-            response = requests.post(
-                "https://openrouter.ai/api/v1/chat/completions",
-                headers={"Authorization": f"Bearer {api_key}"},
-                json={
-                    "model": "google/gemini-2.5-flash",
-                    "messages": [{"role": "user", "content": prompt}]
-                },
-                timeout=10
-            )
-            if response.ok:
-                data = response.json()
-                insight = data["choices"][0]["message"]["content"].strip().replace('"', '')
-        
-        # Fallback insight if LLM fails
+        prompt = (
+            f"You are The Baron from Whisper of the Heart, a dapper aristocrat cat giving distinguished real estate advice. "
+            f"The market analysis shows: fairness score {fairness_score:.0f}/100, percentile {percentile:.0f}th. "
+            f"Details: {explanation.get('details', insight)} "
+            f"The rent is ${rent}. Give 1 elegant sentence telling the user if this is a fair market value."
+        )
+        llm_insight = generate_text(prompt, model="gemini-2.5-flash")
+        if llm_insight:
+            insight = llm_insight.strip().replace('"', '')
+
+        # Fallback insight if LLM unavailable
         if not insight or insight == "In line with current market trends":
             if fairness_score < 40:
                 insight = f"This rental sits at the {percentile:.0f}th percentile — notably above typical market rates for the area. Consider negotiating."
@@ -153,7 +135,7 @@ The rent is ${rent}. Give 1 elegant sentence telling the user if this is a fair 
                 insight = f"A splendid find! At the {percentile:.0f}th percentile, this represents excellent value compared to similar properties."
             else:
                 insight = f"Fair market value. The rent aligns with the {percentile:.0f}th percentile for this neighborhood."
-                
+
     except Exception as e:
         logger.warning("Fairness Baron insight error: %s", e)
                 

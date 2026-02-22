@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from "react";
 
 export interface UserPreferences {
   college: string;
@@ -19,6 +19,13 @@ interface PreferencesContextType {
   setSelectedListingId: (id: string | null) => void;
   aiPayload: any | null;
   setAiPayload: (payload: any | null) => void;
+  agentResults: Record<string, any>;
+  setAgentResult: (listingId: string, data: any) => void;
+  setBatchAgentResults: (results: any[]) => void;
+  getAgentResult: (listingId: string) => any | null;
+  cachedListings: Record<string, any[]>;
+  setCachedListings: (college: string, listings: any[]) => void;
+  getCachedListings: (college: string) => any[] | null;
   mockMode: boolean;
   setMockMode: (mode: boolean) => void;
 }
@@ -44,6 +51,28 @@ export const PreferencesProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const [aiPayload, setAiPayload] = useState<any | null>(null);
+  const [agentResults, setAgentResults] = useState<Record<string, any>>({});
+  const [cachedListings, setCachedListingsState] = useState<Record<string, any[]>>({});
+
+  const setAgentResult = useCallback((listingId: string, data: any) => {
+    setAgentResults(prev => ({ ...prev, [listingId]: data }));
+  }, []);
+
+  const setBatchAgentResults = useCallback((results: any[]) => {
+    const map: Record<string, any> = {};
+    for (const r of results) {
+      if (r?.id) map[r.id] = r;
+    }
+    setAgentResults(prev => ({ ...prev, ...map }));
+  }, []);
+
+  const getAgentResult = useCallback((listingId: string) => agentResults[listingId] ?? null, [agentResults]);
+
+  const setCachedListings = useCallback((college: string, listings: any[]) => {
+    setCachedListingsState(prev => ({ ...prev, [college]: listings }));
+  }, []);
+
+  const getCachedListings = useCallback((college: string) => cachedListings[college] ?? null, [cachedListings]);
 
   const setPreferences = (prefs: UserPreferences) => {
     setPreferencesState(prefs);
@@ -62,7 +91,7 @@ export const PreferencesProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <PreferencesContext.Provider value={{ preferences, setPreferences, selectedListingId, setSelectedListingId, aiPayload, setAiPayload, mockMode, setMockMode }}>
+    <PreferencesContext.Provider value={{ preferences, setPreferences, selectedListingId, setSelectedListingId, aiPayload, setAiPayload, agentResults, setAgentResult, setBatchAgentResults, getAgentResult, cachedListings, setCachedListings, getCachedListings, mockMode, setMockMode }}>
       {children}
     </PreferencesContext.Provider>
   );

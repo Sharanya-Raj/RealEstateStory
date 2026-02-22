@@ -1,0 +1,802 @@
+[
+  {
+    "name": "Icon Riverwalk 55+ Active Adult Apartment Homes",
+    "address": "1 Riverwalk, Plainsboro, NJ 08536",
+    "price": "$2,415+",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": [
+      "Pets Allowed",
+      "Fitness Center",
+      "Pool",
+      "Dishwasher",
+      "Refrigerator",
+      "Kitchen"
+    ]
+  },
+  {
+    "name": "Icon Riverwalk 55+ Active Adult Apartment Homes",
+    "address": "1 Riverwalk, Plainsboro, NJ 08536",
+    "price": "$3,005+",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": [
+      "Pets Allowed",
+      "Fitness Center",
+      "Pool",
+      "Dishwasher",
+      "Refrigerator",
+      "Kitchen"
+    ]
+  },
+  {
+    "name": "Icon Riverwalk 55+ Active Adult Apartment Homes",
+    "address": "1 Riverwalk, Plainsboro, NJ 08536",
+    "price": "$2,409+",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": [
+      "Pets Allowed",
+      "Fitness Center",
+      "Pool",
+      "Dishwasher",
+      "Refrigerator",
+      "Kitchen"
+    ]
+  },
+  {
+    "name": "Icon Riverwalk 55+ Active Adult Apartment Homes",
+    "address": "1 Riverwalk, Plainsboro, NJ 08536",
+    "price": "$2,999+",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": [
+      "Pets Allowed",
+      "Fitness Center",
+      "Pool",
+      "Dishwasher",
+      "Refrigerator",
+      "Kitchen"
+    ]
+  },
+  {
+    "name": "Lofts at Princeton",
+    "address": "100 Loft Dr, Princeton, NJ 08540",
+    "price": "$2,399+",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": [
+      "Pets Allowed",
+      "Fitness Center",
+      "Pool",
+      "In Unit Washer & Dryer",
+      "Clubhouse",
+      "Business Center"
+    ]
+  },
+  {
+    "name": "Lofts at Princeton",
+    "address": "100 Loft Dr, Princeton, NJ 08540",
+    "price": "$3,149+",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": [
+      "Pets Allowed",
+      "Fitness Center",
+      "Pool",
+      "In Unit Washer & Dryer",
+      "Clubhouse",
+      "Business Center"
+    ]
+  },
+  {
+    "name": "Lofts at Princeton",
+    "address": "100 Loft Dr, Princeton, NJ 08540",
+    "price": "$4,099+",
+    "bedrooms": 3,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": [
+      "Pets Allowed",
+      "Fitness Center",
+      "Pool",
+      "In Unit Washer & Dryer",
+      "Clubhouse",
+      "Business Center"
+    ]
+  },
+  {
+    "name": "Avalon W Squared",
+    "address": "500 Avalon Sq, West Windsor, NJ 08550",
+    "price": "$2,093+",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": [
+      "Pets Allowed",
+      "Fitness Center",
+      "Pool",
+      "Stainless Steel Appliances"
+    ]
+  },
+  {
+    "name": "Avalon W Squared",
+    "address": "500 Avalon Sq, West Windsor, NJ 08550",
+    "price": "$2,643+",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": [
+      "Pets Allowed",
+      "Fitness Center",
+      "Pool",
+      "Stainless Steel Appliances"
+    ]
+  },
+  {
+    "name": "Barclay Square at Princeton Forrestal",
+    "address": "1900 Barclay Blvd, Princeton, NJ 08540",
+    "price": "$3,275+",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": [
+      "Fitness Center",
+      "Pool",
+      "Dishwasher",
+      "Refrigerator",
+      "Kitchen",
+      "In Unit Washer & Dryer"
+    ]
+  },
+  {
+    "name": "Barclay Square at Princeton Forrestal",
+    "address": "1900 Barclay Blvd, Princeton, NJ 08540",
+    "price": "$4,297+",
+    "bedrooms": 3,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": [
+      "Fitness Center",
+      "Pool",
+      "Dishwasher",
+      "Refrigerator",
+      "Kitchen",
+      "In Unit Washer & Dryer"
+    ]
+  },
+  {
+    "name": "Windsor Woods",
+    "address": "465 Meadow Rd, Princeton, NJ 08540",
+    "price": "$2,309",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": [
+      "Pets Allowed",
+      "Fitness Center",
+      "Pool",
+      "Dishwasher",
+      "Grill",
+      "Business Center",
+      "Gated"
+    ]
+  },
+  {
+    "name": "Windsor Woods",
+    "address": "465 Meadow Rd, Princeton, NJ 08540",
+    "price": "$2,207+",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": [
+      "Pets Allowed",
+      "Fitness Center",
+      "Pool",
+      "Dishwasher",
+      "Grill",
+      "Business Center",
+      "Gated"
+    ]
+  },
+  {
+    "name": "Windsor Woods",
+    "address": "465 Meadow Rd, Princeton, NJ 08540",
+    "price": "$2,685+",
+    "bedrooms": 3,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": [
+      "Pets Allowed",
+      "Fitness Center",
+      "Pool",
+      "Dishwasher",
+      "Grill",
+      "Business Center",
+      "Gated"
+    ]
+  },
+  {
+    "name": "The Mews at Princeton Junction",
+    "address": "900 Wessex Pl, Princeton, NJ 08540",
+    "price": "$2,124+",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": [
+      "Pets Allowed",
+      "Fitness Center",
+      "Pool",
+      "Dishwasher",
+      "In Unit Washer & Dryer",
+      "Walk-In Closets"
+    ]
+  },
+  {
+    "name": "The Mews at Princeton Junction",
+    "address": "900 Wessex Pl, Princeton, NJ 08540",
+    "price": "$2,786+",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": [
+      "Pets Allowed",
+      "Fitness Center",
+      "Pool",
+      "Dishwasher",
+      "In Unit Washer & Dryer",
+      "Walk-In Closets"
+    ]
+  },
+  {
+    "name": "The Mews at Princeton Junction",
+    "address": "900 Wessex Pl, Princeton, NJ 08540",
+    "price": "$2,920+",
+    "bedrooms": 3,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": [
+      "Pets Allowed",
+      "Fitness Center",
+      "Pool",
+      "Dishwasher",
+      "In Unit Washer & Dryer",
+      "Walk-In Closets"
+    ]
+  },
+  {
+    "name": "172 Nassau St",
+    "address": "172 Nassau St, Princeton, NJ 08544",
+    "price": "$2,950",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "Avalon Princeton on Harrison",
+    "address": "275 N Harrison St, Princeton, NJ 08540",
+    "price": "$2,910+",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "Avalon Princeton on Harrison",
+    "address": "275 N Harrison St, Princeton, NJ 08540",
+    "price": "$2,650+",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "The Alice",
+    "address": "365 Terhune Rd, Princeton, NJ 08540",
+    "price": "$3,295+",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "The Alice",
+    "address": "365 Terhune Rd, Princeton, NJ 08540",
+    "price": "$4,480+",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "Woodmont Way - West Windsor",
+    "address": "100 Woodstone Cir, Princeton, NJ 08540",
+    "price": "$2,695+",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "Woodmont Way - West Windsor",
+    "address": "100 Woodstone Cir, Princeton, NJ 08540",
+    "price": "$3,155+",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "Copperwood in Princeton",
+    "address": "300 Bunn Dr, Princeton, NJ 08540",
+    "price": "$2,908+",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "Copperwood in Princeton",
+    "address": "300 Bunn Dr, Princeton, NJ 08540",
+    "price": "$2,977+",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "661 Mount Lucas Rd Unit 2",
+    "address": "661 Mount Lucas Rd Unit 2, Princeton, NJ 08540",
+    "price": "N/A",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "Unit 447 at Icon Riverwalk 55+ Active Adult Apartment Homes",
+    "address": "1 Riverwalk, Plainsboro, NJ 08536",
+    "price": "$2,415",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "Unit 447 at Icon Riverwalk 55+ Active Adult Apartment Homes",
+    "address": "1 Riverwalk, Plainsboro, NJ 08536",
+    "price": "$2,409",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "Princeton Lakeview Apartments",
+    "address": "103 Lakeview Ter, Princeton, NJ 08540",
+    "price": "$1,655",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "Princeton Lakeview Apartments",
+    "address": "103 Lakeview Ter, Princeton, NJ 08540",
+    "price": "$2,395",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "31 Palmer Square W Unit A, Princeton, NJ 08540",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$4,250",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "15 Colebrook Ct, Princeton, NJ 08540",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$3,900",
+    "bedrooms": 3,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "3728 Brunswick Pike, Princeton, NJ 08540",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$3,500",
+    "bedrooms": 3,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "3728 US-1, Princeton, NJ 08540",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$3,500",
+    "bedrooms": 3,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "100 Loft Dr, Princeton, NJ 08540",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$2,449+",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "151 N Harrison St, Princeton, NJ 08540",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$3,375",
+    "bedrooms": 3,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "117 N Barrow Pl, Princeton, NJ 08540",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$2,950",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "715 Parker Blvd, West Windsor Township, NJ 08550",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$3,800",
+    "bedrooms": 3,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "606 Parker Blvd, West Windsor Township, NJ 08550",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$3,300",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "1001 Greenwich Dr, West Windsor, NJ 08550",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$3,000",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "500 Avalon Sq, West Windsor, NJ 08550",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$2,093",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "1310 Parker Blvd, West Windsor, NJ 08550",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$3,750",
+    "bedrooms": 3,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "189 Christopher Dr, Princeton, NJ 08540",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$8,800",
+    "bedrooms": 4,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "6105 Vivaldi Rd, Princeton, NJ 08540",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$3,600",
+    "bedrooms": 3,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "43 Princeton Hightstown Rd Unit 1215, West Windsor Township, NJ 08550",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$2,000",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "43 Princeton Hightstown Rd, West Windsor, NJ 08550",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$3,800",
+    "bedrooms": 3,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "1900 Barclay Blvd, Princeton, NJ 08540",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$4,655",
+    "bedrooms": 3,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "43 Princeton Hightstown Rd, West Windsor, NJ 08550",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$3,600",
+    "bedrooms": 3,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "150 John Street, Princeton, NJ 08542",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$3,600",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "219 Birch Ave Unit #2FC, Princeton, NJ 08542",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$1,330",
+    "bedrooms": 4,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "45 Spring St Unit 5, Princeton, NJ 08542",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$4,600",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "31 Palmer Square W Unit A, Princeton, NJ 08540",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$4,250",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "465 Meadow Rd, Princeton, NJ 08540",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$2,242",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "37 Bank St Unit 1, Princeton, NJ 08542",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$2,700",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "255 Nassau St Unit 301, Princeton, NJ 08540",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$4,380",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "36 Moore St Unit 3, Princeton, NJ 08542",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$2,999",
+    "bedrooms": 1,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "12 Murray Pl, Princeton, NJ 08540",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$7,500",
+    "bedrooms": 5,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "15 Fountayne Ct, Princeton, NJ 08540",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$3,800",
+    "bedrooms": 3,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "54 Hodge Rd, Princeton, NJ 08540",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$9,575",
+    "bedrooms": 5,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "168 John St Unit 2, Princeton, NJ 08542",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$4,850",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  },
+  {
+    "name": "30 MacLean St Unit 3, Princeton, NJ 08542",
+    "address": "Princeton University, Canal Pointe Boulevard, Canal Pointe, Princeton, Mercer County, New Jersey, 08540, United States",
+    "price": "$3,595",
+    "bedrooms": 2,
+    "latitude": 40.3386752,
+    "longitude": -74.6583655,
+    "source": "Apartments.com",
+    "score": 0.0,
+    "amenities": []
+  }
+]

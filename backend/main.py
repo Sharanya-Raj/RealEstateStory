@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Response
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 import io
+import logging
 from pydantic import BaseModel, Field
 from typing import Any, Dict, List, Optional
 import math
@@ -29,10 +30,10 @@ from market_fairness.handler import run_market_fairness_agent
 from agents.kamaji import aggregate_insights, aggregate_insights_batch
 from agents.neighborhood_agent import analyze_nearby
 try:
-    from services.craigslist import get_craigslist
+    from services.apartmentsdotcom import get_apartmentsdotcom
 except ImportError as e:
-    sys.stderr.write(f"[WARNING] Scraper dependencies missing ({e}). Real Mode (Scraper) will be unavailable.\n")
-    get_craigslist = None
+    sys.stderr.write(f"[WARNING] Apartments.com scraper dependencies missing ({e}).\n")
+    get_apartmentsdotcom = None
 
 from services.geolocate import get_coordinates
 from data_loader import get_listings
@@ -48,9 +49,14 @@ except ImportError:
 # Load environment variables from .env file
 load_dotenv()
 
-
 # Ensure the backend directory is in the python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from log_config import setup_logging
+setup_logging()
+
+logger = logging.getLogger("api")
+logger.info("Backend starting up...")
 
 app = FastAPI(title="The Spirited Oracle API")
 mcp = FastMCP("GhibliNest")
@@ -63,6 +69,20 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+import time as _time
+
+@app.middleware("http")
+async def log_requests(request, call_next):
+    start = _time.perf_counter()
+    method = request.method
+    path = request.url.path
+    qs = str(request.url.query)
+    logger.info(">>> %s %s%s", method, path, f"?{qs}" if qs else "")
+    response = await call_next(request)
+    elapsed = (_time.perf_counter() - start) * 1000
+    logger.info("<<< %s %s  %d  (%.0fms)", method, path, response.status_code, elapsed)
+    return response
 
 # --- MCP Tool Schemas ---
 
@@ -142,84 +162,94 @@ def search_and_analyze_property(query: ListingQuery) -> str:
     use_mock = query.mock or os.environ.get("USE_MOCK_DATA", "0").lower() in ("1", "true", "yes")
 
     if use_scraper and not use_mock:
-        if get_craigslist is None:
-            sys.stderr.write("[INFO] Scraper is disabled because dependencies are missing.\n")
-        else:
+        raw_apts = []
+
+        if get_apartmentsdotcom is not None:
             try:
-                real_apts = get_craigslist(
+                sys.stderr.write(f"[INFO] Attempting Apartments.com scrape for {query.address!r}\n")
+                raw_apts = get_apartmentsdotcom(
                     query.address,
                     max_price=query.budget,
                     min_beds=min_beds,
                     require_parking=require_parking,
-                )
-                if real_apts:
-                    new_count = 0
-                    for i, apt in enumerate(real_apts):
-                        addr = apt.address or ""
-                        name = apt.name or "Unknown"
-                        # Skip if already in DB
-                        if db_available() and listing_exists(addr, name):
-                            continue
-                        # Mapping logic consolidated from server.py
-                        price_str = re.sub(r"[^\d]", "", apt.price or "")
-                        base_rent = int(price_str) if price_str else 1500
-                        zip_match = re.search(r"\b\d{5}(?:-\d{4})?\b", addr)
-                        zipcode = zip_match.group(0)[:5] if zip_match else "00000"
+                ) or []
+                if raw_apts:
+                    sys.stderr.write(f"[INFO] Apartments.com returned {len(raw_apts)} listings\n")
+            except Exception as e:
+                sys.stderr.write(f"[INFO] Apartments.com failed: {e}\n")
+        else:
+            sys.stderr.write("[INFO] Apartments.com scraper not available (dependencies missing).\n")
 
-                        city = "Unknown"
-                        state = "NJ"
-                        city_state_match = re.search(r",\s*([^,]+),\s*([A-Z]{2})\b", addr)
-                        if city_state_match:
-                            city = city_state_match.group(1).strip()
-                            state = city_state_match.group(2).strip()
+        if raw_apts:
+            try:
+                new_count = 0
+                for i, apt in enumerate(raw_apts):
+                    addr = apt.address or ""
+                    name = apt.name or "Unknown"
+                    # Skip if already in DB
+                    if db_available() and listing_exists(addr, name):
+                        continue
+                    # Mapping logic consolidated from server.py
+                    price_str = re.sub(r"[^\d]", "", apt.price or "")
+                    base_rent = int(price_str) if price_str else 1500
+                    zip_match = re.search(r"\b\d{5}(?:-\d{4})?\b", addr)
+                    zipcode = zip_match.group(0)[:5] if zip_match else "00000"
 
-                        matched_listings.append({
-                            "id": f"apt_real_{new_count + 1}",
-                            "name": name,
-                            "address": addr,
-                            "city": city,
-                            "state": state,
-                            "zip": zipcode,
-                            "base_rent": base_rent,
-                            "bedrooms": apt.bedrooms,
-                            "bathrooms": 1,
-                            "sqft": 800,
-                            "pet_friendly": "pet" in (getattr(apt, "amenities", []) or []),
-                            "has_gym": "gym" in (getattr(apt, "amenities", []) or []),
-                            "avg_utilities": 120,
-                            "description": f"Property from {apt.source}: {apt.name}",
-                            "latitude": getattr(apt, "latitude", None),
-                            "longitude": getattr(apt, "longitude", None),
-                            "image_url": IMAGE_ASSETS[new_count % len(IMAGE_ASSETS)],
-                        })
-                        new_count += 1
-                    # Distance filter: remove listings too far from campus
-                    if _college_lat and _college_lon and max_dist < 30:
-                        before = len(matched_listings)
-                        matched_listings = [
-                            L for L in matched_listings
-                            if (
-                                L.get("latitude") and L.get("longitude")
-                                and _haversine_miles(_college_lat, _college_lon, L["latitude"], L["longitude"]) <= max_dist
-                            )
-                        ]
-                        removed = before - len(matched_listings)
-                        if removed:
-                            sys.stderr.write(f"[INFO] Distance filter removed {removed} listings beyond {max_dist} mi\n")
+                    city = "Unknown"
+                    state = "NJ"
+                    city_state_match = re.search(r",\s*([^,]+),\s*([A-Z]{2})\b", addr)
+                    if city_state_match:
+                        city = city_state_match.group(1).strip()
+                        state = city_state_match.group(2).strip()
 
-                    listings_from_scraper = len(matched_listings) > 0
+                    matched_listings.append({
+                        "id": f"apt_real_{new_count + 1}",
+                        "name": name,
+                        "address": addr,
+                        "city": city,
+                        "state": state,
+                        "zip": zipcode,
+                        "base_rent": base_rent,
+                        "bedrooms": apt.bedrooms,
+                        "bathrooms": 1,
+                        "sqft": 800,
+                        "pet_friendly": "pet" in (getattr(apt, "amenities", []) or []),
+                        "has_gym": "gym" in (getattr(apt, "amenities", []) or []),
+                        "avg_utilities": 120,
+                        "description": f"Property from {apt.source}: {apt.name}",
+                        "latitude": getattr(apt, "latitude", None),
+                        "longitude": getattr(apt, "longitude", None),
+                        "image_url": IMAGE_ASSETS[new_count % len(IMAGE_ASSETS)],
+                    })
+                    new_count += 1
 
-                    # Cap before the expensive agent pipeline
-                    max_analyze = int(os.environ.get("MAX_SCRAPER_ANALYZE", "20"))
-                    if len(matched_listings) > max_analyze:
-                        # Sort cheapest-first within budget, then take the cap
-                        matched_listings.sort(key=lambda L: abs(L["base_rent"] - query.budget))
-                        dropped = len(matched_listings) - max_analyze
-                        matched_listings = matched_listings[:max_analyze]
-                        sys.stderr.write(
-                            f"[INFO] Capped scraper results: analyzing {max_analyze} of "
-                            f"{max_analyze + dropped} listings (set MAX_SCRAPER_ANALYZE to change)\n"
+                # Distance filter: remove listings too far from campus
+                if _college_lat and _college_lon and max_dist < 30:
+                    before = len(matched_listings)
+                    matched_listings = [
+                        L for L in matched_listings
+                        if (
+                            L.get("latitude") and L.get("longitude")
+                            and _haversine_miles(_college_lat, _college_lon, L["latitude"], L["longitude"]) <= max_dist
                         )
+                    ]
+                    removed = before - len(matched_listings)
+                    if removed:
+                        sys.stderr.write(f"[INFO] Distance filter removed {removed} listings beyond {max_dist} mi\n")
+
+                listings_from_scraper = len(matched_listings) > 0
+
+                # Cap before the expensive agent pipeline
+                max_analyze = int(os.environ.get("MAX_SCRAPER_ANALYZE", "20"))
+                if len(matched_listings) > max_analyze:
+                    # Sort cheapest-first within budget, then take the cap
+                    matched_listings.sort(key=lambda L: abs(L["base_rent"] - query.budget))
+                    dropped = len(matched_listings) - max_analyze
+                    matched_listings = matched_listings[:max_analyze]
+                    sys.stderr.write(
+                        f"[INFO] Capped scraper results: analyzing {max_analyze} of "
+                        f"{max_analyze + dropped} listings (set MAX_SCRAPER_ANALYZE to change)\n"
+                    )
             except Exception:
                 pass
 
@@ -286,6 +316,56 @@ def evaluate_market_fairness(input_data: MarketFairnessInput):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+class PipelineRequest(BaseModel):
+    college: str
+    budget: float = 1500.0
+    roommates: str = "solo"
+    parking: str = "not_needed"
+    max_distance_miles: float = 30.0
+
+@app.post("/api/pipeline")
+def run_full_pipeline(request: PipelineRequest):
+    """
+    Single endpoint: scrape → run agents → return combined results.
+    Listings are only returned after all agents have processed them.
+    """
+    logger.info(
+        "POST /api/pipeline  college=%r  budget=%.0f  roommates=%s  parking=%s  dist=%.0f",
+        request.college, request.budget, request.roommates, request.parking, request.max_distance_miles,
+    )
+
+    # Step 1: Scrape / fetch listings
+    logger.info("  [PIPELINE] Step 1: Fetching listings...")
+    raw_listings = get_all_listings(
+        college=request.college,
+        radius=request.max_distance_miles,
+        max_price=request.budget,
+    )
+
+    if not raw_listings:
+        logger.info("  [PIPELINE] No listings found.")
+        return {"listings": [], "agentResults": []}
+
+    logger.info("  [PIPELINE] Step 1 done: %d listings found", len(raw_listings))
+
+    # Step 2: Run agents on all listings
+    logger.info("  [PIPELINE] Step 2: Running agent analysis on %d listings...", len(raw_listings))
+    translated = [_translate_frontend_to_backend(l) for l in raw_listings]
+    agent_results = aggregate_insights_batch(translated, request.budget, request.college)
+    logger.info("  [PIPELINE] Step 2 done: %d agent results", len(agent_results))
+
+    # Step 3: Return combined result — listings are only surfaced NOW
+    # Propagate distanceMiles updated by OSRM routing in aggregate_insights_batch
+    for raw, trans in zip(raw_listings, translated):
+        raw["distanceMiles"] = trans.get("distanceMiles", raw.get("distanceMiles", 2.0))
+
+    logger.info("  [PIPELINE] Complete. Returning %d listings with agent data.", len(raw_listings))
+    return {
+        "listings": raw_listings,
+        "agentResults": agent_results,
+    }
+
+
 class EvaluateRequest(BaseModel):
     address: str
     budget: float
@@ -348,12 +428,22 @@ def _translate_frontend_to_backend(frontend_data: Dict[str, Any]) -> Dict[str, A
 
 @app.post("/api/evaluate")
 def evaluate_listing(request: EvaluateRequest):
+    logger.info(
+        "POST /api/evaluate  address=%r  budget=%.0f  college=%r",
+        request.address, request.budget, request.college,
+    )
     try:
         backend_data = _translate_frontend_to_backend(request.mock_data)
+        logger.info("  -> Translated listing id=%s, rent=%s", backend_data.get("id"), backend_data.get("base_rent"))
+        logger.info("  -> Running agent pipeline (commute, budget, fairness, neighborhood, hidden)...")
         result = aggregate_insights(backend_data, request.budget, request.college)
+        logger.info(
+            "  -> DONE  trueCost=$%s  matchScore=%s  walkScore=%s",
+            result.get("trueCost"), result.get("matchScore"), result.get("walkScore"),
+        )
         return result
     except Exception as e:
-        import traceback; traceback.print_exc()
+        logger.error("  -> FAILED: %s", e, exc_info=True)
         return {"error": str(e)}
 
 class BatchEvaluateRequest(BaseModel):
@@ -364,16 +454,110 @@ class BatchEvaluateRequest(BaseModel):
 @app.post("/api/evaluate-batch")
 def evaluate_batch(request: BatchEvaluateRequest):
     """Batch evaluation: runs all agents with 1 geocode, 1 OSRM, 1 Overpass, 1 LLM call."""
+    n = len(request.listings)
+    logger.info(
+        "POST /api/evaluate-batch  listings=%d  budget=%.0f  college=%r",
+        n, request.budget, request.college,
+    )
     try:
+        logger.info("  -> Translating %d listings to backend format...", n)
         translated = [_translate_frontend_to_backend(l) for l in request.listings]
+        for i, t in enumerate(translated[:5]):
+            logger.debug("     [%d] id=%s  rent=%s  addr=%s", i, t.get("id"), t.get("base_rent"), (t.get("address") or "")[:60])
+        if n > 5:
+            logger.debug("     ... and %d more", n - 5)
+
+        logger.info("  -> Running BATCH agent pipeline (geocode, OSRM, Overpass, LLM)...")
         results = aggregate_insights_batch(translated, request.budget, request.college)
+        logger.info(
+            "  -> BATCH DONE  returned=%d results  trueCosts=[%s]",
+            len(results),
+            ", ".join(f"${r.get('trueCost', '?')}" for r in results[:5]),
+        )
         return results
     except Exception as e:
-        import traceback; traceback.print_exc()
+        logger.error("  -> BATCH FAILED: %s", e, exc_info=True)
         return {"error": str(e)}
 
 import pandas as pd
 import random
+
+
+def _map_scraped_to_listing(apt, idx: int = 0, college_coords: tuple = None) -> dict:
+    """Convert a scraped Apartment object to the frontend Listing shape."""
+    # Parse price string "$1,500" → 1500.0
+    price_str = re.sub(r"[^\d]", "", str(apt.price or "0"))
+    price = float(price_str) if price_str else 1500.0
+
+    address = apt.address or "New Jersey"
+
+    # Extract city/zip from address (e.g. "123 Main St, Piscataway, NJ 08854")
+    city_match = re.search(r",\s*([^,]+),\s*NJ\b", address, re.IGNORECASE)
+    city = city_match.group(1).strip() if city_match else "New Jersey"
+    zip_match = re.search(r"\b(\d{5})\b", address)
+    zipcode = zip_match.group(1) if zip_match else "08901"
+
+    # Real distance if we have both listing and college coordinates
+    dist = 2.0
+    commute_mins = 15
+    apt_lat = getattr(apt, "latitude", None) or 0.0
+    apt_lon = getattr(apt, "longitude", None) or 0.0
+    if college_coords and apt_lat and apt_lon:
+        dist = round(_haversine_miles(apt_lat, apt_lon, college_coords[0], college_coords[1]), 1)
+        commute_mins = max(5, int(dist * 2.5))
+
+    gradients = [
+        "from-ghibli-meadow/40 to-ghibli-sky/40",
+        "from-ghibli-pink/40 to-ghibli-amber/40",
+        "from-ghibli-sky/40 to-ghibli-meadow/40",
+        "from-ghibli-amber/40 to-ghibli-pink/40",
+        "from-ghibli-meadow/30 to-ghibli-pink/30",
+        "from-ghibli-sky/30 to-ghibli-amber/30",
+    ]
+
+    hidden_costs = [
+        {"name": "Utilities (est.)", "amount": 120},
+        {"name": "Internet", "amount": 60},
+        {"name": "Renter's Insurance", "amount": 18},
+    ]
+
+    listing_id = f"apt_{idx}_{abs(hash(address)) % 9999:04d}"
+    amenities = list(getattr(apt, "amenities", None) or []) + ["Heating", "Air Conditioning"]
+
+    return {
+        "id": listing_id,
+        "address": address,
+        "city": city,
+        "state": "NJ",
+        "zip": zipcode,
+        "price": price,
+        "bedrooms": max(1, int(getattr(apt, "bedrooms", None) or 1)),
+        "bathrooms": 1,
+        "sqft": 800,
+        "description": f"Apartment in {city}, NJ. Listed on Apartments.com.",
+        "shortDesc": f"Apartment in {city}",
+        "amenities": amenities,
+        "distanceMiles": dist,
+        "commuteMinutes": commute_mins,
+        "rating": 4.0,
+        "imageGradient": gradients[idx % len(gradients)],
+        "landlord": f"{city} Property Management",
+        "yearBuilt": 2005,
+        "parkingIncluded": False,
+        "utilitiesIncluded": False,
+        "petFriendly": False,
+        "leaseTermMonths": 12,
+        "securityDeposit": price,
+        "moveInDate": "2025-09-01",
+        "zillowEstimate": price,
+        "crimeScore": 7,
+        "walkScore": 65,
+        "nearbyGrocery": "Local Grocery (est.)",
+        "nearbyGym": "Local Gym (est.)",
+        "hiddenCosts": hidden_costs,
+        "imageUrl": IMAGE_ASSETS[idx % len(IMAGE_ASSETS)],
+    }
+
 
 def _map_row_to_listing(row) -> dict:
     hidden_costs = []
@@ -514,56 +698,121 @@ def _map_supabase_to_listing(row: dict, college_coords: tuple = None) -> dict:
         "imageUrl": IMAGE_ASSETS[hash(id_str) % len(IMAGE_ASSETS)],
     }
 
+_listings_logger = logging.getLogger("api.listings")
+
 @app.get("/api/listings")
 def get_all_listings(college: str = None, radius: float = 50.0, max_price: float = 99999, mock: bool = False):
     """
-    Get listings. If Supabase is configured and college is provided, uses geo-radius query.
-    Otherwise falls back to CSV.
+    Get listings.  Priority order:
+      1. Apartments.com scraper  (Selenium + Playwright)
+      2. Supabase database
+      3. CSV file  (LAST RESORT — only if all live sources fail)
     """
-    # Try Supabase first (if not in mock mode)
-    use_mock_env = os.environ.get("USE_MOCK_DATA", "0").lower() in ("1", "true", "yes")
-    is_mock = mock or use_mock_env
+    logger.info(
+        "GET /api/listings  college=%r  radius=%.1f  max_price=%.0f",
+        college, radius, max_price,
+    )
+    _listings_logger.info(
+        "REQUEST: college=%r  radius=%.1f  max_price=%.0f",
+        college, radius, max_price,
+    )
+
+    # Geocode college once — reused by scrapers + CSV fallback
+    college_coords = None
+    if college:
+        try:
+            geo = get_coordinates(college)
+            if isinstance(geo, dict) and geo.get("latitude"):
+                college_coords = (float(geo["latitude"]), float(geo["longitude"]))
+                _listings_logger.info("College geocoded: %s -> lat=%.4f lon=%.4f", college, *college_coords)
+        except Exception as e:
+            _listings_logger.warning("College geocoding failed for %r: %s", college, e)
+
+    # ── 1. Apartments.com ──────────────────────────────────────────────
+    if college and get_apartmentsdotcom is not None:
+        try:
+            adc_max_price = max_price if max_price < 99999 else None
+            _listings_logger.info("SCRAPER Apartments.com: scraping near %r (max_price=%s)", college, adc_max_price)
+            apartments = get_apartmentsdotcom(college, max_price=adc_max_price)
+            if apartments:
+                # Geocode each apartment's real address (the scraper
+                # assigns the college's coords as a placeholder)
+                from services.geolocate import geocode_batch
+                apt_addresses = [apt.address for apt in apartments]
+                _listings_logger.info("GEOCODING %d apartment addresses...", len(apt_addresses))
+                geocoded = geocode_batch(apt_addresses)
+                _SAME_THRESH = 0.001  # ~100 m — treat same-as-college as placeholder
+                for apt, geo in zip(apartments, geocoded):
+                    lat = geo.get("latitude", 0)
+                    lon = geo.get("longitude", 0)
+                    # If geocoded back to the college itself, the apt address fell back
+                    # to the college's display name — discard so we use the default distance.
+                    if lat and lon and college_coords:
+                        if (abs(lat - college_coords[0]) < _SAME_THRESH and
+                                abs(lon - college_coords[1]) < _SAME_THRESH):
+                            lat, lon = 0, 0
+                    if lat and lon:
+                        apt.latitude = float(lat)
+                        apt.longitude = float(lon)
+                    else:
+                        apt.latitude = 0.0
+                        apt.longitude = 0.0
+
+                adc_results = []
+                for i, apt in enumerate(apartments):
+                    listing = _map_scraped_to_listing(apt, i, college_coords)
+                    if listing["price"] <= max_price:
+                        adc_results.append(listing)
+                if adc_results:
+                    _listings_logger.info("SCRAPER Apartments.com SUCCESS — returning %d listings", len(adc_results))
+                    return adc_results[:50]
+                _listings_logger.info("SCRAPER Apartments.com returned listings but none passed filters")
+            else:
+                _listings_logger.info("SCRAPER Apartments.com returned 0 listings")
+        except Exception as e:
+            _listings_logger.warning("SCRAPER Apartments.com FAILED: %s", e)
+    elif get_apartmentsdotcom is None:
+        _listings_logger.info("SCRAPER Apartments.com SKIPPED — dependencies not installed")
+    else:
+        _listings_logger.info("SCRAPER Apartments.com SKIPPED — no college provided")
+
+    # ── 2. Supabase ────────────────────────────────────────────────────
     supabase_url = os.environ.get("SUPABASE_URL")
-    if supabase_url and not is_mock:
+    if supabase_url:
         try:
             try:
                 from db import get_college_coords, get_nearby_listings, get_all_listings as db_get_all
             except ImportError:
-                sys.stderr.write("[WARNING] Supabase dependencies missing. Real Mode (Database) will be unavailable.\n")
                 raise Exception("Supabase not installed")
 
-            college_coords = None
+            _listings_logger.info("DATABASE: Attempting Supabase lookup")
             if college:
-                college_coords = get_college_coords(college)
-                if college_coords:
-                    rows = get_nearby_listings(college_coords[0], college_coords[1], radius_miles=radius, max_price=max_price)
-                    return [_map_supabase_to_listing(r, college_coords) for r in rows]
+                db_coords = get_college_coords(college)
+                if db_coords:
+                    rows = get_nearby_listings(db_coords[0], db_coords[1], radius_miles=radius, max_price=max_price)
+                    _listings_logger.info("DATABASE: Supabase returned %d listings near %s", len(rows), college)
+                    return [_map_supabase_to_listing(r, db_coords) for r in rows]
 
-            # No college filter — return all
             rows = db_get_all(limit=100)
+            _listings_logger.info("DATABASE: Supabase returned %d listings (no college filter)", len(rows))
             return [_map_supabase_to_listing(r, college_coords) for r in rows]
         except Exception as e:
-            sys.stderr.write(f"[LISTINGS] Supabase error, falling back to CSV: {e}\n")
+            _listings_logger.warning("DATABASE: Supabase FAILED: %s", e)
+    else:
+        _listings_logger.info("DATABASE: Supabase SKIPPED — SUPABASE_URL not set")
 
-    # Fallback to CSV
+    # ── 3. CSV FALLBACK (last resort) ──────────────────────────────────
+    _listings_logger.warning(
+        "FALLBACK: All live sources failed. Loading CSV as last resort."
+    )
     try:
         csv_path = os.path.join(os.path.dirname(__file__), "data", "listings.csv")
         df = pd.read_csv(csv_path)
-        
-        college_coords = None
-        if college:
-            try:
-                geo = get_coordinates(college)
-                if isinstance(geo, dict) and geo.get("latitude"):
-                    college_coords = (float(geo["latitude"]), float(geo["longitude"]))
-            except Exception as e:
-                print(f"[LISTINGS] Geocoding failed for {college}: {e}")
 
         results = []
         for _, row in df.iterrows():
             listing = _map_row_to_listing(row)
-            
-            # Distance filtering for CSV data
+
             if college_coords and row.get("latitude") and row.get("longitude"):
                 dist = _haversine_miles(
                     float(row["latitude"]), float(row["longitude"]),
@@ -571,23 +820,23 @@ def get_all_listings(college: str = None, radius: float = 50.0, max_price: float
                 )
                 listing["distanceMiles"] = round(dist, 1)
                 listing["commuteMinutes"] = max(5, int(dist * 2.5))
-            
-            # Apply filters
+
             if listing["price"] <= max_price:
                 if not college_coords or listing["distanceMiles"] <= radius:
                     results.append(listing)
-        
-        # If no results after filtering, return a small sample so the UI isn't empty
+
         if not results and not df.empty:
-            return [_map_row_to_listing(row) for _, row in df.head(5).iterrows()]
-            
+            results = [_map_row_to_listing(row) for _, row in df.head(5).iterrows()]
+
+        _listings_logger.warning("FALLBACK: CSV returned %d listings", len(results))
         return results[:100]
     except Exception as e:
-        print(f"[LISTINGS] CSV error: {e}")
+        _listings_logger.error("FALLBACK: CSV ALSO FAILED: %s", e)
         return []
 
 @app.get("/api/listings/{listing_id}")
 def get_listing(listing_id: str, mock: bool = False):
+    logger.info("GET /api/listings/%s", listing_id)
     # Try Supabase first (if not in mock mode)
     use_mock_env = os.environ.get("USE_MOCK_DATA", "0").lower() in ("1", "true", "yes")
     is_mock = mock or use_mock_env
@@ -699,4 +948,5 @@ Student's question: {request.question}"""
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    reload = os.environ.get("RELOAD", "0").lower() in ("1", "true", "yes")
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=reload, log_level="info")
