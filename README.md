@@ -353,7 +353,7 @@ npm run build
 
 ---
 
-## 🏆 Hackathon Prize Tracks
+## 🏆 MLH Hackathon Prize Tracks
 
 **🤖 Google Gemini Track**
 - Multi-agent system powered by Gemini 2.5 Flash for narrative generation
@@ -364,16 +364,6 @@ npm run build
 - Character-specific voice narration for all 6 agents
 - Parallel TTS generation for optimal performance
 - On-demand audio synthesis via `/api/tts` endpoint
-
-**☁️ Vultr Track**
-- Containerized FastAPI backend ready for Vultr deployment
-- Supabase PostgreSQL + PostGIS for geo-spatial queries
-- See [VULTR_DEPLOYMENT.md](backend/VULTR_DEPLOYMENT.md) for deployment guide
-
-**💼 ADP Track**
-- Budget transparency features (hidden cost extraction)
-- True cost of living calculator including utilities, parking, insurance
-- Financial planning insights aligned with user budgets
 
 ---
 
