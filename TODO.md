@@ -4,49 +4,34 @@
 
 ### 1. **Unify Backend Architecture**
 **Problem:** Two separate FastAPI apps (`main.py` and `server.py`) both trying to use port 8000
-- [ ] Merge `server.py` FastMCP tools into `main.py` as additional routes
-- [ ] OR: Make `server.py` run on different port and have `main.py` proxy to it
-- [ ] OR: Create unified router structure with both services under one app
-- [ ] Update Dockerfile to point to correct entry point
-- [ ] Test all endpoints work after merge
+- [x] Merge `server.py` FastMCP tools into `main.py` as additional routes
+- [x] Update Dockerfile to point to correct entry point
+- [x] Test all endpoints work after merge
 
 ### 2. **Fix Hardcoded API URLs in Frontend**
 **Problem:** All API calls use `http://127.0.0.1:8000` or `http://localhost:8000`
-- [ ] Create environment variable system for frontend (Vite `.env` support)
-- [ ] Add `VITE_API_URL` to `.env` and `.env.example`
-- [ ] Replace all hardcoded URLs in:
-  - `frontend/src/pages/Journey.tsx` (3 instances)
-  - `frontend/src/pages/Listings.tsx`
-  - `frontend/src/pages/ListingDetail.tsx`
-  - `frontend/src/pages/Summary.tsx`
-  - `frontend/src/pages/Chat.tsx`
-- [ ] Create `src/lib/api.ts` with centralized API client
+- [x] Create environment variable system for frontend (Vite `.env` support)
+- [x] Add `VITE_API_URL` to `.env` and `.env.example`
+- [x] Replace all hardcoded URLs in all frontend pages
+- [x] Create `src/lib/api.ts` with centralized API client
 - [ ] Update `deploy.sh` to set production URLs
 
 ### 3. **Eliminate Mock Data Dependencies**
 **Problem:** Frontend still imports and uses `mockListings.ts`, backend generates fake data
-- [ ] Remove `frontend/src/data/mockListings.ts` entirely
-- [ ] Update all imports to use backend Listing type instead
-- [ ] Create TypeScript types from backend Pydantic models
-- [ ] Remove random data generation in `_map_row_to_listing()`:
-  - `yearBuilt` - should come from listing data or be nullable
-  - `zillowEstimate` - should be real API call or removed
-  - `distanceMiles` - should use real geocoding
-  - `rating` - should come from reviews or be removed
-- [ ] Remove hardcoded cost values in agents:
-  - `transportation: 80` in budget_agent.py
-  - `groceries: 200` in budget_agent.py
-  - Calculate these based on real data
+- [x] Remove `frontend/src/data/mockListings.ts` entirely
+- [x] Update all imports to use backend Listing type instead
+- [x] Create TypeScript types from backend Pydantic models
+- [x] Remove random data generation in `_map_row_to_listing()`
+- [x] Integrate real-world images from AI generation
+- [x] Remove hardcoded cost values in budget_agent.py
 
 ## ⚠️ HIGH PRIORITY
 
 ### 4. **Data Synchronization Issues**
 **Problem:** Frontend sends camelCase, backend expects snake_case
-- [ ] Standardize on one naming convention (recommend snake_case for API)
-- [ ] Update frontend to send snake_case in API requests
-- [ ] OR: Add middleware to convert camelCase ↔ snake_case automatically
-- [ ] Document the data contract between frontend/backend
-- [ ] Add TypeScript types that match backend exactly
+- [x] Standardize on one naming convention (snake_case for API)
+- [x] Add translation layer in `main.py` to bridge camelCase ↔ snake_case
+- [x] Add TypeScript types that match backend exactly
 
 ### 5. **Missing/Incomplete API Endpoints**
 - [x] `/api/listings` - EXISTS but needs refinement
@@ -61,22 +46,10 @@
   - `GET /api/neighborhoods/{zip}` - cached neighborhood data
 
 ### 6. **Environment Configuration**
-- [ ] Create `backend/.env.example` with all required variables:
-  ```
-  GEMINI_API_KEY=
-  OPENROUTER_API_KEY=
-  ELEVENLABS_API_KEY=
-  SUPABASE_URL=
-  SUPABASE_KEY=
-  USE_OPENROUTER=0
-  USE_APARTMENTS_COM=0
-  ```
-- [ ] Create `frontend/.env.example`:
-  ```
-  VITE_API_URL=http://localhost:8000
-  ```
-- [ ] Add `.env` to `.gitignore` (if not already)
-- [ ] Document which API keys are required vs optional
+- [x] Create `backend/.env.example` with all required variables
+- [x] Create `frontend/.env.example`
+- [x] Add `.env` to `.gitignore`
+- [x] Document which API keys are required vs optional
 
 ### 7. **ZORI/ZORDI Market Data Issues**
 **Problem:** Data access uses ZIP codes but ZORI uses city names
@@ -137,7 +110,7 @@
 - [ ] Comparison view for multiple listings side-by-side
 - [ ] Export summary as PDF
 - [ ] Share link for specific listing analysis
-- [ ] Add user preferences persistence (localStorage)
+- [x] Add user preferences persistence (localStorage)
 
 ### 14. **Code Quality**
 - [ ] Add TypeScript strict mode
@@ -195,7 +168,7 @@
 - [ ] Add proper form validation with error messages
 - [ ] Accessibility audit (ARIA labels, keyboard navigation)
 - [ ] Empty states for when no listings found
-- [ ] Skeleton loaders for all data fetching
+- [x] Skeleton loaders for all data fetching
 - [ ] Toast notifications for errors (already have toast component)
 - [ ] Dark mode support (README says "zero dark mode" but might want it later)
 

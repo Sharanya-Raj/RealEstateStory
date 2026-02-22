@@ -1,4 +1,4 @@
-import { Listing } from "@/data/mockListings";
+import { type Listing } from "@/types/listing";
 import { MapPin, Bed, Bath, Ruler, Star } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -11,27 +11,25 @@ interface ListingCardProps {
 const ListingCard = ({ listing, onClick, index }: ListingCardProps) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.07, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
       onClick={onClick}
-      className="group cursor-pointer relative overflow-hidden rounded-3xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(100,150,255,0.2)]"
-      style={{
-        background: "rgba(0,0,0,0.5)",
-        border: "1px solid rgba(255,255,255,0.2)",
-        boxShadow: "0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)",
-      }}
+      className="group relative rounded-[2rem] overflow-hidden cursor-pointer transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_20px_50px_rgba(0,0,0,0.4)] bg-black/40 border border-white/10 backdrop-blur-md"
     >
-      {/* Image / gradient banner */}
-      <div
-        className={`h-44 bg-gradient-to-br ${listing.imageGradient} relative overflow-hidden`}
-        style={{ filter: "saturate(0.7) brightness(1.1)" }}
-      >
-        {/* Pastel overlay for light-mode harmony */}
-        <div className="absolute inset-0 bg-gradient-to-br from-sky-100/50 to-blue-100/40" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-6xl opacity-40 group-hover:scale-110 transition-transform duration-500">🏠</span>
-        </div>
+      {/* Image Section */}
+      <div className="h-48 w-full relative overflow-hidden">
+        {listing.imageUrl ? (
+          <img 
+            src={listing.imageUrl} 
+            alt={listing.address}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          />
+        ) : (
+          <div className={`w-full h-full bg-gradient-to-br ${listing.imageGradient} transition-transform duration-700 group-hover:scale-110`} />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
 
         {/* Price badge */}
         <div

@@ -1,15 +1,37 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from typing import Any, Dict
-from market_fairness.schema import MarketFairnessInput, MarketFairnessOutput
-from market_fairness.handler import run_market_fairness_agent
-from agents.kamaji import aggregate_insights, aggregate_insights_batch
+from pydantic import BaseModel, Field
+from typing import Any, Dict, List, Optional
 import math
 import sys
 import os
 import json
+import re
+import pandas as pd
+import random
 from dotenv import load_dotenv
+from fastmcp import FastMCP
+
+# Define available Ghibli-style house images
+IMAGE_ASSETS = [
+    "/assets/houses/meadow.png",
+    "/assets/houses/urban.png",
+    "/assets/houses/forest.png",
+    "/assets/houses/seaside.png",
+    "/assets/houses/rainy.png",
+    "/assets/houses/snowy.png",
+]
+
+from market_fairness.schema import MarketFairnessInput, MarketFairnessOutput
+from market_fairness.handler import run_market_fairness_agent
+from agents.kamaji import aggregate_insights, aggregate_insights_batch
+from agents.neighborhood_agent import analyze_nearby
+from services.apartmentsdotcom import get_apartmentsdotcom
+from services.geolocate import get_coordinates
+from data_loader import get_listings
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Load environment variables from .env file
 load_dotenv()
@@ -17,7 +39,8 @@ load_dotenv()
 # Ensure the backend directory is in the python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-app = FastAPI(title="Market Fairness API")
+app = FastAPI(title="The Spirited Oracle API")
+mcp = FastMCP("GhibliNest")
 
 # Configure CORS so the frontend can call this API
 app.add_middleware(
@@ -27,6 +50,114 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# --- MCP Tool Schemas ---
+
+class LocationCoords(BaseModel):
+    latitude: float = Field(description="Latitude of the apartment or location (e.g. 40.495)")
+    longitude: float = Field(description="Longitude of the apartment or location (e.g. -74.456)")
+    address: Optional[str] = Field(default=None, description="Optional: if provided, geocode this address and use its coordinates instead of lat/lon.")
+
+class ListingQuery(BaseModel):
+    address: str = Field(description="The address to search for (e.g., '123 Main St, Edison NJ'). In our mock dataset, we will try to match the city or zip.")
+    budget: float = Field(default=1500.0, description="The user's monthly budget for the rental.")
+    mock_data: Optional[dict] = Field(default=None, description="Optional payload containing frontend mock data to analyze directly.")
+
+# --- MCP Tools (Ported from server.py) ---
+
+@mcp.tool()
+def get_neighborhood_insights(coords: LocationCoords) -> str:
+    """
+    Analyzes the surrounding area of a location by latitude and longitude (or by address).
+    Returns nearby amenities and safety score.
+    """
+    lat, lon = coords.latitude, coords.longitude
+    if coords.address:
+        try:
+            geo = get_coordinates(coords.address)
+            if isinstance(geo, dict) and geo.get("latitude") and geo.get("longitude"):
+                lat = float(geo["latitude"])
+                lon = float(geo["longitude"])
+        except Exception as e:
+            return json.dumps({"error": f"Geocoding failed for address: {e}"})
+    result = analyze_nearby(lat, lon)
+    if result is None:
+        return json.dumps({"error": "Neighborhood analysis failed."})
+    return json.dumps(result, indent=2)
+
+@mcp.tool()
+def search_and_analyze_property(query: ListingQuery) -> str:
+    """
+    Triggers the Ghibli Nest agentic pipeline.
+    It takes an address, finds the closest listings, and runs all Ghibli agents.
+    """
+    df = get_listings()
+    matched_listings = []
+    
+    use_scraper = os.environ.get("USE_APARTMENTS_COM", "1").lower() in ("1", "true", "yes")
+    if use_scraper:
+        try:
+            real_apts = get_apartmentsdotcom(query.address, max_price=query.budget)
+            if real_apts:
+                for i, apt in enumerate(real_apts):
+                    # Mapping logic consolidated from server.py
+                    price_str = re.sub(r"[^\d]", "", apt.price or "")
+                    base_rent = int(price_str) if price_str else 1500
+                    addr_str = apt.address or ""
+                    zip_match = re.search(r"\b\d{5}(?:-\d{4})?\b", addr_str)
+                    zipcode = zip_match.group(0)[:5] if zip_match else "00000"
+                    
+                    # More robust city/state parsing: "Address, City, ST ZIP"
+                    city = "Unknown"
+                    state = "NJ"
+                    city_state_match = re.search(r",\s*([^,]+),\s*([A-Z]{2})\b", addr_str)
+                    if city_state_match:
+                        city = city_state_match.group(1).strip()
+                        state = city_state_match.group(2).strip()
+                    
+                    matched_listings.append({
+                        "id": f"apt_real_{i + 1}",
+                        "name": apt.name,
+                        "address": apt.address,
+                        "city": city,
+                        "state": state,
+                        "zip": zipcode,
+                        "base_rent": base_rent,
+                        "bedrooms": apt.bedrooms,
+                        "bathrooms": 1,
+                        "sqft": 800,
+                        "pet_friendly": "pet" in (getattr(apt, 'amenities', []) or []),
+                        "has_gym": "gym" in (getattr(apt, 'amenities', []) or []),
+                        "avg_utilities": 120,
+                        "description": f"Property from {apt.source}: {apt.name}",
+                        "latitude": getattr(apt, "latitude", None),
+                        "longitude": getattr(apt, "longitude", None),
+                        "image_url": IMAGE_ASSETS[i % len(IMAGE_ASSETS)]
+                    })
+        except Exception:
+            pass
+
+    # Fallback to CSV if no listings found
+    if not matched_listings:
+        if not df.empty:
+            possible_matches = df[df["base_rent"] <= query.budget]
+            if not possible_matches.empty:
+                # Use a sample for MCP tool simplicity
+                matched_listings = [possible_matches.sample(1).iloc[0].to_dict()]
+    
+    if not matched_listings:
+        return json.dumps({"error": "No listings available."})
+
+    use_batch = len(matched_listings) > 1
+    if use_batch:
+        all_insights = aggregate_insights_batch(matched_listings, query.budget, college=query.address)
+        results = [{"listing": m, "insights": ins} for m, ins in zip(matched_listings, all_insights)]
+    else:
+        results = [{"listing": matched_listings[0], "insights": aggregate_insights(matched_listings[0], query.budget, college=query.address)}]
+    
+    return json.dumps({"total_analyzed": len(results), "listings": results}, indent=2)
+
+# --- FastAPI Endpoints ---
 
 @app.post("/api/fairness", response_model=MarketFairnessOutput)
 def evaluate_market_fairness(input_data: MarketFairnessInput):
@@ -176,24 +307,25 @@ def _map_row_to_listing(row) -> dict:
         "shortDesc": f"Apartment in {city}",
         "amenities": amenities,
         # Approximate distance
-        "distanceMiles": round(random.uniform(0.5, 5.0), 1),
+        "distanceMiles": row.get("distance_miles") if pd.notna(row.get("distance_miles")) else 2.0,
         "commuteMinutes": int(row["transit_time_to_hub"]) if pd.notna(row["transit_time_to_hub"]) else 15,
-        "rating": round(random.uniform(3.5, 5.0), 1),
+        "rating": row.get("rating") if pd.notna(row.get("rating")) else 4.0,
         "imageGradient": gradient,
         "landlord": f"{city} Property Management",
-        "yearBuilt": random.randint(1970, 2023),
+        "yearBuilt": int(row["year_built"]) if pd.notna(row.get("year_built")) else 2000,
         "parkingIncluded": float(row["parking_fee"]) == 0,
         "utilitiesIncluded": float(row["avg_utilities"]) == 0,
         "petFriendly": row["pet_friendly"] in [True, "True", 1, "1"],
         "leaseTermMonths": 12,
         "securityDeposit": float(row["base_rent"]),
         "moveInDate": "2025-08-01",
-        "zillowEstimate": max(500, float(row["base_rent"]) + random.randint(-150, 100)),
+        "zillowEstimate": float(row.get("zillow_estimate")) if pd.notna(row.get("zillow_estimate")) else float(row["base_rent"]),
         "crimeScore": int(row["crime_rating"]) if pd.notna(row["crime_rating"]) else 7,
         "walkScore": int(row["walk_score"]) if pd.notna(row["walk_score"]) else 70,
         "nearbyGrocery": "Local Grocery (0.5 mi)" if row["has_grocery_nearby"] in [True, "True", 1, "1"] else "Supermarket (1.5 mi)",
         "nearbyGym": "On-site Gym" if row["has_gym"] in [True, "True", 1, "1"] else "Local Gym (1.0 mi)",
         "hiddenCosts": hidden_costs,
+        "imageUrl": row.get("image_url") or IMAGE_ASSETS[hash(str(row["id"])) % len(IMAGE_ASSETS)],
     }
 
 def _haversine_miles(lat1, lon1, lat2, lon2):
@@ -254,22 +386,23 @@ def _map_supabase_to_listing(row: dict, college_coords: tuple = None) -> dict:
         "amenities": amenities if isinstance(amenities, list) else [],
         "distanceMiles": dist,
         "commuteMinutes": commute_mins,
-        "rating": round(rng.uniform(3.5, 5.0), 1),
+        "rating": 4.5,
         "imageGradient": gradient,
         "landlord": f"{row.get('city', 'NJ')} Property Management",
-        "yearBuilt": rng.randint(1970, 2023),
+        "yearBuilt": 2010,
         "parkingIncluded": False,
         "utilitiesIncluded": False,
         "petFriendly": row.get("pet_friendly", False),
         "leaseTermMonths": 12,
         "securityDeposit": price,
         "moveInDate": "2025-08-01",
-        "zillowEstimate": max(500, price + rng.randint(-150, 100)) if price else 1200,
+        "zillowEstimate": price if price else 1200,
         "crimeScore": 7,
         "walkScore": 70,
         "nearbyGrocery": "Local Grocery (0.5 mi)",
         "nearbyGym": "On-site Gym" if row.get("has_gym") else "Local Gym (1.0 mi)",
         "hiddenCosts": hidden_costs,
+        "imageUrl": IMAGE_ASSETS[hash(id_str) % len(IMAGE_ASSETS)],
     }
 
 @app.get("/api/listings")

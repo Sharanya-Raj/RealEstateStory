@@ -1,8 +1,9 @@
 import { Agent } from "@/data/agents";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Loader2, Volume2 } from "lucide-react";
-import { useEffect, useRef, useCallback } from "react";
+import { ChevronRight, Loader2, Volume2, Play, Pause } from "lucide-react";
+import { useEffect, useRef, useCallback, useState } from "react";
+import VoiceWaveform from "./VoiceWaveform";
 
 interface AgentSceneProps {
   agent: Agent;
@@ -55,6 +56,7 @@ const AgentScene = ({
   audioBase64,
 }: AgentSceneProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   // Auto-play the agent's unique voice whenever a new scene renders
   const playAudio = useCallback(() => {
@@ -64,16 +66,32 @@ const AgentScene = ({
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.src = src;
-        audioRef.current.play().catch((e) => console.warn("Audio autoplay blocked:", e));
       } else {
-        const audio = new Audio(src);
-        audioRef.current = audio;
-        audio.play().catch((e) => console.warn("Audio autoplay blocked:", e));
+        audioRef.current = new Audio(src);
       }
+      
+      const audio = audioRef.current;
+      audio.onplay = () => setIsPlaying(true);
+      audio.onpause = () => setIsPlaying(false);
+      audio.onended = () => setIsPlaying(false);
+      
+      audio.play().catch((e) => console.warn("Audio autoplay blocked:", e));
     } catch (e) {
       console.warn("Could not play agent audio:", e);
     }
   }, [audioBase64]);
+
+  const togglePlayback = () => {
+    if (!audioRef.current) {
+      playAudio();
+      return;
+    }
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play().catch(e => console.warn("Audio playback failed:", e));
+    }
+  };
 
   useEffect(() => {
     if (!isLoading) playAudio();
@@ -113,15 +131,29 @@ const AgentScene = ({
           <p className="text-sm text-sky-300 font-semibold tracking-wide mb-2 drop-shadow-sm">{agent.character} — <span className="text-slate-400 font-medium italic">{agent.movie}</span></p>
           <p className="text-sm text-slate-300 max-w-sm font-medium leading-relaxed drop-shadow-sm">{agent.description}</p>
 
-          {/* Audio indicator */}
+          {/* Audio controls & Waveform */}
           {audioBase64 && !isLoading && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="flex items-center gap-1 mt-3 text-xs text-muted-foreground"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-6 flex flex-col items-center gap-3 bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-xl"
             >
-              <Volume2 className="h-4 w-4 animate-pulse text-blue-400" />
-              <span className="font-semibold tracking-wider uppercase text-[10px] text-sky-300 drop-shadow-sm">Agent Streaming Audio…</span>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={togglePlayback}
+                  className="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/40 flex items-center justify-center hover:bg-blue-500/30 transition-colors shadow-[0_0_15px_rgba(59,130,246,0.2)]"
+                >
+                  {isPlaying ? (
+                    <Pause size={18} className="text-blue-300 fill-blue-300" />
+                  ) : (
+                    <Play size={18} className="text-blue-300 fill-blue-300 ml-0.5" />
+                  )}
+                </button>
+                <VoiceWaveform isPlaying={isPlaying} />
+              </div>
+              <span className="font-quicksand font-bold tracking-widest uppercase text-[10px] text-sky-400/80 drop-shadow-sm">
+                {isPlaying ? "Summoning Voice..." : "Voice Suspended"}
+              </span>
             </motion.div>
           )}
 

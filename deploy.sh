@@ -6,7 +6,7 @@ set -e
 
 echo "=== Ghibli Nest Setup ==="
 echo "Updating system..."
-sudo apt-update && sudo apt upgrade -y
+sudo apt-get update && sudo apt-get upgrade -y
 
 echo "Installing Node.js & npm..."
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
@@ -24,7 +24,7 @@ pip install -r requirements.txt
 # Start backend using PM2 (a production process manager)
 echo "Installing PM2 to keep backend running permanently..."
 sudo npm install -g pm2
-pm2 start "python main.py" --name ghiblinest-api
+pm2 start "python3 main.py" --name ghiblinest-api
 
 echo "Setting up Frontend..."
 cd ../frontend

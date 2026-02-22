@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import GhibliLayout from "@/components/GhibliLayout";
-import { type Listing } from "@/data/mockListings";
+import { type Listing } from "@/types/listing";
+import { api } from "@/lib/api";
 import { usePreferences } from "@/contexts/PreferencesContext";
 import {
   MapPin, Bed, Bath, Ruler, Star, Car, Zap, PawPrint,
@@ -19,11 +20,7 @@ const ListingDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/listings/${id}`)
-      .then(res => {
-        if (!res.ok) throw new Error("Not found");
-        return res.json();
-      })
+    api.getListing(id!)
       .then(data => {
         setListing(data);
         setIsLoading(false);

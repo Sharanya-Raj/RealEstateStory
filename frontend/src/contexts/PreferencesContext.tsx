@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 export interface UserPreferences {
   college: string;
@@ -23,10 +23,31 @@ interface PreferencesContextType {
 
 const PreferencesContext = createContext<PreferencesContextType | undefined>(undefined);
 
+const PREFS_KEY = "spirited_oracle_prefs";
+const LISTING_ID_KEY = "spirited_oracle_listing_id";
+
 export const PreferencesProvider = ({ children }: { children: ReactNode }) => {
-  const [preferences, setPreferences] = useState<UserPreferences | null>(null);
-  const [selectedListingId, setSelectedListingId] = useState<string | null>(null);
+  const [preferences, setPreferencesState] = useState<UserPreferences | null>(() => {
+    const saved = localStorage.getItem(PREFS_KEY);
+    return saved ? JSON.parse(saved) : null;
+  });
+  
+  const [selectedListingId, setSelectedListingIdState] = useState<string | null>(() => {
+    return localStorage.getItem(LISTING_ID_KEY);
+  });
+
   const [aiPayload, setAiPayload] = useState<any | null>(null);
+
+  const setPreferences = (prefs: UserPreferences) => {
+    setPreferencesState(prefs);
+    localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
+  };
+
+  const setSelectedListingId = (id: string | null) => {
+    setSelectedListingIdState(id);
+    if (id) localStorage.setItem(LISTING_ID_KEY, id);
+    else localStorage.removeItem(LISTING_ID_KEY);
+  };
 
   return (
     <PreferencesContext.Provider value={{ preferences, setPreferences, selectedListingId, setSelectedListingId, aiPayload, setAiPayload }}>

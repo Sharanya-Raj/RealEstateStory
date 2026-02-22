@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import GhibliLayout from "@/components/GhibliLayout";
 import AgentScene from "@/components/AgentScene";
 import { agents } from "@/data/agents";
-import { type Listing } from "@/data/mockListings";
+import { type Listing } from "@/types/listing";
+import { api } from "@/lib/api";
 import { usePreferences } from "@/contexts/PreferencesContext";
 
 // Dynamically generate dialogue using the backend LLM payload if available, or fallback to defaults
@@ -81,8 +82,7 @@ const Journey = () => {
   const [isFetchingFairness, setIsFetchingFairness] = useState(false);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/listings/${id}`)
-      .then(res => { if (!res.ok) throw new Error("Not found"); return res.json(); })
+    api.getListing(id!)
       .then(data => { setListing(data); setIsFetching(false); })
       .catch(err => { 
         console.error("Failed to fetch listing", err); 
@@ -97,12 +97,7 @@ const Journey = () => {
   useEffect(() => {
     if (currentAgent.id === "market" && !fairnessData && listing) {
       setIsFetchingFairness(true);
-      fetch("http://127.0.0.1:8000/api/fairness", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ listing_id: listing.id, listing_rent: listing.price, zip_code: listing.city || listing.zip }),
-      })
-        .then((res) => { if (!res.ok) throw new Error("API fairness error"); return res.json(); })
+      api.checkFairness({ listing_id: listing.id, listing_rent: listing.price, zip_code: listing.city || listing.zip })
         .then((data) => { setFairnessData(data); setIsFetchingFairness(false); })
         .catch((err) => { console.error("Failed to fetch fairness AI", err); setIsFetchingFairness(false); });
     }
@@ -113,15 +108,13 @@ const Journey = () => {
     const fetchAI = async () => {
       try {
         setIsAiLoading(true);
-        const response = await fetch("http://localhost:8000/api/evaluate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ address: listing.address, budget: preferences?.priceMax || 1500, mock_data: listing, college: preferences?.college || "" })
+        const data = await api.evaluateListing({ 
+          address: listing.address, 
+          budget: preferences?.priceMax || 1500, 
+          mock_data: listing, 
+          college: preferences?.college || "" 
         });
-        if (response.ok) {
-          const data = await response.json();
-          if (!data.error) setAiPayload(data);
-        }
+        if (!data.error) setAiPayload(data);
       } catch (e) {
         console.error("AI fetching failed, falling back to static", e);
       } finally {

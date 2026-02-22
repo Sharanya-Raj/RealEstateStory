@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import GhibliLayout from "@/components/GhibliLayout";
 import ListingCard from "@/components/ListingCard";
-import { type Listing } from "@/data/mockListings";
+import ListingSkeleton from "@/components/ListingSkeleton";
+import { type Listing } from "@/types/listing";
+import { api } from "@/lib/api";
 import { usePreferences } from "@/contexts/PreferencesContext";
 import { SlidersHorizontal, ArrowUpDown, MapPin, Sparkles } from "lucide-react";
 
@@ -26,16 +28,15 @@ const Listings = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const params = new URLSearchParams();
-    if (preferences?.college) params.set("college", preferences.college);
-    if (preferences?.maxCommuteMiles) params.set("radius", String(preferences.maxCommuteMiles));
-    if (preferences?.priceMax) params.set("max_price", String(preferences.priceMax));
-    const qs = params.toString();
-    fetch(`http://127.0.0.1:8000/api/listings${qs ? `?${qs}` : ""}`)
-      .then(res => res.json())
+    setIsLoading(true);
+    api.getListings({
+      college: preferences?.college,
+      radius: preferences?.maxCommuteMiles,
+      max_price: preferences?.priceMax
+    })
       .then(data => { setListings(data); setIsLoading(false); })
       .catch(() => {
-        console.log("Failed to fetch listings");
+        console.error("Failed to fetch listings");
         setListings([]);
         setIsLoading(false);
       });
@@ -173,12 +174,10 @@ const Listings = () => {
 
         {/* ── LISTINGS GRID ── */}
         {isLoading ? (
-          <div className="text-center py-24 flex flex-col items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-black/40 border border-white/20 flex items-center justify-center shadow-2xl animate-bounce">
-              <span className="text-3xl">🏠</span>
-            </div>
-            <p className="font-playfair text-xl text-white font-bold drop-shadow-md">Finding nests for you…</p>
-            <p className="text-slate-300 text-sm">The oracle is searching</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <ListingSkeleton key={i} />
+            ))}
           </div>
         ) : filteredListings.length === 0 ? (
           <div className="text-center py-24 flex flex-col items-center gap-4">

@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import GhibliLayout from "@/components/GhibliLayout";
 import ChatInterface from "@/components/ChatInterface";
 import { chatAgent } from "@/data/agents";
-import { type Listing } from "@/data/mockListings";
+import { type Listing } from "@/types/listing";
+import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Home, FileText } from "lucide-react";
 
@@ -23,11 +24,7 @@ const Chat = () => {
 
   // Fetch listing from backend instead of mockListings
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/listings/${id}`)
-      .then(res => {
-        if (!res.ok) throw new Error("Not found");
-        return res.json();
-      })
+    api.getListing(id!)
       .then(data => {
         setListing(data);
         setIsLoadingListing(false);
@@ -61,22 +58,12 @@ const Chat = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          listing_id: listing.id,
-          question: text,
-          listing_context: listing
-        })
+      const data = await api.chat({
+        listing_id: listing.id,
+        question: text,
+        listing_context: listing
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        setMessages((prev) => [...prev, { role: "assistant", content: data.response }]);
-      } else {
-        setMessages((prev) => [...prev, { role: "assistant", content: "My castle hit some turbulence! Please try again." }]);
-      }
+      setMessages((prev) => [...prev, { role: "assistant", content: data.response }]);
     } catch (e) {
       console.error("Chat API error:", e);
       setMessages((prev) => [...prev, { role: "assistant", content: "The connection to my castle was lost. Please try again." }]);

@@ -19,6 +19,9 @@ from .fairness_agent import analyze_fairness
 from .neighborhood_agent import analyze_neighborhood, analyze_nearby_batch
 from .hidden_cost_agent import analyze_hidden_costs, _compute_structured_costs
 
+from log_config import setup_logging
+from llm_client import generate_text
+
 logger = logging.getLogger("agents.kamaji")
 
 
@@ -157,21 +160,18 @@ def aggregate_insights_batch(
         })
 
     # 5. Single batched LLM call for all narrative insights
-    api_key = os.environ.get("OPENROUTER_API_KEY") or os.environ.get("OPEN_ROUTER_API_KEY")
-    llm_insights = [{"budget": "", "commute": "", "neighborhood": "", "fairness": "", "kamaji": ""}] * n
-    if api_key:
-        rows = []
-        for i, L in enumerate(listings):
-            rows.append({
-                "i": i,
-                "address": L.get("address", "Unknown"),
-                "rent": L.get("base_rent"),
-                "commute": commutes[i]["driving"],
-                "walk_score": commutes[i]["walkScore"],
-                "percentile": fairnesses[i]["percentile"],
-                "true_cost": hiddens[i]["trueCost"],
-            })
-        prompt = f"""You are the Ghibli Nest real estate AI. For each of these {n} NJ rental listings near {college}, provide SHORT insights (1 sentence each).
+    rows = []
+    for i, L in enumerate(listings):
+        rows.append({
+            "i": i,
+            "address": L.get("address", "Unknown"),
+            "rent": L.get("base_rent"),
+            "commute": commutes[i]["driving"],
+            "walk_score": commutes[i]["walkScore"],
+            "percentile": fairnesses[i]["percentile"],
+            "true_cost": hiddens[i]["trueCost"],
+        })
+    prompt = f"""You are the Ghibli Nest real estate AI. For each of these {n} NJ rental listings near {college}, provide SHORT insights (1 sentence each).
 
 Listings data:
 {json.dumps(rows, indent=2)}
@@ -181,33 +181,24 @@ Return ONLY valid JSON with this exact structure (one object per listing, same o
   {{"budget_insight": "...", "commute_insight": "...", "neighborhood_summary": "...", "fairness_insight": "...", "kamaji_verdict": "..."}},
   ...
 ]}}"""
-        try:
-            logger.info("API CALL: Batched LLM for %d listings", n)
-            resp = requests.post(
-                "https://openrouter.ai/api/v1/chat/completions",
-                headers={"Authorization": f"Bearer {api_key}"},
-                json={
-                    "model": "google/gemini-2.5-flash",
-                    "messages": [{"role": "user", "content": prompt}],
-                    "response_format": {"type": "json_object"},
-                },
-                timeout=60,
-            )
-            if resp.ok:
-                raw = resp.json()["choices"][0]["message"]["content"]
-                data = json.loads(raw.replace("```json", "").replace("```", "").strip())
-                arr = data.get("insights", [])
-                for i, item in enumerate(arr[:n]):
-                    if i < len(llm_insights):
-                        llm_insights[i] = {
-                            "budget": item.get("budget_insight", ""),
-                            "commute": item.get("commute_insight", ""),
-                            "neighborhood": item.get("neighborhood_summary", ""),
-                            "fairness": item.get("fairness_insight", ""),
-                            "kamaji": item.get("kamaji_verdict", ""),
-                        }
-        except Exception as e:
-            logger.warning("Batched LLM failed: %s", e)
+    
+    try:
+        logger.info("API CALL: Batched LLM for %d listings", n)
+        raw = generate_text(prompt, model="gemini-flash-latest", json_mode=True)
+        if raw:
+            data = json.loads(raw.replace("```json", "").replace("```", "").strip())
+            arr = data.get("insights", [])
+            for i, item in enumerate(arr[:n]):
+                if i < len(llm_insights):
+                    llm_insights[i] = {
+                        "budget": item.get("budget_insight", ""),
+                        "commute": item.get("commute_insight", ""),
+                        "neighborhood": item.get("neighborhood_summary", ""),
+                        "fairness": item.get("fairness_insight", ""),
+                        "kamaji": item.get("kamaji_verdict", ""),
+                    }
+    except Exception as e:
+        logger.warning("Batched LLM failed: %s", e)
 
     # 6. Merge and build final results
     results = []
@@ -231,7 +222,7 @@ Return ONLY valid JSON with this exact structure (one object per listing, same o
 
         results.append({
             "id": L.get("id"),
-            "rank": random.randint(1, 100),
+            "rank": 50, # static middle rank
             "name": (L.get("address") or "Unknown").split(",")[0] + " Apartments",
             "address": f"{L.get('address')}, {L.get('city')}, {L.get('state')} {L.get('zip')}",
             "rent": L.get("base_rent"),
@@ -240,7 +231,7 @@ Return ONLY valid JSON with this exact structure (one object per listing, same o
             "bedrooms": L.get("bedrooms"),
             "bathrooms": L.get("bathrooms"),
             "sqft": L.get("sqft"),
-            "distanceToCampus": f"{random.uniform(0.5, 4.0):.1f} mi",
+            "distanceToCampus": f"{L.get('distanceMiles', 2.0)} mi",
             "walkScore": commutes[i]["walkScore"],
             "hasGym": L.get("has_gym", False),
             "hasGrocery": L.get("has_grocery_nearby", False),
@@ -286,35 +277,23 @@ def aggregate_insights(listing: dict, target_budget: float, college: str = "") -
     
     # 0. LLM Data Completion Layer (OpenRouter / Gemini)
     logger.info("AGENT: Kamaji LLM data padding")
-    api_key = os.environ.get("OPENROUTER_API_KEY")
-    if api_key:
-        try:
-            completion_prompt = f"""You are an expert real estate AI. Evaluate the property at {listing.get('address', 'Unknown')}.
+    completion_prompt = f"""You are an expert real estate AI. Evaluate the property at {listing.get('address', 'Unknown')}.
 Based on your world knowledge of this area, provide educated estimates in strict JSON:
 {{"walk_score": (int 0-100), "driving_minutes_to_center": (int), "market_fairness_percentile": (int 0-100), "safety_score_out_of_10": (int 1-10)}}
 Return ONLY the valid JSON, no markdown."""
-            response = requests.post(
-                "https://openrouter.ai/api/v1/chat/completions",
-                headers={"Authorization": f"Bearer {api_key}"},
-                json={
-                    "model": "google/gemini-2.5-flash",
-                    "messages": [{"role": "user", "content": completion_prompt}],
-                    "response_format": {"type": "json_object"}
-                },
-                timeout=15
-            )
-            if response.ok:
-                text = response.json()["choices"][0]["message"]["content"]
-                clean_json = text.replace("```json", "").replace("```", "").strip()
-                ai_data = json.loads(clean_json)
-                if commute["walkScore"] == 0 or commute["walkScore"] == 70:
-                    commute["walkScore"] = ai_data.get("walk_score", commute["walkScore"])
-                if neighborhood["safety"]["score"] == 0 or neighborhood["safety"]["score"] == 7:
-                    neighborhood["safety"]["score"] = ai_data.get("safety_score_out_of_10", neighborhood["safety"]["score"])
-                if fairness["percentile"] == 0 or fairness["percentile"] == 50:
-                    fairness["percentile"] = ai_data.get("market_fairness_percentile", fairness["percentile"])
-        except Exception as e:
-            logger.warning("LLM Data Padding error: %s", e)
+    try:
+        text = generate_text(completion_prompt, model="gemini-flash-latest", json_mode=True)
+        if text:
+            clean_json = text.replace("```json", "").replace("```", "").strip()
+            ai_data = json.loads(clean_json)
+            if commute["walkScore"] == 0 or commute["walkScore"] == 70:
+                commute["walkScore"] = ai_data.get("walk_score", commute["walkScore"])
+            if neighborhood["safety"]["score"] == 0 or neighborhood["safety"]["score"] == 7:
+                neighborhood["safety"]["score"] = ai_data.get("safety_score_out_of_10", neighborhood["safety"]["score"])
+            if fairness["percentile"] == 0 or fairness["percentile"] == 50:
+                fairness["percentile"] = ai_data.get("market_fairness_percentile", fairness["percentile"])
+    except Exception as e:
+        logger.warning("LLM Data Padding error: %s", e)
 
     # 1. The Spirit Match Score (overall rating)
     base = 100
@@ -347,25 +326,12 @@ Return ONLY the valid JSON, no markdown."""
     
     summary_text = f"A true find. The overall feeling is a {match_score}% match. Be mindful of the true cost of ${hidden['trueCost']}/mo."
     
-    # Generate dynamic LLM summary using OpenRouter
-    if api_key:
-        try:
-            prompt = f"You are Kamaji from Spirited Away, a gruff but caring boiler man giving rental advice. Analyze these reports and give a 2-sentence final verdict on the property focusing on the Pros and Cons. Mention the Spirit Match score ({match_score}/100) and True Cost (${hidden['trueCost']}). Pros: {pros}. Cons: {cons}."
-            
-            response = requests.post(
-                "https://openrouter.ai/api/v1/chat/completions",
-                headers={"Authorization": f"Bearer {api_key}"},
-                json={
-                    "model": "google/gemini-2.5-flash",
-                    "messages": [{"role": "user", "content": prompt}]
-                },
-                timeout=10
-            )
-            if response.ok:
-                data = response.json()
-                summary_text = data["choices"][0]["message"]["content"].strip().replace('"', '')
-        except Exception as e:
-            logger.warning("OpenRouter Kamaji error: %s", e)
+    # Generate dynamic LLM summary
+    prompt = f"You are Kamaji from Spirited Away, a gruff but caring boiler man giving rental advice. Analyze these reports and give a 2-sentence final verdict on the property focusing on the Pros and Cons. Mention the Spirit Match score ({match_score}/100) and True Cost (${hidden['trueCost']}). Pros: {pros}. Cons: {cons}."
+    
+    llm_summary = generate_text(prompt, model="gemini-flash-latest")
+    if llm_summary:
+        summary_text = llm_summary.strip().replace('"', '')
     
     # 3. ElevenLabs TTS for All Agents (Parallelized)
     eleven_key = os.environ.get("ELEVENLABS_API_KEY")
@@ -435,12 +401,12 @@ Return ONLY the valid JSON, no markdown."""
         "bedrooms": listing.get('bedrooms'),
         "bathrooms": listing.get('bathrooms'),
         "sqft": listing.get('sqft'),
-        "distanceToCampus": f"{random.uniform(0.5, 4.0):.1f} mi",
+        "distanceToCampus": f"{listing.get('distanceMiles', 2.0)} mi",
         "walkScore": commute["walkScore"],
         "hasGym": neighborhood["hasGym"],
         "hasGrocery": neighborhood["hasGrocery"],
         "petFriendly": listing.get('pet_friendly', False),
-        "amenities": ["In-unit Laundry" if random.random() > 0.5 else "Shared Laundry", "Dishwasher" if random.random() > 0.3 else "None", "Air Conditioning"],
+        "amenities": ["In-unit Laundry", "Dishwasher", "Air Conditioning"],
         "description": listing.get('description'),
         "historicalInsight": fairness["historicalInsight"],
         "historicalTrend": fairness["historicalTrend"],

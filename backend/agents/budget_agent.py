@@ -29,25 +29,9 @@ def analyze_budget(listing: dict, target_budget: float) -> dict:
         
     # Generate dynamic LLM insight (Gemini or OpenRouter)
     logger.info("AGENT: budget calling LLM (Lin insight)")
-    insight_text = ""
-    api_key = os.environ.get("OPENROUTER_API_KEY")
-    if api_key:
-        try:
-            prompt = f"You are Lin from Spirited Away, a pragmatic worker evaluating budget. The user has ${target_budget}/mo. This property costs ${total_estimated}/mo (Rent: ${rent}, Util: ${utilities}). Give 1 punchy sentence telling them if it's a smart financial fit."
-            response = requests.post(
-                "https://openrouter.ai/api/v1/chat/completions",
-                headers={"Authorization": f"Bearer {api_key}"},
-                json={
-                    "model": "google/gemini-2.5-flash",
-                    "messages": [{"role": "user", "content": prompt}]
-                },
-                timeout=10
-            )
-            if response.ok:
-                data = response.json()
-                insight_text = data["choices"][0]["message"]["content"].strip().replace('"', '')
-        except Exception as e:
-            print("Budget API error:", e)
+    prompt = f"You are Lin from Spirited Away, a pragmatic worker evaluating budget. The user has ${target_budget}/mo. This property costs ${total_estimated}/mo (Rent: ${rent}, Util: ${utilities}). Give 1 punchy sentence telling them if it's a smart financial fit."
+    
+    insight_text = generate_text(prompt, model="gemini-flash-latest") or ""
         
     return {
         "matchScore": int(budget_fit),
@@ -55,7 +39,7 @@ def analyze_budget(listing: dict, target_budget: float) -> dict:
         "costBreakdown": {
             "rent": rent,
             "utilities": utilities,
-            "transportation": 80, # static mock 
-            "groceries": 200 # static mock
+            "transportation": listing.get("parking_fee", 0) + 50, # estimate based on parking + metro pass
+            "groceries": 300 # more realistic monthly grocery estimate
         }
     }
