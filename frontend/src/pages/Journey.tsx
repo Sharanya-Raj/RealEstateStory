@@ -112,7 +112,7 @@ const Journey = () => {
         const response = await fetch("http://localhost:8000/api/evaluate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ address: listing.address, budget: preferences?.priceMax || 1500, mock_data: listing })
+          body: JSON.stringify({ address: listing.address, budget: preferences?.priceMax || 1500, mock_data: listing, college: preferences?.college || "" })
         });
         if (response.ok) {
           const data = await response.json();

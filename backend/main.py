@@ -4,7 +4,8 @@ from pydantic import BaseModel
 from typing import Any, Dict
 from market_fairness.schema import MarketFairnessInput, MarketFairnessOutput
 from market_fairness.handler import run_market_fairness_agent
-from agents.kamaji import aggregate_insights
+from agents.kamaji import aggregate_insights, aggregate_insights_batch
+import math
 import sys
 import os
 import json
@@ -107,23 +108,26 @@ def _translate_frontend_to_backend(frontend_data: Dict[str, Any]) -> Dict[str, A
 @app.post("/api/evaluate")
 def evaluate_listing(request: EvaluateRequest):
     try:
-        # Translate frontend field names to backend field names
         backend_data = _translate_frontend_to_backend(request.mock_data)
-        print(f"\n{'='*60}")
-        print(f"[EVALUATE] Received listing: {backend_data.get('id', '?')}")
-        print(f"[EVALUATE] base_rent={backend_data.get('base_rent')}, walk_score={backend_data.get('walk_score')}, crime_rating={backend_data.get('crime_rating')}")
-        print(f"[EVALUATE] OPENROUTER_API_KEY loaded: {bool(os.environ.get('OPENROUTER_API_KEY'))}")
-        print(f"{'='*60}")
-        # Pass the translated data to Kamaji along with the budget target
         result = aggregate_insights(backend_data, request.budget, request.college)
-        print(f"[EVALUATE] Result keys: {list(result.keys())}")
-        print(f"[EVALUATE] commute.llm_insight: '{result.get('commute', {}).get('llm_insight', 'MISSING')}'")
-        print(f"[EVALUATE] budgetInsight: '{result.get('budgetInsight', 'MISSING')}'")
-        print(f"[EVALUATE] historicalInsight: '{result.get('historicalInsight', 'MISSING')}'")
         return result
     except Exception as e:
-        # If orchestration fails, return an error block so frontend falls back
-        print(f"[EVALUATE] ERROR: {e}")
+        import traceback; traceback.print_exc()
+        return {"error": str(e)}
+
+class BatchEvaluateRequest(BaseModel):
+    listings: list
+    budget: float
+    college: str = ""
+
+@app.post("/api/evaluate-batch")
+def evaluate_batch(request: BatchEvaluateRequest):
+    """Batch evaluation: runs all agents with 1 geocode, 1 OSRM, 1 Overpass, 1 LLM call."""
+    try:
+        translated = [_translate_frontend_to_backend(l) for l in request.listings]
+        results = aggregate_insights_batch(translated, request.budget, request.college)
+        return results
+    except Exception as e:
         import traceback; traceback.print_exc()
         return {"error": str(e)}
 
@@ -192,7 +196,15 @@ def _map_row_to_listing(row) -> dict:
         "hiddenCosts": hidden_costs,
     }
 
-def _map_supabase_to_listing(row: dict) -> dict:
+def _haversine_miles(lat1, lon1, lat2, lon2):
+    """Haversine distance in miles between two lat/lon points."""
+    R = 3958.8  # Earth radius in miles
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = math.sin(dlat/2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon/2)**2
+    return R * 2 * math.asin(math.sqrt(a))
+
+def _map_supabase_to_listing(row: dict, college_coords: tuple = None) -> dict:
     """Convert a Supabase row to the frontend Listing shape."""
     gradients = [
         "from-ghibli-meadow/40 to-ghibli-sky/40",
@@ -200,13 +212,35 @@ def _map_supabase_to_listing(row: dict) -> dict:
         "from-ghibli-sky/40 to-ghibli-meadow/40",
         "from-ghibli-amber/40 to-ghibli-pink/40",
     ]
-    gradient = gradients[hash(str(row.get("id", ""))) % len(gradients)]
+    # Deterministic seed per listing so values don't change on each call
+    id_str = str(row.get("id", ""))
+    rng = random.Random(hash(id_str))
+    gradient = gradients[hash(id_str) % len(gradients)]
     price = float(row.get("price") or 0)
     amenities = row.get("amenities") or []
 
+    # Compute real distance from listing coords to college
+    lat = float(row.get("latitude") or 0)
+    lon = float(row.get("longitude") or 0)
+    if college_coords and lat and lon:
+        dist = round(_haversine_miles(lat, lon, college_coords[0], college_coords[1]), 1)
+        commute_mins = max(5, int(dist * 2.5))  # ~2.5 min per mile avg driving
+    else:
+        dist = round(rng.uniform(0.5, 5.0), 1)
+        commute_mins = rng.randint(5, 30)
+
+    # Estimate hidden costs from Supabase data
     hidden_costs = []
+    sqft = row.get("sqft") or 800
+    est_utils = round(min(max(60 + int(sqft) * 0.09, 85), 210))
+    hidden_costs.append({"name": "Utilities (est.)", "amount": est_utils})
+    hidden_costs.append({"name": "Internet", "amount": 60})
+    hidden_costs.append({"name": "Renter's Insurance", "amount": 18})
+    if not row.get("has_gym"):
+        hidden_costs.append({"name": "Gym Membership", "amount": 35})
+
     return {
-        "id": str(row["id"]),
+        "id": id_str,
         "address": row.get("address", ""),
         "city": row.get("city", ""),
         "state": row.get("state", "NJ"),
@@ -214,23 +248,23 @@ def _map_supabase_to_listing(row: dict) -> dict:
         "price": price,
         "bedrooms": row.get("bedrooms", 1),
         "bathrooms": row.get("bathrooms", 1),
-        "sqft": row.get("sqft") or 800,
+        "sqft": sqft,
         "description": row.get("description", ""),
         "shortDesc": f"Apartment in {row.get('city', 'NJ')}",
         "amenities": amenities if isinstance(amenities, list) else [],
-        "distanceMiles": round(random.uniform(0.5, 5.0), 1),
-        "commuteMinutes": random.randint(5, 30),
-        "rating": round(random.uniform(3.5, 5.0), 1),
+        "distanceMiles": dist,
+        "commuteMinutes": commute_mins,
+        "rating": round(rng.uniform(3.5, 5.0), 1),
         "imageGradient": gradient,
         "landlord": f"{row.get('city', 'NJ')} Property Management",
-        "yearBuilt": random.randint(1970, 2023),
+        "yearBuilt": rng.randint(1970, 2023),
         "parkingIncluded": False,
         "utilitiesIncluded": False,
         "petFriendly": row.get("pet_friendly", False),
         "leaseTermMonths": 12,
         "securityDeposit": price,
         "moveInDate": "2025-08-01",
-        "zillowEstimate": max(500, price + random.randint(-150, 100)) if price else 1200,
+        "zillowEstimate": max(500, price + rng.randint(-150, 100)) if price else 1200,
         "crimeScore": 7,
         "walkScore": 70,
         "nearbyGrocery": "Local Grocery (0.5 mi)",
@@ -250,15 +284,16 @@ def get_all_listings(college: str = None, radius: float = 50.0, max_price: float
         try:
             from db import get_college_coords, get_nearby_listings, get_all_listings as db_get_all
 
+            college_coords = None
             if college:
-                coords = get_college_coords(college)
-                if coords:
-                    rows = get_nearby_listings(coords[0], coords[1], radius_miles=radius, max_price=max_price)
-                    return [_map_supabase_to_listing(r) for r in rows]
+                college_coords = get_college_coords(college)
+                if college_coords:
+                    rows = get_nearby_listings(college_coords[0], college_coords[1], radius_miles=radius, max_price=max_price)
+                    return [_map_supabase_to_listing(r, college_coords) for r in rows]
 
             # No college filter — return all
             rows = db_get_all(limit=100)
-            return [_map_supabase_to_listing(r) for r in rows]
+            return [_map_supabase_to_listing(r, college_coords) for r in rows]
         except Exception as e:
             print(f"[LISTINGS] Supabase error, falling back to CSV: {e}")
 
@@ -283,7 +318,8 @@ def get_listing(listing_id: str):
             if row:
                 return _map_supabase_to_listing(row)
         except Exception as e:
-            print(f"[LISTING] Supabase error, falling back to CSV: {e}")
+            logger_msg = f"[LISTING] Supabase error, falling back to CSV: {e}"
+            print(logger_msg)
 
     # Fallback to CSV
     try:

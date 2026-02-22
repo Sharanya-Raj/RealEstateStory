@@ -4,7 +4,6 @@
 This project transforms a standard real estate dashboard into a beautiful, emotionally engaging storytelling experience inspired by Studio Ghibli. We target maximum impact by aiming for:
 - **Best Overall & Best UI/UX**: Cinematic, narrative-driven interface.
 - **Financial Solutions / AI & Analytics**: Multi-agent time-series analysis (ZORI/ZORDI) to predict fair value and true living costs.
-- **ADP Challenge (Hack the Sales Journey)**: Negotiation engine to find fair compromise between buyer and seller.
 - **MLH Special Prizes**: Vultr (Hosting), Gemini (Unstructured data analysis), ElevenLabs (Voiceovers).
 
 ## 2. Current Implementation Status

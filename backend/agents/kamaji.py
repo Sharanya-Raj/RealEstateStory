@@ -8,7 +8,10 @@ import re
 import requests
 import concurrent.futures
 
-from elevenlabs.client import ElevenLabs
+try:
+    from elevenlabs.client import ElevenLabs
+except ImportError:
+    ElevenLabs = None
 
 from .commute_agent import analyze_commute, _get_commute_matrix_batch
 from .budget_agent import analyze_budget
@@ -375,7 +378,7 @@ Return ONLY the valid JSON, no markdown."""
         "kamaji": None
     }
     
-    if eleven_key:
+    if eleven_key and ElevenLabs is not None:
         try:
             logger.info("API: ElevenLabs TTS for 6 agents (parallel)")
             client = ElevenLabs(api_key=eleven_key)

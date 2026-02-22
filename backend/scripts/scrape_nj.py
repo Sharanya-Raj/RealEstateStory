@@ -84,7 +84,7 @@ def scrape_and_store(university: str) -> int:
     client = get_client()
     stored = 0
 
-    for apt in apartments:
+    for i, apt in enumerate(apartments):
         try:
             price = _parse_price(apt.price)
             amenity_list = getattr(apt, "amenities", None) or []
@@ -96,6 +96,26 @@ def scrape_and_store(university: str) -> int:
                 parts = apt.address.split(",")
                 if len(parts) >= 2:
                     city = parts[-2].strip()
+
+            # Geocode the INDIVIDUAL apartment address (not the university!)
+            lat = getattr(apt, "latitude", None) or 0.0
+            lon = getattr(apt, "longitude", None) or 0.0
+            
+            # CRITICAL: The scraper gives all apts the university coords.
+            # We need to geocode each apartment's actual address.
+            if (lat == 0 or lon == 0) and apt.address:
+                logger.info("  Geocoding %d/%d: %s", i+1, len(apartments), apt.address[:50])
+                try:
+                    from services.geolocate import get_coordinates
+                    geo = get_coordinates(apt.address)
+                    if isinstance(geo, dict):
+                        lat = geo.get("latitude", 0)
+                        lon = geo.get("longitude", 0)
+                        if not city and geo.get("city"):
+                            city = geo.get("city")
+                    time.sleep(1.1)  # Respect Nominatim rate limit (1 req/sec)
+                except Exception as geo_err:
+                    logger.warning("  Geocoding failed for %s: %s", apt.name, geo_err)
 
             row = {
                 "name": apt.name,
@@ -111,18 +131,41 @@ def scrape_and_store(university: str) -> int:
                 "has_gym": any(x in amenity_str for x in ("gym", "fitness")),
                 "description": f"Off-campus housing near {university}: {apt.name}",
                 "source": "apartments.com",
-                "latitude": getattr(apt, "latitude", None) or 0.0,
-                "longitude": getattr(apt, "longitude", None) or 0.0,
+                "latitude": lat if lat else None,
+                "longitude": lon if lon else None,
             }
 
-            # Build PostGIS point if we have coordinates
-            if row["latitude"] and row["longitude"] and row["latitude"] != 0:
-                row["location"] = f"POINT({row['longitude']} {row['latitude']})"
-
-            client.table("listings").upsert(
-                row, on_conflict="address,name"
-            ).execute()
-            stored += 1
+            # IMPORTANT: Don't set 'location' field directly as a string!
+            # Supabase PostGIS will auto-populate it from lat/lon via a trigger,
+            # OR we use ST_Point in the RPC. For now, we'll use the RPC approach.
+            
+            # Use Supabase's built-in geospatial insert via RPC
+            if row["latitude"] and row["longitude"]:
+                # Call the upsert_listing RPC that handles PostGIS point creation
+                result = client.rpc("upsert_listing_with_location", {
+                    "p_name": row["name"],
+                    "p_address": row["address"],
+                    "p_city": row["city"],
+                    "p_state": row["state"],
+                    "p_zip": row["zip"],
+                    "p_price": row["price"],
+                    "p_bedrooms": row["bedrooms"],
+                    "p_bathrooms": row["bathrooms"],
+                    "p_amenities": row["amenities"],
+                    "p_pet_friendly": row["pet_friendly"],
+                    "p_has_gym": row["has_gym"],
+                    "p_description": row["description"],
+                    "p_source": row["source"],
+                    "p_latitude": row["latitude"],
+                    "p_longitude": row["longitude"],
+                }).execute()
+                stored += 1
+            else:
+                # No coordinates - insert without location field
+                client.table("listings").upsert(
+                    row, on_conflict="address,name"
+                ).execute()
+                stored += 1
 
         except Exception as e:
             logger.warning("Failed to store %s: %s", apt.name, e)

@@ -57,3 +57,61 @@ AS $$
     ORDER BY price ASC NULLS LAST
     LIMIT lim;
 $$;
+
+-- 7. RPC function: Upsert listing with proper PostGIS geography creation
+CREATE OR REPLACE FUNCTION upsert_listing_with_location(
+    p_name TEXT,
+    p_address TEXT,
+    p_city TEXT,
+    p_state TEXT,
+    p_zip TEXT,
+    p_price NUMERIC,
+    p_bedrooms INTEGER,
+    p_bathrooms INTEGER,
+    p_amenities TEXT[],
+    p_pet_friendly BOOLEAN,
+    p_has_gym BOOLEAN,
+    p_description TEXT,
+    p_source TEXT,
+    p_latitude DOUBLE PRECISION,
+    p_longitude DOUBLE PRECISION
+)
+RETURNS UUID
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    listing_id UUID;
+BEGIN
+    INSERT INTO listings (
+        name, address, city, state, zip, price, bedrooms, bathrooms,
+        amenities, pet_friendly, has_gym, description, source,
+        latitude, longitude, location
+    )
+    VALUES (
+        p_name, p_address, p_city, p_state, p_zip, p_price, p_bedrooms, p_bathrooms,
+        p_amenities, p_pet_friendly, p_has_gym, p_description, p_source,
+        p_latitude, p_longitude,
+        ST_Point(p_longitude, p_latitude)::geography
+    )
+    ON CONFLICT (address, name)
+    DO UPDATE SET
+        city = EXCLUDED.city,
+        state = EXCLUDED.state,
+        zip = EXCLUDED.zip,
+        price = EXCLUDED.price,
+        bedrooms = EXCLUDED.bedrooms,
+        bathrooms = EXCLUDED.bathrooms,
+        amenities = EXCLUDED.amenities,
+        pet_friendly = EXCLUDED.pet_friendly,
+        has_gym = EXCLUDED.has_gym,
+        description = EXCLUDED.description,
+        source = EXCLUDED.source,
+        latitude = EXCLUDED.latitude,
+        longitude = EXCLUDED.longitude,
+        location = EXCLUDED.location,
+        scraped_at = NOW()
+    RETURNING id INTO listing_id;
+    
+    RETURN listing_id;
+END;
+$$;

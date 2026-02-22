@@ -3,7 +3,6 @@ import logging
 import os
 import re
 import requests
-from llm_client import generate_text
 
 logger = logging.getLogger("agents.commute")
 

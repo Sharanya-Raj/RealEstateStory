@@ -2,7 +2,6 @@
 import json
 import logging
 import os
-from llm_client import generate_text
 
 logger = logging.getLogger("agents.hidden_cost")
 import requests
