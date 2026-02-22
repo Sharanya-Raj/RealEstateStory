@@ -390,7 +390,7 @@ const Summary = () => {
           </button>
 
           <button 
-            onClick={() => navigate(`/chat/${id}`)}
+            onClick={() => navigate(`/chat/${id}`, { state: { listing } })}
             className="begin-btn flex items-center gap-3 px-10 py-4 rounded-xl text-white font-bold shadow-xl hover:scale-105 transition-transform"
           >
             <MessageCircle size={20} />

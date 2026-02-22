@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import GhibliLayout from "@/components/GhibliLayout";
 import ChatInterface from "@/components/ChatInterface";
 import { chatAgent } from "@/data/agents";
 import { type Listing } from "@/types/listing";
-import { api } from "@/lib/api";
+import { api, getScraperName } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Home, FileText } from "lucide-react";
+import { usePreferences } from "@/contexts/PreferencesContext";
 
 interface Message {
   role: "user" | "assistant";
@@ -17,13 +18,35 @@ interface Message {
 const Chat = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { preferences, getCachedListings } = usePreferences();
   const [listing, setListing] = useState<Listing | null>(null);
   const [isLoadingListing, setIsLoadingListing] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch listing from backend instead of mockListings
   useEffect(() => {
+    // 1. Check router state (passed from Summary/Listing detail)
+    if (location.state?.listing) {
+      setListing(location.state.listing);
+      setIsLoadingListing(false);
+      return;
+    }
+
+    // 2. Check in-memory cache from preferences context
+    const scraperKey = getScraperName(preferences?.college || "");
+    const cached = getCachedListings(scraperKey);
+    if (cached) {
+      const found = cached.find((l: any) => l.id === id);
+      if (found) {
+        setListing(found);
+        setIsLoadingListing(false);
+        return;
+      }
+    }
+
+    // 3. Fall back to API
     api.getListing(id!)
       .then(data => {
         setListing(data);
@@ -31,10 +54,10 @@ const Chat = () => {
       })
       .catch(err => {
         console.error("Failed to fetch listing for chat", err);
-        setListing(null);
+        setFetchError(true);
         setIsLoadingListing(false);
       });
-  }, [id]);
+  }, [id, preferences?.college, getCachedListings, location.state]);
 
   if (isLoadingListing) {
     return (
@@ -47,9 +70,22 @@ const Chat = () => {
     );
   }
 
-  if (!listing) {
-    navigate("/listings");
-    return null;
+  if (fetchError || !listing) {
+    return (
+      <GhibliLayout showBack>
+        <div className="container mx-auto px-4 py-16 text-center flex flex-col items-center gap-4">
+          <span className="text-5xl drop-shadow-md">🏚️</span>
+          <p className="font-playfair text-2xl text-white font-bold drop-shadow-md">Howl's Castle is Lost</p>
+          <p className="text-slate-300 drop-shadow-sm">The listing couldn't be found. Please go back and try again.</p>
+          <button
+            onClick={() => navigate("/listings")}
+            className="mt-4 flex items-center gap-2 px-6 py-3 rounded-xl border border-white/20 bg-black/40 text-blue-200 font-bold hover:bg-black/60 transition-all text-sm shadow-lg"
+          >
+            <Home size={16} /> All Sanctuaries
+          </button>
+        </div>
+      </GhibliLayout>
+    );
   }
 
   const handleSend = async (text: string) => {
