@@ -58,6 +58,19 @@ def analyze_neighborhood(listing: dict) -> dict:
                 logger.warning("Neighborhood API failed: %s - %s", response.status_code, response.text[:200])
         except Exception as e:
             logger.warning("Neighborhood API error: %s", e)
+    
+    # Fallback summary if LLM didn't provide one or failed
+    if not summary or summary == "A peaceful neighborhood with average activity.":
+        if crime_rating > 8 and walk_score > 70:
+            summary = f"What a lovely neighborhood! With a {crime_rating}/10 safety rating and walkability score of {walk_score}, everything you need is right at your doorstep."
+        elif crime_rating > 8:
+            summary = f"A very safe area with a {crime_rating}/10 rating! Though walkability is moderate, the peace of mind is worth it."
+        elif walk_score > 80:
+            summary = f"Incredibly walkable with a score of {walk_score}! You can reach shops, cafes, and transit stops without breaking a sweat."
+        elif walk_score < 40:
+            summary = f"This area has a walk score of {walk_score}, so you'll definitely need a car or rely on transit to get around."
+        else:
+            summary = f"A balanced neighborhood with a {crime_rating}/10 safety rating and walk score of {walk_score}."
         
     return {
         "safety": {
@@ -67,7 +80,8 @@ def analyze_neighborhood(listing: dict) -> dict:
         },
         "hasGym": has_gym,
         "hasGrocery": has_grocery,
-        "walkScore": walk_score
+        "walkScore": walk_score,
+        "llm_insight": summary  # Include for consistency with other agents
     }
 
 
