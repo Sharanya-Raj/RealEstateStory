@@ -13,62 +13,20 @@ const GhibliLayout = ({ children, showNav = true, showBack = false }: GhibliLayo
 
   return (
     <div
-      className="min-h-screen relative overflow-hidden font-quicksand"
+      className="min-h-screen relative overflow-hidden font-quicksand bg-slate-900"
       style={{
-        background: "linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 40%, #dbeafe 70%, #eff6ff 100%)",
+        background: `url('/images/spiritedaway_background.jpg') center/cover no-repeat fixed`,
       }}
     >
-      {/* Floating orbs — same as Oracle landing */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div
-          className="absolute w-[600px] h-[600px] rounded-full"
-          style={{
-            top: "-10%", left: "-5%",
-            background: "radial-gradient(circle, rgba(147,197,253,0.4) 0%, rgba(186,230,255,0.15) 60%, transparent 100%)",
-            filter: "blur(80px)",
-            animation: "orbFloatA 20s ease-in-out infinite",
-          }}
-        />
-        <div
-          className="absolute w-[500px] h-[500px] rounded-full"
-          style={{
-            top: "10%", right: "-5%",
-            background: "radial-gradient(circle, rgba(125,211,252,0.35) 0%, rgba(186,230,255,0.12) 60%, transparent 100%)",
-            filter: "blur(70px)",
-            animation: "orbFloatB 25s ease-in-out infinite",
-          }}
-        />
-        <div
-          className="absolute w-[700px] h-[400px] rounded-full"
-          style={{
-            bottom: "-5%", left: "15%",
-            background: "radial-gradient(circle, rgba(167,210,255,0.3) 0%, rgba(219,234,254,0.15) 60%, transparent 100%)",
-            filter: "blur(90px)",
-            animation: "orbFloatC 30s ease-in-out infinite",
-          }}
-        />
-      </div>
+      {/* Background overlay instead of orbs */}
+      <div className="fixed inset-0 bg-black/40 pointer-events-none z-0" />
 
       <style>{`
-        @keyframes orbFloatA {
-          0%,100%{transform:translate(0,0) scale(1)}
-          40%{transform:translate(25px,-35px) scale(1.04)}
-          70%{transform:translate(-15px,20px) scale(0.97)}
-        }
-        @keyframes orbFloatB {
-          0%,100%{transform:translate(0,0) scale(1)}
-          35%{transform:translate(-30px,25px) scale(1.06)}
-          65%{transform:translate(20px,-15px) scale(0.96)}
-        }
-        @keyframes orbFloatC {
-          0%,100%{transform:translate(0,0) scale(1)}
-          50%{transform:translate(40px,-20px) scale(1.03)}
-        }
         .oracle-glass-nav {
-          background: rgba(255,255,255,0.55);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          border-bottom: 1px solid rgba(200,225,255,0.4);
+          background: rgba(0,0,0,0.4);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          border-bottom: 1px solid rgba(255,255,255,0.2);
         }
       `}</style>
 
@@ -80,7 +38,7 @@ const GhibliLayout = ({ children, showNav = true, showBack = false }: GhibliLayo
               {showBack && (
                 <button
                   onClick={() => navigate(-1)}
-                  className="w-8 h-8 rounded-xl bg-blue-50/80 border border-blue-100 flex items-center justify-center text-blue-400 hover:bg-blue-100 transition-colors"
+                  className="w-8 h-8 rounded-xl bg-black/40 border border-white/20 flex items-center justify-center text-blue-200 hover:bg-black/60 transition-colors shadow-sm"
                 >
                   <ArrowLeft size={15} />
                 </button>
@@ -89,10 +47,10 @@ const GhibliLayout = ({ children, showNav = true, showBack = false }: GhibliLayo
                 onClick={() => navigate("/")}
                 className="flex items-center gap-2 hover:opacity-80 transition-opacity"
               >
-                <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-blue-400 to-sky-400 flex items-center justify-center shadow-[0_4px_10px_rgba(96,165,250,0.35)]">
+                <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-blue-400 to-sky-400 flex items-center justify-center shadow-[0_4px_10px_rgba(96,165,250,0.35)] border border-white/20">
                   <Home size={13} className="text-white" />
                 </div>
-                <span className="font-playfair text-base font-semibold text-blue-950 tracking-tight">
+                <span className="font-playfair text-base font-semibold text-white tracking-tight drop-shadow-md">
                   The Spirited Oracle
                 </span>
               </button>

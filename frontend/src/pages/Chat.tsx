@@ -43,8 +43,8 @@ const Chat = () => {
     return (
       <GhibliLayout showBack>
         <div className="container mx-auto px-4 py-16 text-center">
-          <span className="text-5xl block mb-4 animate-bounce">🍂</span>
-          <p className="text-xl text-muted-foreground">Summoning Howl...</p>
+          <span className="text-5xl block mb-4 animate-bounce drop-shadow-md">🍂</span>
+          <p className="font-playfair text-xl text-white font-bold drop-shadow-sm">Summoning Howl...</p>
         </div>
       </GhibliLayout>
     );
@@ -88,6 +88,18 @@ const Chat = () => {
   return (
     <GhibliLayout showBack>
       <div className="container mx-auto px-4 py-4 h-[calc(100vh-56px)] flex flex-col lg:flex-row gap-4">
+        <style>{`
+          .oracle-glass {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+          }
+          .oracle-glass-strong {
+            background: rgba(0,0,0,0.7);
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.7), 0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+          }
+        `}</style>
         {/* Howl sidebar */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -100,19 +112,23 @@ const Chat = () => {
                 <motion.div
                   animate={{ y: [0, -8, 0], filter: ["drop-shadow(0 4px 12px rgba(100,150,255,0.1))", "drop-shadow(0 12px 24px rgba(100,150,255,0.25))", "drop-shadow(0 4px 12px rgba(100,150,255,0.1))"] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="text-7xl mb-4"
+                  className="w-24 h-24 mx-auto mb-4 rounded-3xl bg-black/40 border border-white/20 flex items-center justify-center overflow-hidden shadow-xl"
                 >
-                  {chatAgent.emoji}
+                  {chatAgent.image ? (
+                    <img src={chatAgent.image} alt={chatAgent.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-5xl drop-shadow-md">{chatAgent.emoji}</span>
+                  )}
                 </motion.div>
-                <h2 className="font-playfair text-3xl font-bold text-blue-950 mb-1">{chatAgent.character}</h2>
-                <p className="text-xs text-blue-400 font-bold uppercase tracking-widest">{chatAgent.movie}</p>
-                <p className="text-sm text-slate-500 mt-4 leading-relaxed font-medium">{chatAgent.description}</p>
+                <h2 className="font-playfair text-3xl font-bold text-white mb-1 drop-shadow-md">{chatAgent.character}</h2>
+                <p className="text-xs text-blue-300 font-bold uppercase tracking-widest drop-shadow-sm">{chatAgent.movie}</p>
+                <p className="text-sm text-slate-300 mt-4 leading-relaxed font-medium drop-shadow-sm">{chatAgent.description}</p>
               </div>
 
-              <div className="oracle-glass p-5 rounded-2xl mb-8 border-blue-50/50">
-                <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-2">Current Sanctuary</p>
-                <p className="text-blue-900 font-bold text-sm truncate">{listing.address}</p>
-                <p className="text-slate-400 text-xs mt-1 font-medium">${listing.price.toLocaleString()}/mo · {listing.bedrooms}bd/{listing.bathrooms}ba</p>
+              <div className="oracle-glass bg-black/40 p-5 rounded-2xl mb-8 border border-white/20 shadow-lg">
+                <p className="text-[10px] font-bold text-sky-200 uppercase tracking-widest mb-2 drop-shadow-sm">Current Sanctuary</p>
+                <p className="text-white font-bold text-sm truncate">{listing.address}</p>
+                <p className="text-slate-300 text-xs mt-1 font-medium">${listing.price.toLocaleString()}/mo · {listing.bedrooms}bd/{listing.bathrooms}ba</p>
               </div>
             </div>
 
@@ -125,7 +141,7 @@ const Chat = () => {
                 <button
                   key={link.label}
                   onClick={() => navigate(link.path)}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-blue-100/50 bg-white/40 text-blue-600 font-bold text-sm hover:bg-blue-50 transition-all group"
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-white/20 bg-black/40 text-blue-200 font-bold text-sm hover:bg-black/60 transition-all group shadow-md"
                 >
                   <link.icon size={16} className="group-hover:scale-110 transition-transform" />
                   {link.label}

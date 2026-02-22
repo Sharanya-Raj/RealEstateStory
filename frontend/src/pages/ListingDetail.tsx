@@ -42,7 +42,7 @@ const ListingDetail = () => {
           <div className="w-16 h-16 rounded-2xl bg-white/60 border border-white/70 flex items-center justify-center shadow-lg animate-bounce">
             <span className="text-3xl">🏠</span>
           </div>
-          <p className="font-playfair text-xl text-blue-900">Summoning listing details...</p>
+          <p className="font-sans text-xl text-blue-900">Summoning listing details...</p>
           <p className="text-slate-400 text-sm">The oracle is searching</p>
         </div>
       </GhibliLayout>
@@ -54,11 +54,11 @@ const ListingDetail = () => {
       <GhibliLayout showBack>
         <div className="container mx-auto px-4 py-16 text-center flex flex-col items-center gap-4">
           <span className="text-5xl">🍃</span>
-          <p className="font-playfair text-2xl text-blue-950 font-bold">Listing Not Found</p>
-          <p className="text-slate-400">The wind has carried this sanctuary away.</p>
+          <p className="font-sans text-2xl text-white font-bold drop-shadow-md">Listing Not Found</p>
+          <p className="text-slate-300">The wind has carried this sanctuary away.</p>
           <button 
             onClick={() => navigate("/listings")}
-            className="mt-4 px-6 py-2 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 font-semibold hover:bg-blue-100 transition-colors"
+            className="mt-4 px-6 py-2 rounded-xl bg-black/40 text-blue-300 border border-white/20 font-semibold hover:bg-white/10 transition-colors shadow-lg"
           >
             Back to listings
           </button>
@@ -75,7 +75,19 @@ const ListingDetail = () => {
   return (
     <GhibliLayout showBack>
       <div className="container mx-auto px-4 py-12 max-w-4xl relative z-10">
-        
+        <style>{`
+          .oracle-glass {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+          }
+          .oracle-glass-strong {
+            background: rgba(0,0,0,0.7);
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.7), 0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+          }
+        `}</style>
+
         {/* Back navigation */}
         <motion.button
           initial={{ opacity: 0, x: -10 }}
@@ -110,20 +122,20 @@ const ListingDetail = () => {
 
           {/* Top Price Badge */}
           <div className="absolute top-6 right-6 oracle-glass px-6 py-3 rounded-2xl">
-            <span className="font-playfair text-3xl font-bold text-blue-900">
+            <span className="font-sans text-3xl font-bold text-white drop-shadow-md">
               ${listing.price.toLocaleString()}
-              <span className="text-sm font-medium text-blue-500/70">/mo</span>
+              <span className="text-sm font-medium text-slate-300">/mo</span>
             </span>
           </div>
 
           {/* Rating/Landlord Badge */}
           <div className="absolute bottom-6 left-6 oracle-glass px-5 py-3 rounded-2xl flex items-center gap-3">
-            <div className="flex items-center gap-1 bg-amber-100/80 px-2 py-0.5 rounded-lg border border-amber-200">
-              <Star size={14} className="text-amber-500 fill-amber-500" />
-              <span className="font-bold text-amber-700 text-sm">{listing.rating}</span>
+            <div className="flex items-center gap-1 bg-black/60 px-2 py-0.5 rounded-lg border border-white/30">
+              <Star size={14} className="text-amber-400 fill-amber-400" />
+              <span className="font-bold text-amber-200 text-sm">{listing.rating}</span>
             </div>
-            <div className="h-4 w-px bg-blue-100" />
-            <span className="text-blue-800 text-sm font-semibold tracking-wide">{listing.landlord}</span>
+            <div className="h-4 w-px bg-white/20" />
+            <span className="text-blue-100 text-sm font-semibold tracking-wide drop-shadow-sm">{listing.landlord}</span>
           </div>
         </motion.div>
 
@@ -137,21 +149,21 @@ const ListingDetail = () => {
             transition={{ delay: 0.2 }}
           >
             <div className="flex items-center gap-2 mb-3">
-              <Sparkles size={16} className="text-blue-400" />
-              <span className="text-xs font-semibold tracking-widest uppercase text-blue-400">
+              <Sparkles size={16} className="text-blue-300" />
+              <span className="text-xs font-semibold tracking-widest uppercase text-blue-300 drop-shadow-md">
                 Property Sanctuary
               </span>
             </div>
-            <h1 className="font-playfair text-4xl lg:text-5xl font-bold text-blue-950 mb-4 leading-tight">
+            <h1 className="font-sans text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight drop-shadow-xl">
               {listing.address}
             </h1>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-slate-500">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-slate-300 drop-shadow-sm border border-white/10 bg-black/40 px-4 py-2 rounded-full w-max">
               <div className="flex items-center gap-1.5">
                 <MapPin size={16} className="text-blue-300" />
                 <span className="font-medium">{listing.city}, {listing.state} {listing.zip}</span>
               </div>
-              <div className="w-1.5 h-1.5 rounded-full bg-blue-100" />
-              <div className="flex items-center gap-1.5 font-medium text-blue-400">
+              <div className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+              <div className="flex items-center gap-1.5 font-medium text-blue-200">
                 <Navigation size={16} />
                 <span>{listing.distanceMiles} miles from campus</span>
               </div>
@@ -171,13 +183,13 @@ const ListingDetail = () => {
               { icon: Ruler, label: "Sq Ft", value: listing.sqft, color: "blue" },
               { icon: Calendar, label: "Lease Term", value: `${listing.leaseTermMonths} mo`, color: "sky" },
             ].map((stat) => (
-              <div key={stat.label} className="oracle-glass p-6 rounded-3xl text-center flex flex-col items-center gap-2 group hover:scale-105 transition-transform">
-                <div className={`w-10 h-10 rounded-2xl bg-${stat.color}-50 flex items-center justify-center text-${stat.color}-400 group-hover:bg-${stat.color}-400 group-hover:text-white transition-all`}>
+              <div key={stat.label} className="oracle-glass p-6 rounded-3xl text-center flex flex-col items-center gap-2 group hover:scale-105 transition-transform bg-black/40 border border-white/20">
+                <div className={`w-10 h-10 rounded-2xl bg-black/60 border border-[var(--tw-colors-${stat.color}-400)] flex items-center justify-center text-${stat.color}-300 group-hover:bg-white/20 group-hover:text-white transition-all shadow-md`}>
                   <stat.icon size={20} />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-blue-950">{stat.value}</p>
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-slate-400 mt-0.5">{stat.label}</p>
+                  <p className="text-2xl font-bold text-white drop-shadow-md">{stat.value}</p>
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-slate-400 mt-0.5 drop-shadow-sm">{stat.label}</p>
                 </div>
               </div>
             ))}
@@ -188,14 +200,14 @@ const ListingDetail = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="oracle-glass-strong p-8 sm:p-10 rounded-[2.5rem] relative overflow-hidden"
+            className="oracle-glass-strong bg-black/40 border border-white/20 p-8 sm:p-10 rounded-[2.5rem] relative overflow-hidden shadow-2xl"
           >
             <div className="relative z-10">
-              <h2 className="font-playfair text-2xl font-bold text-blue-950 mb-4 flex items-center gap-3">
+              <h2 className="font-sans text-2xl font-bold text-white mb-4 flex items-center gap-3 drop-shadow-md">
                 <span className="w-1.5 h-8 bg-blue-400 rounded-full" />
                 About This Home
               </h2>
-              <p className="text-slate-600 leading-relaxed text-lg font-light">
+              <p className="text-slate-300 leading-relaxed text-lg font-light drop-shadow-sm">
                 {listing.description}
               </p>
             </div>
@@ -208,12 +220,12 @@ const ListingDetail = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5 }}
-              className="oracle-glass p-8 rounded-[2rem]"
+              className="oracle-glass bg-black/40 border border-white/20 p-8 rounded-[2rem] shadow-2xl"
             >
-              <h3 className="font-playfair text-xl font-bold text-blue-950 mb-5">Amenities</h3>
+              <h3 className="font-sans text-xl font-bold text-white mb-5 drop-shadow-md">Amenities</h3>
               <div className="flex flex-wrap gap-2.5">
                 {listing.amenities.map((a) => (
-                  <span key={a} className="pill-tag px-4 py-2 rounded-full bg-white/60 border border-white/80 text-blue-700 text-xs font-bold tracking-wide shadow-sm">
+                  <span key={a} className="pill-tag px-4 py-2 rounded-full bg-black/60 border border-white/20 text-blue-200 text-xs font-bold tracking-wide shadow-sm">
                     {a}
                   </span>
                 ))}
@@ -225,25 +237,25 @@ const ListingDetail = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5 }}
-              className="oracle-glass p-8 rounded-[2rem]"
+              className="oracle-glass bg-black/40 border border-white/20 p-8 rounded-[2rem] shadow-2xl"
             >
-              <h3 className="font-playfair text-xl font-bold text-blue-950 mb-5">Key Details</h3>
+              <h3 className="font-sans text-xl font-bold text-white mb-5 drop-shadow-md">Key Details</h3>
               <div className="space-y-4">
                 {[
-                  { icon: Car, label: "Parking", value: listing.parkingIncluded ? "Included ✓" : "Not included", iconColor: "text-blue-400" },
-                  { icon: Zap, label: "Utilities", value: listing.utilitiesIncluded ? "Included ✓" : "Not included", iconColor: "text-amber-400" },
-                  { icon: PawPrint, label: "Pets", value: listing.petFriendly ? "Friendly ✓" : "Not allowed", iconColor: "text-sky-400" },
-                  { icon: Shield, label: "Security Deposit", value: `$${listing.securityDeposit}`, iconColor: "text-blue-500" },
-                  { icon: DollarSign, label: "Zillow Estimate", value: `$${listing.zillowEstimate}/mo`, iconColor: "text-amber-500" },
+                  { icon: Car, label: "Parking", value: listing.parkingIncluded ? "Included ✓" : "Not included", iconColor: "text-blue-300" },
+                  { icon: Zap, label: "Utilities", value: listing.utilitiesIncluded ? "Included ✓" : "Not included", iconColor: "text-amber-200" },
+                  { icon: PawPrint, label: "Pets", value: listing.petFriendly ? "Friendly ✓" : "Not allowed", iconColor: "text-sky-300" },
+                  { icon: Shield, label: "Security Deposit", value: `$${listing.securityDeposit}`, iconColor: "text-blue-400" },
+                  { icon: DollarSign, label: "Zillow Estimate", value: `$${listing.zillowEstimate}/mo`, iconColor: "text-amber-300" },
                 ].map((detail) => (
-                  <div key={detail.label} className="flex items-center justify-between text-sm py-2 border-b border-blue-50/50 last:border-0">
+                  <div key={detail.label} className="flex items-center justify-between text-sm py-2 border-b border-white/10 last:border-0">
                     <div className="flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded-lg bg-white/50 flex items-center justify-center ${detail.iconColor} border border-white/60`}>
+                      <div className={`w-8 h-8 rounded-lg bg-black/60 flex items-center justify-center ${detail.iconColor} border border-white/20 shadow-md`}>
                         <detail.icon size={16} />
                       </div>
-                      <span className="text-slate-400 font-medium">{detail.label}</span>
+                      <span className="text-slate-300 font-medium">{detail.label}</span>
                     </div>
-                    <span className="text-blue-900 font-bold">{detail.value}</span>
+                    <span className="text-white font-bold">{detail.value}</span>
                   </div>
                 ))}
               </div>
@@ -255,20 +267,20 @@ const ListingDetail = () => {
             initial={{ opacity: 0, y: 32 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="text-center py-12 border-t border-blue-50"
+            className="text-center py-12 border-t border-white/10"
           >
-            <div className="inline-block p-1 rounded-full bg-blue-50 mb-6">
-              <Sparkles size={20} className="text-blue-400 animate-pulse" />
+            <div className="inline-block p-1 rounded-full bg-black/40 border border-white/20 mb-6 shadow-md">
+              <Sparkles size={20} className="text-blue-300 animate-pulse" />
             </div>
-            <h3 className="font-playfair text-2xl lg:text-3xl font-bold text-blue-950 mb-4">
+            <h3 className="font-sans text-2xl lg:text-3xl font-bold text-white mb-4 drop-shadow-md">
               Begin Your Magical Journey
             </h3>
-            <p className="text-slate-400 mb-8 max-w-lg mx-auto leading-relaxed">
+            <p className="text-slate-300 mb-8 max-w-lg mx-auto leading-relaxed drop-shadow-sm">
               Explore the true spirit of this home through our collective of specialized AI agents.
             </p>
             <button
               onClick={handleBeginJourney}
-              className="begin-btn flex items-center justify-center gap-3 px-12 py-5 rounded-2xl text-white font-bold text-xl tracking-wide mx-auto"
+              className="begin-btn flex items-center justify-center gap-3 px-12 py-5 rounded-2xl text-white font-bold text-xl tracking-wide mx-auto border border-white/20 shadow-xl"
             >
               <Sparkles size={22} />
               Consult the Oracle

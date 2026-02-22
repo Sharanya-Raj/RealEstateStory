@@ -54,10 +54,10 @@ function DualRangeSlider({
   return (
     <div className="space-y-3">
       <div className="flex justify-between items-center">
-        <span className="text-xs font-semibold tracking-widest uppercase text-sky-200 drop-shadow-sm">
+        <span className="text-xs font-semibold tracking-widest uppercase text-blue-400">
           Budget Range
         </span>
-        <span className="text-sm font-semibold text-white bg-black/40 px-3 py-1 rounded-full border border-white/20 shadow-md">
+        <span className="text-sm font-semibold text-slate-700 bg-blue-50/80 px-3 py-1 rounded-full border border-blue-100">
           {fmt(value[0])} — {fmt(value[1])}/mo
         </span>
       </div>
@@ -99,7 +99,7 @@ function SegmentedControl({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="relative flex bg-black/40 rounded-2xl p-1 border border-white/20 gap-1 shadow-inner">
+    <div className="relative flex bg-white/50 rounded-2xl p-1 border border-white/70 gap-1">
       {options.map((opt) => (
         <button
           key={opt}
@@ -108,7 +108,7 @@ function SegmentedControl({
           className={`relative z-10 flex-1 py-2 px-3 rounded-xl text-sm font-semibold transition-all duration-300 ${
             value === opt
               ? "bg-gradient-to-r from-blue-400 to-sky-400 text-white shadow-[0_4px_12px_rgba(100,150,255,0.35)]"
-              : "text-slate-300 hover:text-white"
+              : "text-slate-500 hover:text-blue-500"
           }`}
         >
           {opt}
@@ -123,7 +123,7 @@ function SegmentedControl({
 ───────────────────────────────────────────── */
 function FloatingOrbs() {
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 mix-blend-screen opacity-40">
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
       <div
         className="absolute w-[700px] h-[700px] rounded-full"
         style={{
@@ -224,9 +224,9 @@ export default function SpiritedOracle() {
 
   return (
     <div
-      className="relative min-h-screen overflow-x-hidden font-quicksand bg-slate-900"
+      className="relative min-h-screen overflow-x-hidden font-quicksand"
       style={{
-        background: `url('/images/spiritedaway_background.jpg') center/cover no-repeat fixed`,
+        background: "linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 40%, #dbeafe 70%, #eff6ff 100%)",
       }}
     >
       <style>{`
@@ -267,33 +267,33 @@ export default function SpiritedOracle() {
         .animate-icons{animation:subtleBreath 4s ease-in-out infinite}
 
         .oracle-glass{
-          background:rgba(0,0,0,0.65);
-          backdrop-filter:blur(12px) saturate(1.2);
-          -webkit-backdrop-filter:blur(12px) saturate(1.2);
-          border:1px solid rgba(255,255,255,0.15);
-          box-shadow:0 8px 32px rgba(0,0,0,0.6),0 2px 8px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.05);
+          background:rgba(255,255,255,0.42);
+          backdrop-filter:blur(36px) saturate(1.6);
+          -webkit-backdrop-filter:blur(36px) saturate(1.6);
+          border:1px solid rgba(255,255,255,0.65);
+          box-shadow:0 8px 32px rgba(100,150,255,0.13),0 2px 8px rgba(150,200,255,0.1),inset 0 1px 0 rgba(255,255,255,0.7);
         }
 
         .select-wrapper{position:relative}
         .select-wrapper select{
           appearance:none;-webkit-appearance:none;
           width:100%;
-          background:rgba(0,0,0,0.4);
-          border:1.5px solid rgba(255,255,255,0.3);
+          background:rgba(255,255,255,0.6);
+          border:1.5px solid rgba(200,225,255,0.7);
           border-radius:16px;
           padding:14px 44px 14px 48px;
           font-family:'Quicksand',sans-serif;
           font-size:15px;font-weight:500;
-          color:#fff;outline:none;
+          color:#1e3a6e;outline:none;
           transition:border-color 0.2s,box-shadow 0.2s,background 0.2s;
           cursor:pointer;
         }
         .select-wrapper select:focus{
           border-color:rgba(100,170,255,0.8);
-          background:rgba(0,0,0,0.6);
-          box-shadow:0 0 0 3px rgba(100,170,255,0.3);
+          background:rgba(255,255,255,0.85);
+          box-shadow:0 0 0 3px rgba(100,170,255,0.12);
         }
-        .select-wrapper select option{color:#fff;background:#1e293b}
+        .select-wrapper select option{color:#1e3a6e;background:#f0f7ff}
 
         .begin-btn{
           background:linear-gradient(135deg,#60a5fa 0%,#38bdf8 100%);
@@ -310,9 +310,9 @@ export default function SpiritedOracle() {
         .pill-tag:hover{transform:scale(1.06)}
 
         .nav-glass{
-          background:rgba(0,0,0,0.5);
-          backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-          border-bottom:1px solid rgba(255,255,255,0.2);
+          background:rgba(255,255,255,0.55);
+          backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+          border-bottom:1px solid rgba(200,225,255,0.4);
         }
 
         .commute-slider{
@@ -336,10 +336,10 @@ export default function SpiritedOracle() {
       <nav className="nav-glass fixed top-0 left-0 right-0 z-50">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-sky-400 flex items-center justify-center shadow-[0_4px_12px_rgba(56,189,248,0.4)] border border-white/20">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-400 to-sky-400 flex items-center justify-center shadow-[0_4px_12px_rgba(96,165,250,0.4)]">
               <Home size={14} className="text-white" />
             </div>
-            <span className="font-playfair text-lg font-semibold text-white tracking-tight drop-shadow-md">
+            <span className="font-playfair text-lg font-semibold text-blue-950 tracking-tight">
               The Spirited Oracle
             </span>
           </div>
@@ -356,7 +356,7 @@ export default function SpiritedOracle() {
           <Cloud size={20} className="text-blue-200" />
         </div>
 
-        <h1 className="animate-title font-playfair text-6xl sm:text-7xl md:text-8xl font-bold tracking-tight leading-[1.1] mb-6 drop-shadow-[0_4px_16px_rgba(255,255,255,0.4)]">
+        <h1 className="animate-title font-playfair text-6xl sm:text-7xl md:text-8xl font-bold tracking-tight leading-[1.1] mb-6">
           <span style={{ background:"linear-gradient(135deg,#1e3a6e 0%,#1d4ed8 40%,#0284c7 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>
             Find Your
           </span>
@@ -366,15 +366,15 @@ export default function SpiritedOracle() {
           </span>
         </h1>
 
-        <p className="animate-tagline text-white text-lg sm:text-xl max-w-xl mx-auto leading-relaxed font-medium drop-shadow-md">
+        <p className="animate-tagline text-slate-500 text-lg sm:text-xl max-w-xl mx-auto leading-relaxed font-light">
           Where every home tells a story and every story finds its home.{" "}
-          <span className="text-sky-300 font-bold">Let the oracle guide you.</span>
+          <span className="text-blue-400 font-medium">Let the oracle guide you.</span>
         </p>
 
         <div className="animate-tagline mt-8 flex justify-center">
-          <div className="flex flex-col items-center gap-1 text-sky-200">
-            <span className="text-xs tracking-widest uppercase font-medium drop-shadow-sm">Begin Journey</span>
-            <ChevronDown size={16} className="animate-bounce drop-shadow-sm text-white" />
+          <div className="flex flex-col items-center gap-1 text-blue-300">
+            <span className="text-xs tracking-widest uppercase font-medium">Begin Journey</span>
+            <ChevronDown size={16} className="animate-bounce" />
           </div>
         </div>
       </section>
@@ -385,12 +385,12 @@ export default function SpiritedOracle() {
 
           {/* Card header */}
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-2xl bg-black/40 flex items-center justify-center border border-white/20 shadow-lg">
-              <Navigation size={18} className="text-white" />
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-100 to-sky-100 flex items-center justify-center border border-white/80">
+              <Navigation size={18} className="text-blue-400" />
             </div>
             <div>
-              <h2 className="font-playfair text-2xl font-semibold text-white drop-shadow-md">Your Journey Preferences</h2>
-              <p className="text-sm text-slate-300 mt-0.5 drop-shadow-sm">Curate your perfect home search</p>
+              <h2 className="font-playfair text-2xl font-semibold text-blue-950">Your Journey Preferences</h2>
+              <p className="text-sm text-slate-400 mt-0.5">Curate your perfect home search</p>
             </div>
           </div>
 
@@ -413,7 +413,7 @@ export default function SpiritedOracle() {
               </div>
             </div>
 
-            <div className="h-px bg-white/10" />
+            <div className="h-px bg-gradient-to-r from-transparent via-blue-100 to-transparent" />
 
             {/* ── ROOMMATES & PARKING ── */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -427,12 +427,12 @@ export default function SpiritedOracle() {
               </div>
             </div>
 
-            <div className="h-px bg-white/10" />
+            <div className="h-px bg-gradient-to-r from-transparent via-blue-100 to-transparent" />
 
             {/* ── BUDGET SLIDER ── */}
             <DualRangeSlider min={500} max={5000} value={budget} onChange={setBudget} />
 
-            <div className="h-px bg-white/10" />
+            <div className="h-px bg-gradient-to-r from-transparent via-blue-100 to-transparent" />
 
             {/* ── MAX COMMUTE ── */}
             <div className="space-y-3">
@@ -440,7 +440,7 @@ export default function SpiritedOracle() {
                 <label className="text-xs font-semibold tracking-widest uppercase text-blue-400 flex items-center gap-1.5">
                   <Navigation size={11} /> Max Distance to Campus
                 </label>
-                <span className="text-sm font-semibold text-white bg-black/40 px-3 py-1 rounded-full border border-white/20 shadow-md">
+                <span className="text-sm font-semibold text-slate-700 bg-blue-50/80 px-3 py-1 rounded-full border border-blue-100">
                   {maxCommute} miles
                 </span>
               </div>
@@ -457,7 +457,7 @@ export default function SpiritedOracle() {
               </div>
             </div>
 
-            <div className="h-px bg-white/10" />
+            <div className="h-px bg-gradient-to-r from-transparent via-blue-100 to-transparent" />
 
             {/* ── AMENITIES ── */}
             <div className="space-y-3">
@@ -475,7 +475,7 @@ export default function SpiritedOracle() {
                       className={`pill-tag flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 ${
                         active
                           ? "bg-gradient-to-r from-blue-400 to-sky-400 text-white border-transparent shadow-[0_4px_16px_rgba(100,160,255,0.35)]"
-                          : "bg-black/40 text-slate-200 border-white/20 hover:border-white/50 hover:shadow-[0_0_0_3px_rgba(255,255,255,0.12)] hover:text-white"
+                          : "bg-white/60 text-slate-600 border-white/70 hover:border-blue-200 hover:shadow-[0_0_0_3px_rgba(100,170,255,0.12)] hover:text-blue-600"
                       }`}
                     >
                       {a}
@@ -485,14 +485,14 @@ export default function SpiritedOracle() {
               </div>
             </div>
 
-            <div className="h-px bg-white/10" />
+            <div className="h-px bg-gradient-to-r from-transparent via-blue-100 to-transparent" />
 
             {/* ── CTA BUTTON ── */}
             <button
               type="button"
               onClick={handleBegin}
               disabled={!college || isSubmitting}
-              className="begin-btn w-full py-5 rounded-2xl text-white font-bold text-lg tracking-wide flex items-center justify-center gap-3 border border-white/10 shadow-xl"
+              className="begin-btn w-full py-5 rounded-2xl text-white font-bold text-lg tracking-wide flex items-center justify-center gap-3"
             >
               {isSubmitting ? (
                 <>
@@ -509,17 +509,17 @@ export default function SpiritedOracle() {
             </button>
 
             {!college && (
-              <p className="text-center text-xs text-sky-200 -mt-4 drop-shadow-sm font-medium">
+              <p className="text-center text-xs text-blue-300 -mt-4">
                 Choose a college to unlock your journey ✦
               </p>
             )}
           </div>
         </div>
 
-        <div className="mt-8 text-center flex items-center justify-center gap-2 text-slate-300 text-sm font-medium drop-shadow-sm">
-          <Cloud size={14} className="text-sky-300" />
+        <div className="mt-8 text-center flex items-center justify-center gap-2 text-slate-400 text-sm">
+          <Cloud size={14} className="text-blue-200" />
           <span>Powered by mystical algorithms & good vibes</span>
-          <Sparkles size={14} className="text-sky-300" />
+          <Sparkles size={14} className="text-blue-200" />
         </div>
       </section>
     </div>

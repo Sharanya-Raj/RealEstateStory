@@ -8,6 +8,7 @@ export interface Agent {
   emoji: string;
   vibe: string;
   description: string;
+  image?: string;
 }
 
 export const agents: Agent[] = [
@@ -19,6 +20,7 @@ export const agents: Agent[] = [
     color: "ghibli-sky",
     bgGradient: "from-ghibli-sky/20 via-ghibli-mist to-ghibli-sky/10",
     emoji: "🚂",
+    image: "/images/trainconductor.png",
     vibe: "Punctual, rhythmic, and slightly obsessed with clocks",
     description: "A tall, lanky shadow figure with a glowing pocket watch. He knows every track, bus line, and shortcut in New Jersey.",
   },
@@ -30,6 +32,7 @@ export const agents: Agent[] = [
     color: "ghibli-amber",
     bgGradient: "from-ghibli-amber/20 via-ghibli-parchment to-ghibli-amber/10",
     emoji: "💰",
+    image: "/images/lin.png",
     vibe: "Practical, no-nonsense, and protective of your gold",
     description: "The hardworking big sister figure who manages the tokens and ensures everyone gets fed. She's tough but looks out for you.",
   },
@@ -41,6 +44,7 @@ export const agents: Agent[] = [
     color: "ghibli-forest",
     bgGradient: "from-ghibli-meadow/20 via-ghibli-mist to-ghibli-forest/10",
     emoji: "🎩",
+    image: "/images/thebaron.png",
     vibe: "Sophisticated, fair, and incredibly knowledgeable about true value",
     description: "An elegant, wise shop owner who can tell the difference between a masterpiece and a fake just by the smell of the wood.",
   },
@@ -52,6 +56,7 @@ export const agents: Agent[] = [
     color: "ghibli-pink",
     bgGradient: "from-ghibli-pink/20 via-ghibli-parchment to-ghibli-pink/10",
     emoji: "🧹",
+    image: "/images/kiki.png",
     vibe: "Observant, community-oriented, and breezy",
     description: "A character like Kiki on her broom, who flies over the streets and knows where the best bakery, the safest alleys, and the quietest parks are.",
   },
@@ -63,6 +68,7 @@ export const agents: Agent[] = [
     color: "ghibli-soot",
     bgGradient: "from-ghibli-soot/10 via-ghibli-mist to-ghibli-amber/10",
     emoji: "🕷️",
+    image: "/images/sootspirits.png",
     vibe: "Detail-oriented, grumbly, and investigative",
     description: "A multi-armed tinkerer who digs into the pipes and basements to find what's hidden. Nothing escapes their six eyes.",
   },

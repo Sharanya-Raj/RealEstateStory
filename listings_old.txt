@@ -34,11 +34,7 @@ const Listings = () => {
     fetch(`http://127.0.0.1:8000/api/listings${qs ? `?${qs}` : ""}`)
       .then(res => res.json())
       .then(data => { setListings(data); setIsLoading(false); })
-      .catch(() => {
-        console.log("Failed to fetch listings");
-        setListings([]);
-        setIsLoading(false);
-      });
+      .catch(() => setIsLoading(false));
   }, [preferences]);
 
   const filteredListings = useMemo(() => {
@@ -77,16 +73,16 @@ const Listings = () => {
               Available Nests
             </span>
           </div>
-          <h1 className="font-playfair text-4xl lg:text-5xl font-bold text-white mb-2 leading-tight drop-shadow-lg">
+          <h1 className="font-playfair text-4xl lg:text-5xl font-bold text-blue-950 mb-2 leading-tight">
             Find Your Sanctuary
           </h1>
           {preferences && (
-            <div className="flex items-center gap-2 text-slate-300 text-sm drop-shadow-sm bg-black/40 px-3 py-1.5 rounded-full w-max border border-white/10">
+            <div className="flex items-center gap-2 text-slate-500 text-sm">
               <MapPin size={13} className="text-blue-300" />
               <span>
-                Near <span className="text-white font-semibold">{preferences.college}</span>
+                Near <span className="text-blue-600 font-semibold">{preferences.college}</span>
                 {" · "}Budget up to{" "}
-                <span className="font-semibold text-white">${preferences.priceMax.toLocaleString()}/mo</span>
+                <span className="font-semibold text-blue-600">${preferences.priceMax.toLocaleString()}/mo</span>
               </span>
             </div>
           )}
@@ -104,7 +100,7 @@ const Listings = () => {
             onClick={() => setShowFilters(!showFilters)}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold border transition-all duration-200 ${showFilters
                 ? "bg-gradient-to-r from-blue-400 to-sky-400 text-white border-transparent shadow-[0_4px_12px_rgba(100,150,255,0.3)]"
-                : "bg-black/40 text-slate-300 border-white/20 hover:text-white hover:border-white/50 shadow-md"
+                : "bg-white/50 text-slate-500 border-white/70 hover:text-blue-500 hover:border-blue-200"
               }`}
             style={{ backdropFilter: "blur(12px)" }}
           >
@@ -113,7 +109,7 @@ const Listings = () => {
           </button>
 
           {/* Sort pills */}
-          <div className="flex items-center gap-1.5 text-xs text-slate-300 drop-shadow-sm">
+          <div className="flex items-center gap-1.5 text-xs text-slate-400">
             <ArrowUpDown size={12} />
             <span className="font-semibold">Sort:</span>
           </div>
@@ -123,7 +119,7 @@ const Listings = () => {
               onClick={() => setSortBy(opt.key)}
               className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 ${sortBy === opt.key
                   ? "bg-gradient-to-r from-blue-400 to-sky-400 text-white border-transparent shadow-[0_4px_12px_rgba(100,150,255,0.25)]"
-                  : "bg-black/40 text-slate-300 border-white/20 hover:text-white hover:border-white/50 shadow-md"
+                  : "bg-white/50 text-slate-500 border-white/70 hover:text-blue-500 hover:border-blue-200"
                 }`}
               style={{ backdropFilter: "blur(12px)" }}
             >
@@ -131,7 +127,7 @@ const Listings = () => {
             </button>
           ))}
 
-          <span className="ml-auto text-xs text-slate-300 font-medium drop-shadow-sm">
+          <span className="ml-auto text-xs text-slate-400 font-medium">
             {filteredListings.length} result{filteredListings.length !== 1 ? "s" : ""}
           </span>
         </motion.div>
@@ -151,10 +147,10 @@ const Listings = () => {
             }}
           >
             <div className="flex justify-between items-center mb-3">
-              <label className="text-xs font-semibold tracking-widest uppercase text-blue-300 drop-shadow-sm">
+              <label className="text-xs font-semibold tracking-widest uppercase text-blue-400">
                 Max Price
               </label>
-              <span className="text-sm font-semibold text-white bg-black/60 px-3 py-1 rounded-full border border-white/20 shadow-md">
+              <span className="text-sm font-semibold text-slate-700 bg-blue-50/80 px-3 py-1 rounded-full border border-blue-100">
                 ${maxPrice.toLocaleString()}/mo
               </span>
             </div>
@@ -169,7 +165,7 @@ const Listings = () => {
                 outline: "none", cursor: "pointer",
               }}
             />
-            <div className="flex justify-between text-xs text-slate-300 font-medium mt-2 drop-shadow-md">
+            <div className="flex justify-between text-xs text-blue-300 font-medium mt-2">
               <span>$500</span><span>$5,000</span>
             </div>
           </motion.div>
@@ -178,17 +174,17 @@ const Listings = () => {
         {/* ── LISTINGS GRID ── */}
         {isLoading ? (
           <div className="text-center py-24 flex flex-col items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-black/40 border border-white/20 flex items-center justify-center shadow-2xl animate-bounce">
+            <div className="w-16 h-16 rounded-2xl bg-white/60 border border-white/70 flex items-center justify-center shadow-lg animate-bounce">
               <span className="text-3xl">🏠</span>
             </div>
-            <p className="font-playfair text-xl text-white font-bold drop-shadow-md">Finding nests for you…</p>
-            <p className="text-slate-300 text-sm">The oracle is searching</p>
+            <p className="font-playfair text-xl text-blue-900">Finding nests for you…</p>
+            <p className="text-slate-400 text-sm">The oracle is searching</p>
           </div>
         ) : filteredListings.length === 0 ? (
           <div className="text-center py-24 flex flex-col items-center gap-4">
             <span className="text-5xl">🍃</span>
-            <p className="font-playfair text-xl text-white font-bold drop-shadow-md">No nests found</p>
-            <p className="text-slate-300 text-sm">Try adjusting your filters or distance</p>
+            <p className="font-playfair text-xl text-blue-900">No nests found</p>
+            <p className="text-slate-400 text-sm">Try adjusting your filters or distance</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

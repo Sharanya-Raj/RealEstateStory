@@ -84,7 +84,11 @@ const Journey = () => {
     fetch(`http://127.0.0.1:8000/api/listings/${id}`)
       .then(res => { if (!res.ok) throw new Error("Not found"); return res.json(); })
       .then(data => { setListing(data); setIsFetching(false); })
-      .catch(err => { console.error("Failed to fetch listing", err); setListing(null); setIsFetching(false); });
+      .catch(err => { 
+        console.error("Failed to fetch listing", err); 
+        setListing(null);
+        setIsFetching(false); 
+      });
   }, [id]);
 
   const college = preferences?.college || "your college";
@@ -144,11 +148,11 @@ const Journey = () => {
     return (
       <GhibliLayout showBack>
         <div className="container mx-auto px-4 py-24 text-center flex flex-col items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-white/60 border border-white/70 flex items-center justify-center shadow-lg animate-bounce">
+          <div className="w-16 h-16 rounded-2xl bg-black/40 border border-white/20 flex items-center justify-center shadow-2xl animate-bounce">
             <span className="text-3xl">🏠</span>
           </div>
-          <p className="font-playfair text-xl text-blue-900">Preparing your journey...</p>
-          <p className="text-slate-400 text-sm">The spirits are marking your path</p>
+          <p className="font-playfair text-xl text-white font-bold drop-shadow-md">Preparing your journey...</p>
+          <p className="text-slate-300 text-sm drop-shadow-sm">The spirits are marking your path</p>
         </div>
       </GhibliLayout>
     );
@@ -158,7 +162,7 @@ const Journey = () => {
     return (
       <GhibliLayout showBack>
         <div className="container mx-auto px-4 py-16 text-center">
-          <p className="text-xl text-muted-foreground">Listing not found 🍃</p>
+          <p className="text-xl text-white font-bold drop-shadow-md">Listing not found 🍃</p>
         </div>
       </GhibliLayout>
     );
@@ -169,8 +173,19 @@ const Journey = () => {
 
   return (
     <GhibliLayout showBack>
-
       <div className="container mx-auto px-4 py-8 relative z-10">
+        <style>{`
+          .oracle-glass {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+          }
+          .oracle-glass-strong {
+            background: rgba(0,0,0,0.7);
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.7), 0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+          }
+        `}</style>
         {isAiLoading ? (
           <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
             <motion.div
@@ -181,8 +196,8 @@ const Journey = () => {
             >
               🚂
             </motion.div>
-            <h2 className="font-playfair text-3xl font-bold mb-2 text-blue-950">Summoning the Spirits...</h2>
-            <p className="text-blue-400 font-semibold tracking-wide font-quicksand uppercase text-xs">Kamaji is evaluating {listing.address}</p>
+            <h2 className="font-playfair text-3xl font-bold mb-2 text-white drop-shadow-md">Summoning the Spirits...</h2>
+            <p className="text-sky-300 font-semibold tracking-wide font-quicksand uppercase text-xs drop-shadow-sm">Kamaji is evaluating {listing.address}</p>
           </div>
         ) : (
           <AgentScene

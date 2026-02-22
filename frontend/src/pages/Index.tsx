@@ -36,8 +36,8 @@ const GlassCard = ({ children, className = "" }: { children: React.ReactNode; cl
       className={`relative overflow-hidden rounded-3xl ${className}`}
       style={{
         background: "rgba(10, 18, 50, 0.88)",
-        backdropFilter: "blur(44px) saturate(2)",
-        WebkitBackdropFilter: "blur(44px) saturate(2)",
+        backdropFilter: "blur(8px) saturate(2)",
+        WebkitBackdropFilter: "blur(8px) saturate(2)",
         border: "1px solid rgba(90, 140, 255, 0.18)",
         boxShadow: "0 8px 60px rgba(5, 10, 50, 0.7), inset 0 1px 0 rgba(120, 180, 255, 0.15)",
       }}

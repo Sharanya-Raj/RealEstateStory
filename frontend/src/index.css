@@ -82,8 +82,6 @@
   /* Heavy frosted glass — background barely visible through it */
   .glass-card {
     background: hsla(var(--glass-bg));
-    backdrop-filter: blur(32px) saturate(1.8);
-    -webkit-backdrop-filter: blur(32px) saturate(1.8);
     border: 1px solid hsla(var(--glass-border));
     box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(100, 160, 255, 0.12);
     border-radius: var(--radius);
@@ -92,8 +90,6 @@
   /* Extra thick frosted glass for prominent cards */
   .glass-card-strong {
     background: hsla(220, 55%, 10%, 0.88);
-    backdrop-filter: blur(44px) saturate(2);
-    -webkit-backdrop-filter: blur(44px) saturate(2);
     border: 1px solid rgba(100, 160, 255, 0.18);
     box-shadow: 0 8px 60px rgba(10, 20, 70, 0.6), inset 0 1px 0 rgba(120, 180, 255, 0.15);
     border-radius: var(--radius);
@@ -140,6 +136,22 @@
   .font-playfair {
     font-family: 'Playfair Display', serif;
   }
+
+  .animate-float {
+    animation: gentle-float 6s ease-in-out infinite;
+  }
+
+  .animate-drift {
+    animation: drift 8s ease-in-out infinite;
+  }
+
+  .animate-glow {
+    animation: glow-pulse 3s ease-in-out infinite;
+  }
+
+  .animate-subtle-scale {
+    animation: subtle-scale 4s ease-in-out infinite;
+  }
 }
 
 /* Animations */
@@ -168,11 +180,31 @@
   50% { opacity: 1; transform: scale(1.2); }
 }
 
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes gentle-float {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  25% { transform: translateY(-8px) translateX(3px); }
+  50% { transform: translateY(-12px) translateX(-2px); }
+  75% { transform: translateY(-6px) translateX(4px); }
+}
+
+@keyframes drift {
+  0%, 100% { transform: translateX(0px); }
+  50% { transform: translateX(15px); }
+}
+
+@keyframes subtle-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
 /* 🌸 THE SPIRITED ORACLE - LIGHT THEME UTILITIES 🌸 */
 .oracle-glass {
   background: rgba(255, 255, 255, 0.42);
-  backdrop-filter: blur(36px) saturate(1.6);
-  -webkit-backdrop-filter: blur(36px) saturate(1.6);
   border: 1px solid rgba(255, 255, 255, 0.65);
   box-shadow: 0 8px 32px rgba(100, 150, 255, 0.13), 
               0 2px 8px rgba(150, 200, 255, 0.1), 
@@ -181,8 +213,6 @@
 
 .oracle-glass-strong {
   background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(48px) saturate(1.8);
-  -webkit-backdrop-filter: blur(48px) saturate(1.8);
   border: 1px solid rgba(255, 255, 255, 0.8);
   box-shadow: 0 12px 48px rgba(100, 150, 255, 0.16), 
               inset 0 1px 0 rgba(255, 255, 255, 0.9);
@@ -191,19 +221,59 @@
 .begin-btn {
   background: linear-gradient(135deg, #60a5fa 0%, #38bdf8 100%);
   box-shadow: 0 8px 24px rgba(96, 165, 250, 0.4), 0 2px 8px rgba(56, 189, 248, 0.25);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, filter 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
+
+.begin-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transform: translateX(-100%);
+}
+
 .begin-btn:not(:disabled):hover {
   transform: translateY(-3px);
   box-shadow: 0 16px 40px rgba(96, 165, 250, 0.5), 0 4px 12px rgba(56, 189, 248, 0.35);
+  filter: brightness(1.1);
 }
-.begin-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.begin-btn:not(:disabled):active {
+  transform: translateY(-1px);
+}
+
+.begin-btn:disabled { 
+  opacity: 0.45; 
+  cursor: not-allowed; 
+}
 
 .pill-tag {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
+
+.pill-tag::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pill-tag:hover::after {
+  transform: translateX(100%);
+}
+
 .pill-tag:hover {
   transform: scale(1.06);
+}
+
+.pill-tag:active {
+  transform: scale(1.02);
 }
 
 .commute-slider {
@@ -215,7 +285,9 @@
   background: linear-gradient(to right, #60a5fa, #38bdf8);
   outline: none;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(100, 150, 255, 0.2);
 }
+
 .commute-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -224,7 +296,127 @@
   border-radius: 50%;
   background: #fff;
   border: 2px solid #60a5fa;
-  box-shadow: 0 2px 12px rgba(100, 150, 255, 0.4);
-  transition: transform 0.15s;
+  box-shadow: 0 2px 12px rgba(100, 150, 255, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
 }
-.commute-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+.commute-slider::-webkit-slider-thumb:hover { 
+  transform: scale(1.15);
+  box-shadow: 0 4px 16px rgba(100, 150, 255, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.commute-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #60a5fa;
+  box-shadow: 0 2px 12px rgba(100, 150, 255, 0.4);
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+
+/* Premium form element styling */
+.form-input {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1.5px solid rgba(200, 225, 255, 0.8);
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1e3a6e;
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.form-input:focus {
+  border-color: rgba(100, 170, 255, 0.8);
+  background: rgba(255, 255, 255, 0.93);
+  box-shadow: 0 0 0 3px rgba(100, 170, 255, 0.12), 0 4px 16px rgba(100, 150, 255, 0.15);
+}
+
+.form-input:hover:not(:focus) {
+  border-color: rgba(100, 170, 255, 0.6);
+  background: rgba(255, 255, 255, 0.88);
+}
+
+/* Card hover effects */
+.card-elevated {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              box-shadow 0.3s ease,
+              filter 0.3s ease;
+}
+
+.card-elevated:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(100, 150, 255, 0.25);
+  filter: brightness(1.05);
+}
+
+/* Animated gradient text */
+.gradient-text-animated {
+  background: linear-gradient(
+    90deg,
+    #60a5fa 0%,
+    #38bdf8 50%,
+    #60a5fa 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Badge styling */
+.badge-premium {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(100, 180, 255, 0.1) 0%, rgba(56, 189, 248, 0.1) 100%);
+  border: 1px solid rgba(100, 180, 255, 0.3);
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+
+.badge-premium::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: translateX(-100%);
+}
+
+.badge-premium:hover::before {
+  animation: shimmer-slide 0.8s ease forwards;
+}
+
+@keyframes shimmer-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Glass card with premium feel */
+.glass-premium {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 40px rgba(100, 150, 255, 0.15),
+              inset 0 1px 0 rgba(255, 255, 255, 0.9),
+              inset -1px -1px 2px rgba(100, 150, 255, 0.05);
+}
+
+/* Floating animation for decorative elements */
+@keyframes float-smooth {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  25% { transform: translateY(-12px) translateX(4px); }
+  50% { transform: translateY(-8px) translateX(-2px); }
+  75% { transform: translateY(-14px) translateX(3px); }
+}
+
+.float-smooth {
+  animation: float-smooth 7s ease-in-out infinite;
+}
