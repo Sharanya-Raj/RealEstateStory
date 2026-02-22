@@ -9,12 +9,14 @@ from typing import Optional
 # Fairness Agent: "Callum" or similar neutral/logical voice
 
 VOICE_MAP = {
-    "howl": "JBFqnCBvToIDGisDtj7p", # George
-    "kamaji": "z68rM5VAsA0S3fK6T6k5", # Marcus? (Need a good deep one)
-    "budget": "21m00Tcm4TlvDq8ikWAM", # Rachel
-    "fairness": "ErXwbcICj0yD9i62y_C3", # Callum
-    "neighborhood": "MF3mGyEYCl7XYW7LMaPr", # Alice
-    "default": "21m00Tcm4TlvDq8ikWAM"
+    "commute": "M5E055lOUxMi0kJpGyE9",      # Spirits (Train Conductor)
+    "budget": "4tRn1lSkEn13EVTuqb0g",       # Lin
+    "market": "eadgjmk4R4uojdsheG9t",       # Baron
+    "neighborhood": "BlgEcC0TfWpBak7FmvHW", # Kiki
+    "hidden": "goT3UYdM9bhm0n2lmKQx",       # Kamaji Helper
+    "kamaji": "goT3UYdM9bhm0n2lmKQx",       # Kamaji Summary
+    "howl": "eadgjmk4R4uojdsheG9t",         # Howl (Baron as fit)
+    "default": "M5E055lOUxMi0kJpGyE9"
 }
 
 def generate_voice(text: str, agent_type: str = "default") -> Optional[bytes]:
@@ -28,6 +30,7 @@ def generate_voice(text: str, agent_type: str = "default") -> Optional[bytes]:
         return None
 
     voice_id = VOICE_MAP.get(agent_type.lower(), VOICE_MAP["default"])
+    print(f"[VOICE] Generating audio for agent='{agent_type}' using voice_id='{voice_id}'")
     url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
 
     headers = {
@@ -38,7 +41,7 @@ def generate_voice(text: str, agent_type: str = "default") -> Optional[bytes]:
 
     data = {
         "text": text,
-        "model_id": "eleven_monolingual_v1",
+        "model_id": "eleven_turbo_v2_5",
         "voice_settings": {
             "stability": 0.5,
             "similarity_boost": 0.5

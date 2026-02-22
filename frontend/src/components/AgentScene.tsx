@@ -58,6 +58,7 @@ const AgentScene = ({
 }: AgentSceneProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isAudioLoading, setIsAudioLoading] = useState(false);
 
   // Auto-play the agent's unique voice whenever a new scene renders
   const playAudio = useCallback(() => {
@@ -68,6 +69,7 @@ const AgentScene = ({
       } else {
         // Fallback to real-time ElevenLabs generation
         src = api.getVoiceUrl(dialogue, agent.id);
+        setIsAudioLoading(true);
       }
 
       if (audioRef.current) {
@@ -78,13 +80,22 @@ const AgentScene = ({
       }
       
       const audio = audioRef.current;
-      audio.onplay = () => setIsPlaying(true);
+      audio.onplay = () => {
+        setIsPlaying(true);
+        setIsAudioLoading(false);
+      };
       audio.onpause = () => setIsPlaying(false);
       audio.onended = () => setIsPlaying(false);
+      audio.oncanplay = () => setIsAudioLoading(false);
+      audio.onerror = () => setIsAudioLoading(false);
       
-      audio.play().catch((e) => console.warn("Audio autoplay blocked:", e));
+      audio.play().catch((e) => {
+        console.warn("Audio autoplay blocked:", e);
+        setIsAudioLoading(false);
+      });
     } catch (e) {
       console.warn("Could not play agent audio:", e);
+      setIsAudioLoading(false);
     }
   }, [audioBase64, dialogue, agent.id]);
 
@@ -148,18 +159,21 @@ const AgentScene = ({
               <div className="flex items-center gap-4">
                 <button
                   onClick={togglePlayback}
-                  className="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/40 flex items-center justify-center hover:bg-blue-500/30 transition-colors shadow-[0_0_15px_rgba(59,130,246,0.2)]"
+                  disabled={isAudioLoading}
+                  className="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/40 flex items-center justify-center hover:bg-blue-500/30 transition-colors shadow-[0_0_15px_rgba(59,130,246,0.2)] disabled:opacity-50"
                 >
-                  {isPlaying ? (
+                  {isAudioLoading ? (
+                    <Loader2 size={18} className="text-blue-300 animate-spin" />
+                  ) : isPlaying ? (
                     <Pause size={18} className="text-blue-300 fill-blue-300" />
                   ) : (
                     <Play size={18} className="text-blue-300 fill-blue-300 ml-0.5" />
                   )}
                 </button>
-                <VoiceWaveform isPlaying={isPlaying} />
+                <VoiceWaveform isPlaying={isPlaying && !isAudioLoading} />
               </div>
-              <span className="font-quicksand font-bold tracking-widest uppercase text-[10px] text-sky-400/80 drop-shadow-sm">
-                {isPlaying ? "Summoning Voice..." : "Voice Suspended"}
+              <span className={`font-quicksand font-bold tracking-widest uppercase text-[10px] drop-shadow-sm ${isAudioLoading ? 'text-amber-400 animate-pulse' : 'text-sky-400/80'}`}>
+                {isAudioLoading ? "Summoning Voice..." : isPlaying ? "The Spirit Speaks" : "Voice Suspended"}
               </span>
             </motion.div>
           )}

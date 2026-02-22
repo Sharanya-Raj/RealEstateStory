@@ -333,8 +333,8 @@ Return ONLY the valid JSON, no markdown."""
     if llm_summary:
         summary_text = llm_summary.strip().replace('"', '')
     
-    # 3. ElevenLabs TTS for All Agents (Parallelized)
-    eleven_key = os.environ.get("ELEVENLABS_API_KEY")
+    # [NEW] Disable the legacy base64 audio generation to prevent it from overriding 
+    # the real-time ElevenLabs TTS (VOICE_MAP) configured in voice_service.py.
     audio_streams = {
         "commute": None,
         "budget": None,
@@ -343,52 +343,6 @@ Return ONLY the valid JSON, no markdown."""
         "hidden": None,
         "kamaji": None
     }
-    
-    if eleven_key and ElevenLabs is not None:
-        try:
-            logger.info("API: ElevenLabs TTS for 6 agents (parallel)")
-            client = ElevenLabs(api_key=eleven_key)
-            
-            voice_map = {
-                "commute":      "auq43ws1oslv0tO4BDa7",
-                "budget":       "auq43ws1oslv0tO4BDa7",
-                "market":       "auq43ws1oslv0tO4BDa7",
-                "neighborhood": "auq43ws1oslv0tO4BDa7",
-                "hidden":       "auq43ws1oslv0tO4BDa7",
-                "kamaji":       "auq43ws1oslv0tO4BDa7"
-            }
-            
-            speech_texts = {
-                "commute": f"Driving takes {commute.get('driving', 'some time')}. Transit takes {commute.get('transit', 'some time')}. {commute.get('llm_insight', 'Hmm, no commute data found.')}",
-                "budget": f"Base Rent is ${budget.get('costBreakdown', {}).get('rent', listing.get('base_rent'))}. {budget.get('llm_insight', 'My calculations are clouded.')}",
-                "market": f"This property sits around the {fairness['percentile']}th percentile for this ZIP code. {fairness.get('historicalInsight', 'A landlord never reveals their secrets.')}",
-                "neighborhood": f"Walk Score is {commute['walkScore']} out of 100. {neighborhood['safety'].get('summary', 'The spirits are quiet today.')}",
-                "hidden": f"Total True Cost is ${hidden['trueCost']} per month. I sense some hidden fees lurking in the shadows. Always read the contract!",
-                "kamaji": summary_text
-            }
-            
-            def fetch_tts(agent_id, text, voice_id):
-                try:
-                    audio_generator = client.text_to_speech.convert(
-                        text=text,
-                        voice_id=voice_id,
-                        model_id="eleven_turbo_v2_5",
-                        output_format="mp3_44100_128",
-                    )
-                    audio_bytes = b"".join(audio_generator)
-                    return agent_id, base64.b64encode(audio_bytes).decode('utf-8')
-                except Exception as e:
-                    logger.warning("ElevenLabs error for %s: %s", agent_id, e)
-                    return agent_id, None
-            
-            with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
-                futures = [executor.submit(fetch_tts, agent, speech_texts[agent], voice_map[agent]) for agent in speech_texts]
-                for future in concurrent.futures.as_completed(futures):
-                    agent_id, base64_audio = future.result()
-                    audio_streams[agent_id] = base64_audio
-                    
-        except Exception as e:
-            logger.warning("ElevenLabs parallel execution error: %s", e)
             
     result = {
         "id": listing["id"],

@@ -284,8 +284,7 @@ def _map_row_to_listing(row) -> dict:
     hidden_costs = []
     if float(row["parking_fee"]) > 0:
         hidden_costs.append({"name": "Parking Fee", "amount": float(row["parking_fee"])})
-    if float(row["amenity_fee"]) > 0:
-        hidden_costs.append({"name": "Amenity Fee", "amount": float(row["amenity_fee"])})
+    # amenity_fee is missing in the new listings.csv, removing it
     if float(row["avg_utilities"]) > 0:
         hidden_costs.append({"name": "Utilities (avg)", "amount": float(row["avg_utilities"])})
 
@@ -455,11 +454,42 @@ def get_all_listings(college: str = None, radius: float = 50.0, max_price: float
     try:
         csv_path = os.path.join(os.path.dirname(__file__), "data", "listings.csv")
         df = pd.read_csv(csv_path)
-        df = df.head(100)
-        results = [_map_row_to_listing(row) for _, row in df.iterrows()]
-        return results
+        
+        college_coords = None
+        if college:
+            try:
+                geo = get_coordinates(college)
+                if isinstance(geo, dict) and geo.get("latitude"):
+                    college_coords = (float(geo["latitude"]), float(geo["longitude"]))
+            except Exception as e:
+                print(f"[LISTINGS] Geocoding failed for {college}: {e}")
+
+        results = []
+        for _, row in df.iterrows():
+            listing = _map_row_to_listing(row)
+            
+            # Distance filtering for CSV data
+            if college_coords and row.get("latitude") and row.get("longitude"):
+                dist = _haversine_miles(
+                    float(row["latitude"]), float(row["longitude"]),
+                    college_coords[0], college_coords[1]
+                )
+                listing["distanceMiles"] = round(dist, 1)
+                listing["commuteMinutes"] = max(5, int(dist * 2.5))
+            
+            # Apply filters
+            if listing["price"] <= max_price:
+                if not college_coords or listing["distanceMiles"] <= radius:
+                    results.append(listing)
+        
+        # If no results after filtering, return a small sample so the UI isn't empty
+        if not results and not df.empty:
+            return [_map_row_to_listing(row) for _, row in df.head(5).iterrows()]
+            
+        return results[:100]
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"[LISTINGS] CSV error: {e}")
+        return []
 
 @app.get("/api/listings/{listing_id}")
 def get_listing(listing_id: str, mock: bool = False):
@@ -510,7 +540,15 @@ def text_to_speech(text: str, agent: str = "default"):
     if not audio_data:
         raise HTTPException(status_code=500, detail="Failed to generate voice")
     
-    return StreamingResponse(io.BytesIO(audio_data), media_type="audio/mpeg")
+    return StreamingResponse(
+        io.BytesIO(audio_data), 
+        media_type="audio/mpeg",
+        headers={
+            "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+            "Pragma": "no-cache",
+            "Expires": "0",
+        }
+    )
 
 class ChatRequest(BaseModel):
     listing_id: str
