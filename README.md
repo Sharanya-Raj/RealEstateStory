@@ -1,382 +1,350 @@
 <div align="center">
-  <h1>� Ghibli Nest</h1>
-  <p><strong>A multi-agent AI system that analyzes apartments and reveals their true monthly cost through a Studio Ghibli-themed storytelling UI.</strong></p>
-  <img src="https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white" alt="Vite" />
-  <img src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white" alt="React" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
-  <img src="https://img.shields.io/badge/FastAPI-0.109-009688?logo=fastapi&logoColor=white" alt="FastAPI" />
-  <img src="https://img.shields.io/badge/Google_Gemini-2.5-4285F4?logo=google" alt="Gemini" />
-  <img src="https://img.shields.io/badge/ElevenLabs-TTS-5B21B6" alt="ElevenLabs" />
-  <img src="https://img.shields.io/badge/Supabase-PostGIS-3ECF8E?logo=supabase&logoColor=white" alt="Supabase" />
+
+# 🏡 Ghibli Nest
+
+### *Apartment hunting, reimagined as a Ghibli film.*
+
+**A multi-agent AI system that reveals the true cost of renting — narrated by six Studio Ghibli characters, powered by Gemini, voiced by ElevenLabs.**
+
+<br/>
+
+<img src="https://img.shields.io/badge/Google_Gemini_2.5_Flash-4285F4?logo=google&logoColor=white&style=for-the-badge" />
+<img src="https://img.shields.io/badge/ElevenLabs_TTS-5B21B6?style=for-the-badge" />
+<img src="https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white&style=for-the-badge" />
+<img src="https://img.shields.io/badge/React_18-61DAFB?logo=react&logoColor=white&style=for-the-badge" />
+<img src="https://img.shields.io/badge/Supabase_PostGIS-3ECF8E?logo=supabase&logoColor=white&style=for-the-badge" />
+
+<br/><br/>
+
+> **Built for AI Agents Challenge 2025** — targeting Google Gemini, ElevenLabs, Vultr, and ADP prize tracks.
+
 </div>
 
-<br />
+---
 
-Welcome to **Ghibli Nest**, a magical apartment-hunting experience where AI agents inspired by Studio Ghibli characters guide you through the hidden truths of rental properties in New Jersey. 
+## The Problem
 
-Built for the **AI Agents Challenge 2025** targeting **Google Gemini**, **ElevenLabs**, **Vultr**, and **ADP** prize tracks. We transform apartment hunting from a stressful, opaque process into an enchanting journey where six AI agents reveal commute times, hidden costs, market fairness, and neighborhood vibes — all narrated with character-specific voices.
+College students renting near NJ universities face a hidden-cost minefield. A listing says **$1,400/mo** — but by the time you add utilities, parking, internet, renter's insurance, and the gym membership you need because there isn't one nearby, the real bill is **$1,850/mo**. On top of that: Is this neighborhood safe? Is the commute actually 8 minutes or 35? Is this rent fair for the ZIP code?
+
+Nobody tells you. Until now.
 
 ---
 
-## ✨ Features
+## The Solution
 
-### 🎭 Six AI Agents (Ghibli Characters)
-Meet the spirits who will guide your apartment search:
+Ghibli Nest sends **six specialized AI agents** — each voiced as a beloved Ghibli character — to investigate every corner of a rental listing. They answer the questions landlords won't:
 
-1. **🚇 The Conductor (Commute Agent)** — Calculates transit routes, walk times, and total commute burden using OSRM routing API
-2. **💸 Lin (Budget Agent)** — Identifies hidden fees (parking, pet deposits, renters insurance) and calculates true monthly costs vs. your budget
-3. **⚖️ The Baron (Market Fairness Agent)** — Compares rent to ZORI (Zillow Observed Rent Index) data and calculates percentile fairness scores
-4. **🌿 Kiki (Neighborhood Agent)** — Scores walkability, safety (crime data), and nearby amenities using Overpass API (OpenStreetMap)
-5. **💰 The Soot Sprites (Hidden Cost Agent)** — Extracts often-overlooked costs from listing text (utilities, move-in fees, broker fees)
-6. **🕰️ Kamaji (Orchestrator Agent)** — Assembles all insights, enriches with LLM-generated narratives, and generates character voice audio via ElevenLabs TTS
+| Agent | Character | What They Uncover |
+|---|---|---|
+| 🚂 **The Conductor** | *Spirited Away* train | Real commute times via OSRM routing (driving, transit, biking, walking) |
+| 💸 **Lin** | *Spirited Away* | True monthly cost after all hidden fees, roommate splits, budget fit |
+| ⚖️ **The Baron** | *The Cat Returns* | ZORI market fairness percentile — are you being overcharged? |
+| 🌿 **Kiki** | *Kiki's Delivery Service* | Walk score, safety score, nearest grocery & gym via live OpenStreetMap data |
+| 🖤 **The Soot Sprites** | *Spirited Away* | Every hidden fee lurking in the listing text |
+| 🔧 **Kamaji** | *Spirited Away* | Final synthesis: Spirit Match score, true cost, pros/cons, Gemini narrative |
 
-### 🎨 Ghibli-Themed UI/UX
-- **Glassmorphism** design with custom Ghibli color palette (meadow green, sky blue, sunset orange)
-- **Animated Agent Journey** — Each agent presents their findings in sequence with Framer Motion transitions
-- **Character Voice Audio** — On-demand TTS narration for each agent using ElevenLabs API
-- **Interactive Chat** — Ask follow-up questions to Gemini with full listing context
-- **Summary Dashboard** — At-a-glance view of all 6 agent insights with cost breakdowns
-
-### 🛢️ Supabase + PostGIS Backend
-- **Geo-spatial queries** for nearby apartments using PostgreSQL PostGIS
-- **Automated Apartments.com scraper** populates database with New Jersey listings near 20 universities
-- **RPC functions** for efficient upsert operations and distance-based searches
-- **Real-time data sync** with scraped listings updated periodically
-
-### 🧠 Multi-Agent Architecture
-- **Parallel processing** — All 5 specialist agents run concurrently
-- **LLM enrichment** — Gemini 2.5 Flash generates narrative insights and summaries
-- **Deterministic fallbacks** — ZORI market fairness calculations work without LLM
-- **External API integrations** — OSRM (routing), Overpass (amenities), Nominatim (geocoding), ElevenLabs (TTS)
+Each agent speaks in their character's voice — literally. ElevenLabs TTS generates character-specific audio for every scene.
 
 ---
 
-## 🛠️ Tech Stack
+## Demo Flow
 
-**Frontend:**
-- **React 18** + **TypeScript** + **Vite** — Fast, modern development
-- **Tailwind CSS** — Utility-first styling with custom Ghibli theme
-- **Framer Motion** — Smooth animations and page transitions
-- **React Router v6** — Client-side routing
-- **Lucide React** — Beautiful icon system
+```
+🏠 Enter preferences  →  📋 Browse live listings  →  🎬 Watch the agent journey  →  📊 See the full summary  →  💬 Chat with Howl
+```
 
-**Backend:**
-- **FastAPI** — High-performance Python API server
-- **Supabase** (PostgreSQL + PostGIS) — Geo-spatial database for listing storage
-- **Google Gemini 2.5 Flash** — LLM for narrative generation and chat
-- **ElevenLabs** — Text-to-speech for character voice narration
-- **FastMCP** — Multi-agent orchestration server
-
-**External APIs:**
-- **OSRM** — Open-source routing machine for commute calculations
-- **Overpass API** — OpenStreetMap amenity and POI queries
-- **Nominatim** — Geocoding service for address resolution
-- **ZORI/ZORDI Data** — Zillow rent index for market fairness analysis
+1. **Landing page** — cinematic Spirited Away background, choose your NJ college, set budget, commute tolerance, amenities
+2. **Listings page** — real apartments scraped from Apartments.com, filtered by your preferences, pre-analyzed by the batch agent pipeline
+3. **Journey** — 6 animated scenes, one per agent. Each character delivers real data-backed dialogue and plays their ElevenLabs voice
+4. **Summary** — full breakdown: true cost, Spirit Match score, market percentile, pros/cons, cost chart
+5. **Chat** — Howl (from *Howl's Moving Castle*) answers follow-up questions about the listing using Gemini with full listing context
 
 ---
 
-## 🚀 Setup & Local Development
+## Technical Architecture
 
-### Prerequisites
-- **Node.js** (v18+)
-- **Python** (3.11+)
-- **Supabase Account** (for database hosting)
-- **API Keys:** Google Gemini, ElevenLabs
+### The Agent Pipeline
 
-### 1. Clone Repository
-```bash
-git clone https://github.com/yourusername/RealEstateStory.git
-cd RealEstateStory
+The system runs two pipelines depending on the use case:
+
+**Batch Pipeline** (`aggregate_insights_batch`) — for the listings page:
+```
+1 Nominatim geocode batch      (all listing addresses at once)
+         ↓
+1 OSRM routing table query     (all apartments → college, 1 API call)
+         ↓
+1 Overpass bbox query          (ALL gyms, groceries, transit, police across all listings)
+         ↓
+Deterministic per-listing:     budget fit, ZORI fairness, hidden cost extraction
+         ↓
+1 batched Gemini call          (8 listings per chunk — narrative insights for all)
+         ↓
+Merged result object per listing
 ```
 
-### 2. Backend Setup
-```bash
-cd backend
-python -m venv venv
-
-# Windows
-venv\Scripts\activate
-
-# MacOS/Linux
-source venv/bin/activate
-
-pip install -r requirements.txt
+**Single Pipeline** (`aggregate_insights`) — for individual deep-dive:
+```
+commute_agent   →  OSRM + Gemini LLM data padding
+budget_agent    →  cost extraction + budget fit score
+fairness_agent  →  ZORI/ZORDI percentile lookup (deterministic, no LLM)
+neighborhood_agent → Overpass API + distance-weighted walk score + Jacobs-effect crime score
+hidden_cost_agent  → structured fee extraction from listing text
+         ↓
+Kamaji orchestrates → Gemini LLM summary → ElevenLabs TTS (6 voices, parallel)
 ```
 
-**Environment Variables:** Create `backend/.env` from `.env.example`
-```env
-# Required
-GEMINI_API_KEY=your_google_gemini_api_key
-ELEVENLABS_API_KEY=your_elevenlabs_api_key
-SUPABASE_URL=your_supabase_project_url
-SUPABASE_KEY=your_supabase_anon_key
+### Walk Score Algorithm
 
-# Optional
-OPENROUTER_API_KEY=your_openrouter_key  # Alternative to Gemini
-USE_OPENROUTER=0  # Set to 1 to use OpenRouter
-USE_APARTMENTS_COM=0  # Set to 1 to enable Apartments.com scraper (requires Chrome)
+The walk score isn't a third-party lookup — it's computed in-house from real OpenStreetMap data:
+
+```python
+# Distance-weighted scoring (mirrors Walk Score methodology)
+score = 35  # car-dependent baseline
+for element in overpass_results:
+    weight = 1.0 if dist < 0.4km else 0.6 if dist < 0.8km else 0.3 if dist < 1.6km else 0
+    if bus_stop:     score += 6.0 * weight
+    if supermarket:  score += 8.0 * weight
+    if gym:          score += 4.0 * weight
+    if restaurant:   score += 1.5 * weight
+    if shop:         score += 3.0 * weight
 ```
 
-**Database Migration:** Run the Supabase migration
-```sql
--- In your Supabase SQL Editor, run:
--- backend/scripts/supabase_migration.sql
--- This creates the listings table, PostGIS indexes, and RPC functions
+### Crime Score — The Jacobs Effect
+
+Safety is derived from two OSM signals (no proprietary crime data needed):
+
+1. **Emergency-response proximity** — distance to nearest police/fire station (60% weight)
+2. **Active-street density** — restaurants and bus stops within 1 km correlate with natural surveillance and lower residential crime (Jane Jacobs' "eyes on the street", 40% weight)
+
+### Market Fairness — ZORI Data
+
+The Baron agent compares each listing against the **Zillow Observed Rent Index (ZORI)** dataset — a ZIP-code-level rent index. The fairness score is entirely deterministic (no LLM call), computing a percentile position from the ZORDI distribution data:
+
+```
+Listed rent → ZORI median for ZIP → percentile → fairness score (0–100)
 ```
 
-**Start Backend Server:**
-```bash
-python main.py  # Starts on http://localhost:8000
-```
+### LLM Layer — Gemini 2.5 Flash
 
-### 3. Frontend Setup
-```bash
-cd frontend
-npm install
-npm run dev  # Starts on http://localhost:8080
-```
+Gemini is used for three purposes:
+- **Data completion**: Fill in walk score / driving time estimates for listings where Overpass/OSRM returns no data
+- **Narrative generation**: Character-voiced insights per agent (batch-processed, 8 listings per call)
+- **Final synthesis**: Kamaji's 2-sentence verdict as the boiler room supervisor from Spirited Away
 
-### 4. Run Apartments.com Scraper (Optional)
-```bash
-cd backend/scripts
-python scrape_nj.py  # Populates Supabase with NJ listings
-```
+All LLM calls are routed through a shared `llm_client.py` that supports both Google Gemini directly and OpenRouter as a drop-in alternative.
+
+### ElevenLabs TTS
+
+Each agent has a dedicated ElevenLabs voice ID. TTS generation happens on-demand via `GET /api/tts?text=...&agent=commute` — streamed as MP3 directly to the browser. The frontend plays audio per scene in the Journey slideshow.
+
+### Data Sources
+
+| Source | Used For |
+|---|---|
+| **Apartments.com** (Selenium scraper) | Live NJ listings near 20+ universities |
+| **Supabase + PostGIS** | Persistent listing storage, geo-spatial queries |
+| **OSRM** (open-source routing) | Driving/transit commute time calculations |
+| **Overpass API** (OpenStreetMap) | Gyms, groceries, restaurants, transit stops, police stations |
+| **Nominatim** | Geocoding listing addresses and college campuses |
+| **ZORI / ZORDI CSV** | Zillow rent index for market fairness analysis |
+| **CSV fallback** | Offline mode when all live sources fail |
 
 ---
 
-## 📡 API Endpoints
+## Full Stack
 
-### Core Endpoints
-
-**`GET /api/listings`** — Retrieve all available listings
-- **Query Params:** `college` (optional), `limit` (default: 100)
-- **Response:** Array of listing objects with address, rent, amenities, coordinates
-
-**`GET /api/listings/:id`** — Get single listing by ID
-- **Response:** Single listing object
-
-**`POST /api/evaluate`** — Main AI agent pipeline
-- **Body:** `{ address, budget, mock_data (optional) }`
-- **Response:** Full `aiPayload` with all 6 agent outputs + audio streams
-- **Processing Time:** 10-30 seconds (parallel agent execution + TTS generation)
-
-**`POST /api/fairness`** — Deterministic ZORI market fairness check
-- **Body:** `{ price, zip_code }`
-- **Response:** `{ percentile, is_fair, market_median, explanation }`
-- **Note:** No LLM required, instant response
-
-**`POST /api/chat`** — Gemini chat with listing context
-- **Body:** `{ message, listing_data, conversation_history }`
-- **Response:** `{ response, sources }`
-
-**`GET /api/tts`** — On-demand text-to-speech
-- **Query Params:** `text`, `voice`
-- **Response:** Base64-encoded MP3 audio
-
-**`GET /health`** — Health check endpoint
-
-### Agent Data Structure
-
-The `/api/evaluate` endpoint returns this structure:
-
-```typescript
-{
-  commute: {
-    totalMinutes: number,
-    walkMinutes: number,
-    transitMinutes: number,
-    routes: Array<{ mode, duration, distance }>,
-    insight: string  // LLM-generated
-  },
-  costBreakdown: {
-    baseRent: number,
-    utilities: number,
-    parking: number,
-    petFee: number,
-    insurance: number,
-    total: number
-  },
-  budgetInsight: {
-    overBudget: boolean,
-    percentOfBudget: number,
-    recommendation: string  // LLM-generated
-  },
-  historicalPercent: number,  // ZORI percentile (0-100)
-  walkScore: number,          // 0-100
-  safety: {
-    crimeScore: number,       // 0-10 scale
-    rating: string,           // "Excellent", "Good", etc.
-    detail: string
-  },
-  trueCost: number,           // Total monthly cost
-  audioStreams: {
-    commute: string | null,   // Base64 MP3
-    budget: string | null,
-    market: string | null,
-    neighborhood: string | null,
-    hidden: string | null,
-    kamaji: string | null
-  }
-}
-```
-
----
-
-## 🎯 Agent Architecture
-
-See [AGENT_WIRING_REPORT.md](AGENT_WIRING_REPORT.md) for comprehensive documentation.
-
-**Orchestration Flow:**
-1. User selects listing on `/listings`
-2. Frontend posts to `/api/evaluate` with address + budget
-3. Backend calls `kamaji.aggregate_insights()` orchestrator
-4. Kamaji spawns 5 parallel agents:
-   - `commute_agent.py` → OSRM routing API
-   - `budget_agent.py` → Cost extraction + LLM
-   - `fairness_agent.py` → ZORI data lookup
-   - `neighborhood_agent.py` → Overpass API + crime data
-   - `hidden_cost_agent.py` → Fee extraction from listing text
-5. Kamaji enriches results with Gemini LLM narratives
-6. ElevenLabs TTS generates audio for each agent **in parallel**
-7. Full payload returned to frontend
-8. `/journey/:id` displays animated agent scenes with audio playback
-
-**LLM Client (`llm_client.py`):** Routes to either Google Gemini directly or OpenRouter (configurable via `USE_OPENROUTER`).
-
-**Voice Mapping:**
-- The Conductor: `Charlie` (ElevenLabs voice ID)
-- Lin: `Rachel` 
-- The Baron: `Clyde`
-- Kiki: `Bella`
-- Soot Sprites: `Antoni`
-- Kamaji: `Arnold`
-
----
-
-## 📂 Project Structure
+### Backend (FastAPI — port 8000)
 
 ```
 backend/
-├── agents/                  # 6 AI agent modules
-│   ├── commute_agent.py
-│   ├── budget_agent.py
-│   ├── fairness_agent.py
-│   ├── neighborhood_agent.py
-│   ├── hidden_cost_agent.py
-│   └── kamaji.py            # Orchestrator
-├── market_fairness/         # ZORI calculations
+├── main.py                    FastAPI app + FastMCP server + all REST endpoints
+├── agents/
+│   ├── kamaji.py              Orchestrator — batch + single pipelines
+│   ├── commute_agent.py       OSRM routing, commute matrix
+│   ├── budget_agent.py        Hidden cost detection, budget fit score
+│   ├── fairness_agent.py      ZORI percentile analysis (deterministic)
+│   ├── neighborhood_agent.py  Overpass API, walk score, crime score
+│   └── hidden_cost_agent.py   Fee extraction from listing text
+├── market_fairness/           ZORI calculations — schema, handler, data_access
 ├── services/
-│   ├── apartmentsdotcom.py  # Selenium scraper
-│   ├── ghibli_scraper.py    # (removed — Apartments.com is the primary scraper)
-│   ├── geolocate.py         # Nominatim geocoding
-│   └── voice_service.py     # ElevenLabs TTS
-├── scripts/
-│   ├── scrape_nj.py         # Main scraper script
-│   └── supabase_migration.sql  # Database setup
-├── data/
-│   ├── listings.csv         # Fallback listing data
-│   ├── ZORI.csv            # Zillow rent index data
-│   └── ZORDI.csv           # Zillow rent distribution
-├── main.py                  # FastAPI + FastMCP server
-├── llm_client.py           # Gemini/OpenRouter abstraction
-└── requirements.txt
+│   ├── apartmentsdotcom.py    Selenium scraper
+│   ├── geolocate.py           Nominatim geocoding + batch geocode with caching
+│   └── voice_service.py       ElevenLabs TTS
+├── llm_client.py              Gemini / OpenRouter abstraction
+├── data_loader.py             CSV fallback
+└── db.py                      Supabase PostGIS client
+```
 
+### Frontend (Vite + React 18 — port 8080)
+
+```
 frontend/src/
 ├── pages/
-│   ├── Index.tsx           # Preference input form
-│   ├── Listings.tsx        # Listing grid
-│   ├── ListingDetail.tsx   # Single listing view
-│   ├── Journey.tsx         # Animated agent slideshow
-│   ├── Summary.tsx         # Final insights dashboard
-│   └── Chat.tsx            # Gemini chat interface
+│   ├── SpiritedOracle.tsx     Preference form — dual-range slider, Spirited Away bg
+│   ├── Listings.tsx           Grid of analyzed listings with Spirit Match badges
+│   ├── Journey.tsx            Animated 6-scene agent slideshow
+│   ├── Summary.tsx            Full insights dashboard, cost breakdown chart
+│   └── Chat.tsx               Howl chat — Gemini with full listing context
 ├── components/
-│   ├── AgentScene.tsx      # Character animation + audio
-│   ├── GhibliLayout.tsx    # Page shell
-│   └── ListingCard.tsx
-├── contexts/
-│   └── PreferencesContext.tsx  # Global state (user prefs, aiPayload)
-├── lib/
-│   ├── api.ts              # API client
-│   └── utils.ts
-└── data/
-    ├── agents.ts           # Agent character definitions
-    ├── colleges.ts         # NJ universities
-    └── mockListings.ts     # Fallback mock data
+│   ├── AgentScene.tsx         Character animation + ElevenLabs audio player
+│   └── GhibliLayout.tsx       Glassmorphism page shell
+└── contexts/
+    └── PreferencesContext.tsx Global state: user prefs, cached listings, aiPayload
 ```
 
----
-
-## ⚠️ Troubleshooting
-
-### Scraper Issues
-- **"Function not found" error:** Ensure you've run `supabase_migration.sql` in your Supabase SQL Editor
-- **All coordinates are 0.0:** Check `services/apartmentsdotcom.py` parsing logic and geocoding
-- **Chrome driver errors:** Install Chrome and chromedriver if using `USE_APARTMENTS_COM=1`
-
-### API Errors
-- **401 Unauthorized:** Check that `GEMINI_API_KEY` and `ELEVENLABS_API_KEY` are set correctly
-- **Slow /api/evaluate:** First request is always slower due to cold start; subsequent requests are faster
-- **Missing audio:** Audio is generated on-demand via `/api/tts` if pre-generated streams are null
-
-### Frontend Issues
-- **Blank aiPayload:** Ensure backend is running and `/api/evaluate` returns valid data structure
-- **Audio not playing:** Check browser console for CORS errors or audio decoding issues
-- **Listings not loading:** Backend may be down or Supabase connection failed; check `backend/.env`
+**UI highlights:**
+- Animated particle system on landing page
+- Kinetic word-by-word title reveal (Framer Motion)
+- Spotlight hover effect on glass cards (tracks mouse position)
+- Floating Ghibli background orbs
+- **Live/CSV toggle** — switch between live Apartments.com scraping and instant CSV mode without restarting anything
 
 ---
 
-## 📚 Additional Documentation
+## API Reference
 
-- **[CLAUDE.md](CLAUDE.md)** — Comprehensive development guide for AI assistants
-- **[AGENT_WIRING_REPORT.md](AGENT_WIRING_REPORT.md)** — Detailed agent architecture documentation
-- **[SUPABASE_SETUP.md](SUPABASE_SETUP.md)** — Database configuration guide
-- **[TODO.md](TODO.md)** — Development roadmap and pending tasks
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/pipeline` | Full scrape → agents → return analyzed listings in one call |
+| `POST` | `/api/evaluate` | Run all 6 agents on a single listing |
+| `POST` | `/api/evaluate-batch` | Batch agent analysis (1 geocode + 1 OSRM + 1 Overpass for N listings) |
+| `GET`  | `/api/listings` | Get listings (Apartments.com → Supabase → CSV priority chain) |
+| `GET`  | `/api/listings/:id` | Single listing by ID |
+| `POST` | `/api/fairness` | Deterministic ZORI market fairness (no LLM, instant) |
+| `GET`  | `/api/tts` | ElevenLabs TTS stream — `?text=...&agent=commute` |
+| `POST` | `/api/chat` | Howl chat with listing context (Gemini) |
+| `GET`  | `/health` | Health check |
 
 ---
 
-## ☁️ Deployment
+## Setup
 
-See [backend/VULTR_DEPLOYMENT.md](backend/VULTR_DEPLOYMENT.md) for containerized deployment instructions.
+### Prerequisites
+- Python 3.11+, Node.js 18+
+- Chrome + chromedriver (for Apartments.com scraper)
+- API keys: Google Gemini, ElevenLabs
 
-**Quick Deploy:**
+### Backend
 ```bash
-# Build and deploy backend
 cd backend
-docker build -t ghibli-nest-backend .
-docker run -p 8000:8000 --env-file .env ghibli-nest-backend
+python -m venv venv && source venv/bin/activate   # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+cp .env.example .env    # fill in keys
+python main.py          # starts on http://localhost:8000
+```
 
-# Build and deploy frontend
+### Frontend
+```bash
 cd frontend
-npm run build
-# Deploy dist/ to static hosting (Vercel, Netlify, Cloudflare Pages)
+npm install
+npm run dev             # starts on http://localhost:8080
+```
+
+### Environment Variables
+
+| Variable | Required | Purpose |
+|---|---|---|
+| `GEMINI_API_KEY` | Yes | Gemini 2.5 Flash (narrative + chat) |
+| `ELEVENLABS_API_KEY` | Yes | Character voice TTS |
+| `SUPABASE_URL` + `SUPABASE_KEY` | Optional | Persistent listing storage |
+| `OPENROUTER_API_KEY` + `USE_OPENROUTER=1` | Optional | OpenRouter as Gemini alternative |
+| `USE_APARTMENTS_COM` | Optional | `0` to disable scraper, use CSV only |
+
+**No Supabase? No problem.** The app gracefully falls back to a bundled CSV of NJ listings — all 6 agents still run full analysis.
+
+---
+
+## What Makes This Different
+
+Most apartment tools give you a list. We give you a **story**.
+
+Instead of scanning a table of specs, you sit with each Ghibli character as they reveal their findings — The Conductor announces your commute like a train departure, Kiki flies over the neighborhood on her broom, The Soot Sprites dig through the fine print for fees the landlord buried. Every data point is real (OSRM routing, OpenStreetMap amenities, ZORI rent index), but delivered through a cinematic, character-driven experience.
+
+The technical result is a system that answers questions apartment hunters actually care about:
+
+> *"My listed rent is $1,500 — but what will I actually spend each month, including the gym I'll need, the utilities that aren't included, and the $80 parking the description mentioned once?"*
+
+Ghibli Nest answers that question with a Spirit Match score, a true cost breakdown, a ZORI market percentile, and a neighborhood vibe summary — all narrated in character.
+
+---
+
+## Architecture Diagram
+
+```
+User Input (college, budget, preferences)
+         │
+         ▼
+GET /api/listings          POST /api/pipeline
+         │                        │
+   ┌─────┴──────────────────────┐
+   │     Data Sources           │
+   │  Apartments.com (Selenium) │
+   │  Supabase PostGIS          │
+   │  CSV fallback              │
+   └─────┬──────────────────────┘
+         │
+         ▼
+aggregate_insights_batch()
+   ├── Nominatim (geocode all addresses, 1 batch)
+   ├── OSRM     (commute matrix, 1 API call)
+   ├── Overpass (bbox query, 1 API call for ALL listings)
+   ├── ZORI     (deterministic, no API)
+   └── Gemini   (batched narratives, 8 listings/chunk)
+         │
+         ▼
+Listings page (with Spirit Match scores)
+         │
+    User selects listing
+         │
+         ▼
+Journey (6 animated agent scenes)
+   ├── 🚂 Conductor  →  ElevenLabs Charlie voice
+   ├── 💸 Lin        →  ElevenLabs Rachel voice
+   ├── ⚖️ Baron      →  ElevenLabs Clyde voice
+   ├── 🌿 Kiki       →  ElevenLabs Bella voice
+   ├── 🖤 Soot Sprites → ElevenLabs Antoni voice
+   └── 🔧 Kamaji     →  ElevenLabs Arnold voice
+         │
+         ▼
+Summary dashboard → Chat with Howl (Gemini)
 ```
 
 ---
 
-## 🏆 MLH Hackathon Prize Tracks
+## Project Structure
 
-**🤖 Google Gemini Track**
-- Multi-agent system powered by Gemini 2.5 Flash for narrative generation
-- Real-time chat interface with full listing context
-- LLM-enriched insights for commute, budget, and neighborhood analysis
-
-**🎙️ ElevenLabs Track**
-- Character-specific voice narration for all 6 agents
-- Parallel TTS generation for optimal performance
-- On-demand audio synthesis via `/api/tts` endpoint
+```
+RealEstateStory/
+├── backend/
+│   ├── agents/               6 AI agent modules + Kamaji orchestrator
+│   ├── market_fairness/      Deterministic ZORI rent fairness module
+│   ├── services/             Scraper, geocoding, TTS
+│   ├── data/                 listings.csv, ZORI.csv, ZORDI.csv
+│   ├── scripts/              DB migration SQL, NJ scraper script
+│   ├── main.py               FastAPI + FastMCP entry point
+│   └── llm_client.py         Gemini/OpenRouter abstraction
+├── frontend/src/
+│   ├── pages/                5 route pages (Oracle → Listings → Journey → Summary → Chat)
+│   ├── components/           AgentScene, GhibliLayout, MagneticButton
+│   ├── contexts/             PreferencesContext (global state)
+│   └── data/                 agents.ts, colleges.ts, mockListings.ts
+└── README.md
+```
 
 ---
 
-**Inspired by the magical worlds of Studio Ghibli** — Spirited Away, Howl's Moving Castle, Kiki's Delivery Service, and more.
+## Additional Documentation
 
----
-
-## 📄 License
-
-MIT License — See [LICENSE](LICENSE) for details.
+- **[CLAUDE.md](CLAUDE.md)** — Full development guide for AI-assisted contributors
+- **[AGENT_WIRING_REPORT.md](AGENT_WIRING_REPORT.md)** — Deep-dive agent architecture
+- **[SUPABASE_SETUP.md](SUPABASE_SETUP.md)** — PostGIS database setup
 
 ---
 
 <div align="center">
-  <p><strong>May your apartment search be as enchanting as a Ghibli film. 🏡✨</strong></p>
+
+**May your apartment search be as enchanting as a Ghibli film. 🏡**
+
+*Inspired by Spirited Away, Kiki's Delivery Service, The Cat Returns, and Howl's Moving Castle.*
+
 </div>
