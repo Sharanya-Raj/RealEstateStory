@@ -167,3 +167,64 @@
   0%, 100% { opacity: 0.3; transform: scale(0.8); }
   50% { opacity: 1; transform: scale(1.2); }
 }
+
+/* 🌸 THE SPIRITED ORACLE - LIGHT THEME UTILITIES 🌸 */
+.oracle-glass {
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(36px) saturate(1.6);
+  -webkit-backdrop-filter: blur(36px) saturate(1.6);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow: 0 8px 32px rgba(100, 150, 255, 0.13), 
+              0 2px 8px rgba(150, 200, 255, 0.1), 
+              inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.oracle-glass-strong {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(48px) saturate(1.8);
+  -webkit-backdrop-filter: blur(48px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 12px 48px rgba(100, 150, 255, 0.16), 
+              inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.begin-btn {
+  background: linear-gradient(135deg, #60a5fa 0%, #38bdf8 100%);
+  box-shadow: 0 8px 24px rgba(96, 165, 250, 0.4), 0 2px 8px rgba(56, 189, 248, 0.25);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+.begin-btn:not(:disabled):hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(96, 165, 250, 0.5), 0 4px 12px rgba(56, 189, 248, 0.35);
+}
+.begin-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.pill-tag {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.pill-tag:hover {
+  transform: scale(1.06);
+}
+
+.commute-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 9999px;
+  background: linear-gradient(to right, #60a5fa, #38bdf8);
+  outline: none;
+  cursor: pointer;
+}
+.commute-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #60a5fa;
+  box-shadow: 0 2px 12px rgba(100, 150, 255, 0.4);
+  transition: transform 0.15s;
+}
+.commute-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }

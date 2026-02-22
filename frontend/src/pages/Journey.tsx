@@ -64,14 +64,7 @@ The property was built in ${listing.yearBuilt}. ${listing.yearBuilt > 2015 ? "Qu
   }
 }
 
-// Agent-specific ambient page backgrounds for cinematic cross-fades
-const agentPageBg: Record<string, string> = {
-  commute: "radial-gradient(ellipse at 60% 30%, rgba(59,130,246,0.18) 0%, transparent 70%), radial-gradient(ellipse at 20% 80%, rgba(100,200,255,0.10) 0%, transparent 60%)",
-  budget: "radial-gradient(ellipse at 40% 20%, rgba(99,102,241,0.18) 0%, transparent 65%), radial-gradient(ellipse at 80% 70%, rgba(139,92,246,0.10) 0%, transparent 60%)",
-  market: "radial-gradient(ellipse at 30% 40%, rgba(14,165,233,0.18) 0%, transparent 65%), radial-gradient(ellipse at 70% 80%, rgba(59,130,246,0.12) 0%, transparent 55%)",
-  neighborhood: "radial-gradient(ellipse at 50% 20%, rgba(139,92,246,0.18) 0%, transparent 65%), radial-gradient(ellipse at 80% 70%, rgba(168,85,247,0.10) 0%, transparent 60%)",
-  hidden: "radial-gradient(ellipse at 20% 50%, rgba(30,40,100,0.35) 0%, transparent 65%), radial-gradient(ellipse at 80% 20%, rgba(59,130,246,0.12) 0%, transparent 60%)",
-};
+
 
 const Journey = () => {
   const { id } = useParams();
@@ -150,9 +143,12 @@ const Journey = () => {
   if (isFetching) {
     return (
       <GhibliLayout showBack>
-        <div className="container mx-auto px-4 py-16 text-center">
-          <span className="text-5xl block mb-4 animate-bounce">🍂</span>
-          <p className="text-xl text-muted-foreground">Preparing your journey...</p>
+        <div className="container mx-auto px-4 py-24 text-center flex flex-col items-center gap-4">
+          <div className="w-16 h-16 rounded-2xl bg-white/60 border border-white/70 flex items-center justify-center shadow-lg animate-bounce">
+            <span className="text-3xl">🏠</span>
+          </div>
+          <p className="font-playfair text-xl text-blue-900">Preparing your journey...</p>
+          <p className="text-slate-400 text-sm">The spirits are marking your path</p>
         </div>
       </GhibliLayout>
     );
@@ -173,19 +169,6 @@ const Journey = () => {
 
   return (
     <GhibliLayout showBack>
-      {/* Cinematic per-agent ambient background cross-fade */}
-      <AnimatePresence mode="sync">
-        <motion.div
-          key={currentAgent.id + "-bg"}
-          className="fixed inset-0 pointer-events-none z-0"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.9, ease: "easeInOut" }}
-          style={{ background: agentPageBg[currentAgent.id] ?? "none" }}
-          aria-hidden
-        />
-      </AnimatePresence>
 
       <div className="container mx-auto px-4 py-8 relative z-10">
         {isAiLoading ? (
@@ -198,8 +181,8 @@ const Journey = () => {
             >
               🚂
             </motion.div>
-            <h2 className="font-playfair text-2xl font-semibold mb-2 text-foreground">Summoning the Spirits...</h2>
-            <p className="text-muted-foreground font-quicksand">Kamaji is evaluating {listing.address}</p>
+            <h2 className="font-playfair text-3xl font-bold mb-2 text-blue-950">Summoning the Spirits...</h2>
+            <p className="text-blue-400 font-semibold tracking-wide font-quicksand uppercase text-xs">Kamaji is evaluating {listing.address}</p>
           </div>
         ) : (
           <AgentScene

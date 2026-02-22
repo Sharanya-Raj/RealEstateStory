@@ -318,7 +318,6 @@ export default function SpiritedOracle() {
         .commute-slider{
           -webkit-appearance:none;appearance:none;
           width:100%;height:6px;border-radius:9999px;
-          background:linear-gradient(to right,#60a5fa,#38bdf8);
           outline:none;cursor:pointer;
         }
         .commute-slider::-webkit-slider-thumb{
@@ -449,6 +448,9 @@ export default function SpiritedOracle() {
                 type="range" min={1} max={30} value={maxCommute}
                 onChange={(e) => setMaxCommute(parseInt(e.target.value))}
                 className="commute-slider"
+                style={{
+                  background: `linear-gradient(to right, #60a5fa 0%, #38bdf8 ${((maxCommute - 1) / (30 - 1)) * 100}%, rgba(255, 255, 255, 0.5) ${((maxCommute - 1) / (30 - 1)) * 100}%, rgba(255, 255, 255, 0.5) 100%)`
+                }}
               />
               <div className="flex justify-between text-xs text-blue-300 font-medium">
                 <span>1 mi</span><span>30 mi</span>

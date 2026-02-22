@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import GhibliLayout from "@/components/GhibliLayout";
 import { type Listing } from "@/data/mockListings";
 import { usePreferences } from "@/contexts/PreferencesContext";
-import { Button } from "@/components/ui/button";
 import { summaryAgent } from "@/data/agents";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -12,9 +11,10 @@ import {
 } from "recharts";
 import {
   MessageCircle, ArrowLeft, Home, CheckCircle, AlertTriangle, Info,
+  Sparkles, DollarSign, Wallet, Shield, Star, MapPin, Navigation, Calendar, Car
 } from "lucide-react";
 
-const COLORS = ["#A6D784", "#8FB1E9", "#F2B5C1", "#F4A460", "#5B8C3E"];
+const ORACLE_COLORS = ["#60a5fa", "#38bdf8", "#818cf8", "#93c5fd", "#bfdbfe"];
 
 const Summary = () => {
   const { id } = useParams();
@@ -44,12 +44,23 @@ const Summary = () => {
       });
   }, [id]);
 
+  // Play Kamaji's voiceover if available - moved up to follow Rules of Hooks
+  useEffect(() => {
+    if (aiPayload?.voiceoverBase64) {
+      const audio = new Audio(`data:audio/mp3;base64,${aiPayload.voiceoverBase64}`);
+      audio.play().catch(e => console.error("Audio playback paused by browser:", e));
+    }
+  }, [aiPayload]);
+
   if (isFetching) {
     return (
       <GhibliLayout showBack>
-        <div className="container mx-auto px-4 py-16 text-center">
-          <span className="text-5xl block mb-4 animate-bounce">🍂</span>
-          <p className="text-xl text-muted-foreground">Gathering your summary...</p>
+        <div className="container mx-auto px-4 py-24 text-center flex flex-col items-center gap-4">
+          <div className="w-16 h-16 rounded-2xl bg-white/60 border border-white/70 flex items-center justify-center shadow-lg animate-bounce">
+            <span className="text-3xl text-blue-400">📜</span>
+          </div>
+          <p className="font-playfair text-xl text-blue-900">Gathering your summary...</p>
+          <p className="text-slate-400 text-sm">Finishing the grand evaluation</p>
         </div>
       </GhibliLayout>
     );
@@ -58,22 +69,16 @@ const Summary = () => {
   if (!listing) {
     return (
       <GhibliLayout showBack>
-        <div className="container mx-auto px-4 py-16 text-center">
-          <p className="text-xl text-muted-foreground">Listing not found 🍃</p>
+        <div className="container mx-auto px-4 py-16 text-center flex flex-col items-center gap-4">
+          <span className="text-5xl">🍃</span>
+          <p className="font-playfair text-2xl text-blue-950 font-bold">Summary Disappeared</p>
+          <p className="text-slate-400">The evaluation could not be completed.</p>
         </div>
       </GhibliLayout>
     );
   }
 
-  // Play Kamaji's voiceover if available
-  useEffect(() => {
-    if (aiPayload?.voiceoverBase64) {
-      const audio = new Audio(`data:audio/mp3;base64,${aiPayload.voiceoverBase64}`);
-      audio.play().catch(e => console.error("Audio playback paused by browser:", e));
-    }
-  }, [aiPayload]);
 
-  // Use LLM-generated insights if available, fallback to dummy math otherwise
   const totalHidden = aiPayload ? (aiPayload.trueCost - aiPayload.rent) : listing.hiddenCosts.reduce((s, c) => s + c.amount, 0);
   const totalMonthly = aiPayload ? aiPayload.trueCost : listing.price + totalHidden;
   const priceDiff = listing.price - listing.zillowEstimate;
@@ -105,28 +110,11 @@ const Summary = () => {
   ];
 
   const scoreCalculations = [
-    {
-      name: "Commute",
-      score: listing.commuteMinutes <= 10 ? 5 : listing.commuteMinutes <= 20 ? 4 : 3,
-    },
-    {
-      name: "Budget",
-      score: totalMonthly < 1200 ? 5 : totalMonthly < 1600 ? 4 : totalMonthly < 2000 ? 3 : 2,
-    },
-    {
-      name: "Fairness",
-      score: fairnessData
-        ? Math.max(1, Math.min(5, Math.ceil(fairnessData.fairness_score / 20)))
-        : (priceDiff <= 0 ? 5 : priceDiff <= 100 ? 4 : 2),
-    },
-    {
-      name: "Safety",
-      score: Math.round(listing.crimeScore / 2),
-    },
-    {
-      name: "Transparency",
-      score: listing.hiddenCosts.length <= 2 ? 5 : listing.hiddenCosts.length <= 3 ? 4 : 3,
-    },
+    { name: "Commute", score: listing.commuteMinutes <= 10 ? 5 : listing.commuteMinutes <= 20 ? 4 : 3 },
+    { name: "Budget", score: totalMonthly < 1200 ? 5 : totalMonthly < 1600 ? 4 : totalMonthly < 2000 ? 3 : 2 },
+    { name: "Fairness", score: fairnessData ? Math.max(1, Math.min(5, Math.ceil(fairnessData.fairness_score / 20))) : (priceDiff <= 0 ? 5 : priceDiff <= 100 ? 4 : 2) },
+    { name: "Safety", score: Math.round(listing.crimeScore / 2) },
+    { name: "Transparency", score: listing.hiddenCosts.length <= 2 ? 5 : listing.hiddenCosts.length <= 3 ? 4 : 3 },
   ];
 
   const overallScore = aiPayload ? aiPayload.matchScore : Math.round((scoreCalculations.reduce((s, x) => s + x.score, 0) / scoreCalculations.length) * 20);
@@ -137,200 +125,240 @@ const Summary = () => {
   if (!aiPayload) {
     if (listing.commuteMinutes <= 15) pros.push(`Short ${listing.commuteMinutes}-min commute`);
     else cons.push(`${listing.commuteMinutes}-min commute may be long`);
-
     if (priceDiff <= 0) pros.push("Priced at or below market value");
     else cons.push(`$${priceDiff} above Zillow estimate`);
-
-    if (fairnessData) {
-      if (fairnessData.fairness_score >= 80) pros.push("Exceptional market value");
-      else if (fairnessData.fairness_score < 40) cons.push("Priced significantly above market value");
-    } else {
-      if (priceDiff <= 0) pros.push("Priced at or below market value");
-      else cons.push(`$${priceDiff} above Zillow estimate`);
-    }
-
     if (listing.crimeScore >= 7) pros.push("Safe neighborhood");
     else cons.push("Safety score could be better");
-
     if (listing.parkingIncluded) pros.push("Parking included");
-    else cons.push("No parking included");
-
     if (listing.utilitiesIncluded) pros.push("Utilities included");
-    else cons.push("Utilities not included");
-
     if (listing.petFriendly) pros.push("Pet friendly");
-    if (listing.amenities.length >= 5) pros.push(`${listing.amenities.length} amenities included`);
   }
 
   return (
     <GhibliLayout showBack>
-      <div className="container mx-auto px-4 py-8 max-w-5xl">
-        {/* Kamaji Header */}
+      <div className="container mx-auto px-4 py-12 max-w-5xl relative z-10">
+        
+        {/* Kamaji Grand Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`glass-card-strong p-6 lg:p-8 mb-8 bg-gradient-to-br ${summaryAgent.bgGradient}`}
+          className="oracle-glass-strong p-8 lg:p-10 mb-12 rounded-[2.5rem] relative overflow-hidden"
         >
-          <div className="flex items-start gap-4">
-            <div className="text-5xl animate-sway">{summaryAgent.emoji}</div>
-            <div>
-              <h1 className="font-playfair text-2xl lg:text-3xl font-bold text-foreground mb-1">
+          {/* Decorative Sparkles */}
+          <Sparkles className="absolute top-4 right-4 text-blue-200/50" size={100} />
+          
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-8 relative z-10">
+            <div className="w-24 h-24 rounded-3xl bg-blue-50 border-2 border-white flex items-center justify-center text-5xl shadow-lg animate-float">
+              {summaryAgent.emoji}
+            </div>
+            <div className="text-center md:text-left">
+              <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
+                <div className="h-px w-8 bg-blue-300" />
+                <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-blue-400">The Final Revelation</span>
+                <div className="h-px w-8 bg-blue-300" />
+              </div>
+              <h1 className="font-playfair text-3xl lg:text-4xl font-bold text-blue-950 mb-4">
                 {summaryAgent.character}'s Grand Summary
               </h1>
-              <p className="text-muted-foreground italic">
-                "{aiPayload?.sophieSummary || `I've pulled all the threads together for ${listing.address}. Here is everything you need to find your way home.`}"
+              <p className="text-blue-900/60 font-quicksand text-lg italic leading-relaxed max-w-2xl">
+                "{aiPayload?.sophieSummary || `I've pulled all the threads together for ${listing.address}. Here is the true essence of your future sanctuary.`}"
               </p>
             </div>
           </div>
         </motion.div>
 
-        {/* Overall Score */}
+        {/* Overall Score Circle */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="text-center mb-8"
+          className="flex flex-col items-center mb-16"
         >
-          <div className="inline-flex items-center justify-center w-28 h-28 rounded-full bg-ghibli-meadow/20 border-4 border-ghibli-meadow/40 mb-3">
-            <span className="font-playfair text-4xl font-bold text-ghibli-forest">{overallScore}%</span>
+          <div className="relative">
+            <svg className="w-40 h-40 transform -rotate-90">
+              <circle cx="80" cy="80" r="70" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-blue-50" />
+              <circle 
+                cx="80" cy="80" r="70" stroke="currentColor" strokeWidth="8" fill="transparent" 
+                strokeDasharray={440} strokeDashoffset={440 - (440 * overallScore) / 100}
+                strokeLinecap="round" className="text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,0.5)] transition-all duration-1000"
+              />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="font-playfair text-5xl font-bold text-blue-950">{overallScore}%</span>
+              <span className="text-[10px] font-bold tracking-widest uppercase text-blue-400 mt-1">Match</span>
+            </div>
           </div>
-          <p className="font-playfair text-lg text-foreground">Overall Match Score</p>
         </motion.div>
 
-        {/* Agent Scores */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="glass-card p-6 mb-8"
-        >
-          <h2 className="font-playfair text-xl font-semibold text-foreground mb-4">Agent Ratings</h2>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={scores}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(101, 30%, 80%)" />
-              <XAxis dataKey="name" tick={{ fontFamily: "Quicksand", fontSize: 12 }} />
-              <YAxis domain={[0, 5]} tick={{ fontFamily: "Quicksand", fontSize: 12 }} />
-              <Tooltip contentStyle={{ borderRadius: "12px", fontFamily: "Quicksand" }} />
-              <Bar dataKey="score" radius={[8, 8, 0, 0]}>
-                {scores.map((_, i) => (
-                  <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </motion.div>
-
-        <div className="grid lg:grid-cols-2 gap-8 mb-8">
-          {/* Cost Breakdown Pie */}
+        {/* ── METRICS GRID ── */}
+        <div className="grid lg:grid-cols-2 gap-8 mb-12">
+          
+          {/* Agent Scores Chart */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-            className="glass-card p-6"
+            transition={{ delay: 0.2 }}
+            className="oracle-glass p-8 rounded-[2rem]"
           >
-            <h2 className="font-playfair text-xl font-semibold text-foreground mb-4">
-              Monthly Cost Breakdown — ${totalMonthly}/mo
+            <h2 className="font-playfair text-xl font-bold text-blue-950 mb-6 flex items-center gap-3">
+              <Star className="text-blue-400" size={20} />
+              Agent Evaluations
             </h2>
-            <ResponsiveContainer width="100%" height={220}>
-              <PieChart>
-                <Pie data={costBreakdown} dataKey="amount" nameKey="name" cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={3}>
-                  {costBreakdown.map((_, i) => (
-                    <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={{ borderRadius: "12px", fontFamily: "Quicksand" }} />
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {costBreakdown.map((item, i) => (
-                <span key={item.name} className="flex items-center gap-1 text-xs">
-                  <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
-                  {item.name}: ${item.amount}
-                </span>
-              ))}
+            <div className="h-[250px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={scores}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontFamily: "Quicksand", fontSize: 11, fontWeight: 600, fill: "#64748b" }} dy={10} />
+                  <YAxis hide domain={[0, 5]} />
+                  <Tooltip cursor={{ fill: '#f1f5f9' }} contentStyle={{ borderRadius: "16px", border: "none", boxShadow: "0 10px 25px rgba(0,0,0,0.05)", fontFamily: "Quicksand" }} />
+                  <Bar dataKey="score" radius={[8, 8, 8, 8]} barSize={32}>
+                    {scores.map((_, i) => (
+                      <Cell key={i} fill={ORACLE_COLORS[i % ORACLE_COLORS.length]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </motion.div>
 
-          {/* Pros & Cons */}
+          {/* Cost Allocation Pie */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
-            className="glass-card p-6"
+            className="oracle-glass p-8 rounded-[2rem]"
           >
-            <h2 className="font-playfair text-xl font-semibold text-foreground mb-4">Pros & Cons</h2>
-            <div className="space-y-3">
-              {pros.map((p) => (
-                <div key={p} className="flex items-start gap-2 text-sm">
-                  <CheckCircle className="h-4 w-4 text-ghibli-meadow flex-shrink-0 mt-0.5" />
-                  <span className="text-foreground">{p}</span>
-                </div>
-              ))}
-              {cons.map((c) => (
-                <div key={c} className="flex items-start gap-2 text-sm">
-                  <AlertTriangle className="h-4 w-4 text-ghibli-amber flex-shrink-0 mt-0.5" />
-                  <span className="text-foreground">{c}</span>
+            <h2 className="font-playfair text-xl font-bold text-blue-950 mb-2 flex items-center gap-3">
+              <Wallet className="text-blue-400" size={20} />
+              True Monthly Cost
+            </h2>
+            <p className="text-sm text-blue-500 font-bold mb-6">${totalMonthly.toLocaleString()}<span className="text-slate-400 font-medium"> total allocation</span></p>
+            
+            <div className="h-[220px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={costBreakdown} dataKey="amount" nameKey="name" cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={6}>
+                    {costBreakdown.map((_, i) => (
+                      <Cell key={i} fill={ORACLE_COLORS[i % ORACLE_COLORS.length]} stroke="rgba(255,255,255,0.5)" strokeWidth={2} />
+                    ))}
+                  </Pie>
+                  <Tooltip contentStyle={{ borderRadius: "16px", border: "none", boxShadow: "0 10px 25px rgba(0,0,0,0.05)", fontFamily: "Quicksand" }} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mt-4">
+              {costBreakdown.map((item, i) => (
+                <div key={item.name} className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-blue-50/50">
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: ORACLE_COLORS[i % ORACLE_COLORS.length] }} />
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{item.name}</span>
                 </div>
               ))}
             </div>
           </motion.div>
         </div>
 
-        {/* Key Facts */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="glass-card p-6 mb-8"
-        >
-          <h2 className="font-playfair text-xl font-semibold text-foreground mb-4">
-            <Info className="inline h-5 w-5 mr-2 text-ghibli-sky" />
-            Quick Reference
-          </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-            {[
-              ["Address", `${listing.address}, ${listing.city}`],
-              ["Monthly Rent", `$${listing.price}`],
-              ["True Monthly Cost", `$${totalMonthly}`],
-              ["Zillow Estimate", `$${listing.zillowEstimate}`],
-              ["Distance", `${listing.distanceMiles} mi`],
-              ["Commute", `${listing.commuteMinutes} min`],
-              ["Walk Score", `${listing.walkScore}/100`],
-              ["Safety Score", `${listing.crimeScore}/10`],
-              ["Beds / Baths", `${listing.bedrooms} / ${listing.bathrooms}`],
-              ["Sq Ft", `${listing.sqft}`],
-              ["Year Built", `${listing.yearBuilt}`],
-              ["Lease Term", `${listing.leaseTermMonths} months`],
-              ["Move-In", listing.moveInDate],
-              ["Parking", listing.parkingIncluded ? "Included" : "Not included"],
-              ["Pets", listing.petFriendly ? "Allowed" : "Not allowed"],
-            ].map(([label, value]) => (
-              <div key={label} className="flex justify-between border-b border-border/30 pb-1">
-                <span className="text-muted-foreground">{label}</span>
-                <span className="font-semibold text-foreground">{value}</span>
+        {/* ── INSIGHTS & REFERENCE ── */}
+        <div className="grid lg:grid-cols-3 gap-8">
+          
+          {/* Pros & Cons */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="lg:col-span-2 oracle-glass-strong p-8 rounded-[2.5rem]"
+          >
+            <h2 className="font-playfair text-2xl font-bold text-blue-950 mb-8 flex items-center gap-3">
+              <span className="w-1.5 h-8 bg-blue-400 rounded-full" />
+              The Oracle's Insights
+            </h2>
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="space-y-4">
+                <h4 className="text-[10px] font-bold tracking-[.2em] uppercase text-blue-400 mb-2">Sacred Blessings</h4>
+                {pros.map((p) => (
+                  <div key={p} className="flex items-start gap-3 p-3 rounded-2xl bg-white/40 border border-white/60">
+                    <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle className="h-3.5 w-3.5 text-blue-500" />
+                    </div>
+                    <span className="text-slate-600 text-sm font-medium">{p}</span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </motion.div>
+              <div className="space-y-4">
+                <h4 className="text-[10px] font-bold tracking-[.2em] uppercase text-amber-400 mb-2">Mortal Cautions</h4>
+                {cons.map((c) => (
+                  <div key={c} className="flex items-start gap-3 p-3 rounded-2xl bg-white/40 border border-white/60">
+                    <div className="w-6 h-6 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
+                    </div>
+                    <span className="text-slate-600 text-sm font-medium">{c}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
 
-        {/* Navigation buttons */}
+          {/* Quick Stats Sidebar */}
+          <motion.div
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
+            className="oracle-glass p-8 rounded-[2.5rem]"
+          >
+            <h2 className="font-playfair text-xl font-bold text-blue-950 mb-6 flex items-center gap-3">
+              <Info className="text-blue-400" size={20} />
+              The Ledger
+            </h2>
+            <div className="space-y-3.5">
+              {[
+                { label: "Address", value: listing.address, icon: MapPin },
+                { label: "Rent", value: `$${listing.price}`, icon: DollarSign },
+                { label: "True Cost", value: `$${totalMonthly}`, icon: Wallet },
+                { label: "Zip Fairness", value: fairnessData ? `${fairnessData.fairness_score}/100` : "Calculated", icon: Shield },
+                { label: "Distance", value: `${listing.distanceMiles} mi`, icon: Navigation },
+                { label: "Safe Score", value: `${listing.crimeScore}/10`, icon: Shield },
+                { label: "Lease", value: `${listing.leaseTermMonths} mo`, icon: Calendar },
+                { label: "Parking", value: listing.parkingIncluded ? "Yes" : "No", icon: Car },
+              ].map((item) => (
+                <div key={item.label} className="flex flex-col border-b border-blue-50/50 pb-2 last:border-0 group">
+                  <span className="text-[10px] font-bold tracking-widest uppercase text-slate-400">{item.label}</span>
+                  <span className="text-blue-900 font-bold group-hover:text-blue-500 transition-colors truncate">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+        </div>
+
+        {/* ── FINAL NAVIGATION ── */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="flex flex-wrap justify-center gap-4 py-6"
+          transition={{ delay: 0.6 }}
+          className="flex flex-wrap justify-center items-center gap-6 mt-16 pt-12 border-t border-blue-50/50"
         >
-          <Button variant="ghibli-outline" onClick={() => navigate(`/listing/${id}`)}>
-            <ArrowLeft className="h-4 w-4 mr-1" /> Back to Listing
-          </Button>
-          <Button variant="ghibli-outline" onClick={() => navigate("/listings")}>
-            <Home className="h-4 w-4 mr-1" /> All Listings
-          </Button>
-          <Button variant="ghibli" size="lg" className="px-8" onClick={() => navigate(`/chat/${id}`)}>
-            <MessageCircle className="h-5 w-5 mr-2" />
-            Ask Howl Your Questions ✨
-          </Button>
+          <button 
+            onClick={() => navigate(`/listing/${id}`)}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl border border-blue-100 bg-white/50 text-blue-600 font-bold hover:bg-blue-50 transition-all text-sm"
+          >
+            <ArrowLeft size={16} /> Back to Detail
+          </button>
+          
+          <button 
+            onClick={() => navigate("/listings")}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl border border-blue-100 bg-white/50 text-blue-600 font-bold hover:bg-blue-50 transition-all text-sm"
+          >
+            <Home size={16} /> All Sanctuaries
+          </button>
+
+          <button 
+            onClick={() => navigate(`/chat/${id}`)}
+            className="begin-btn flex items-center gap-3 px-10 py-4 rounded-xl text-white font-bold shadow-xl hover:scale-105 transition-transform"
+          >
+            <MessageCircle size={20} />
+            Ask the Wizard ✨
+          </button>
         </motion.div>
+
       </div>
     </GhibliLayout>
   );

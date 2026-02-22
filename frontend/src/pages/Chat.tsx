@@ -92,41 +92,45 @@ const Chat = () => {
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="lg:w-72 flex-shrink-0"
+          className="lg:w-80 flex-shrink-0"
         >
-          <div className={`glass-card-strong p-6 bg-gradient-to-br ${chatAgent.bgGradient} h-full`}>
-            <div className="text-center mb-4">
-              <motion.div
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 3, repeat: Infinity }}
-                className="text-6xl mb-3"
-              >
-                {chatAgent.emoji}
-              </motion.div>
-              <h2 className="font-playfair text-xl font-bold text-foreground">{chatAgent.character}</h2>
-              <p className="text-xs text-muted-foreground italic">{chatAgent.movie}</p>
-              <p className="text-sm text-muted-foreground mt-2">{chatAgent.description}</p>
+          <div className="oracle-glass-strong p-8 h-full rounded-[2.5rem] flex flex-col justify-between">
+            <div>
+              <div className="text-center mb-8">
+                <motion.div
+                  animate={{ y: [0, -8, 0], filter: ["drop-shadow(0 4px 12px rgba(100,150,255,0.1))", "drop-shadow(0 12px 24px rgba(100,150,255,0.25))", "drop-shadow(0 4px 12px rgba(100,150,255,0.1))"] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="text-7xl mb-4"
+                >
+                  {chatAgent.emoji}
+                </motion.div>
+                <h2 className="font-playfair text-3xl font-bold text-blue-950 mb-1">{chatAgent.character}</h2>
+                <p className="text-xs text-blue-400 font-bold uppercase tracking-widest">{chatAgent.movie}</p>
+                <p className="text-sm text-slate-500 mt-4 leading-relaxed font-medium">{chatAgent.description}</p>
+              </div>
+
+              <div className="oracle-glass p-5 rounded-2xl mb-8 border-blue-50/50">
+                <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-2">Current Sanctuary</p>
+                <p className="text-blue-900 font-bold text-sm truncate">{listing.address}</p>
+                <p className="text-slate-400 text-xs mt-1 font-medium">${listing.price.toLocaleString()}/mo · {listing.bedrooms}bd/{listing.bathrooms}ba</p>
+              </div>
             </div>
 
-            <div className="text-xs text-muted-foreground mt-4 mb-4">
-              <p className="font-semibold text-foreground mb-1">Discussing:</p>
-              <p>{listing.address}, {listing.city}</p>
-              <p>${listing.price}/mo · {listing.bedrooms}bd/{listing.bathrooms}ba</p>
-            </div>
-
-            <div className="space-y-2">
-              <Button variant="ghibli-outline" size="sm" className="w-full" onClick={() => navigate(`/summary/${id}`)}>
-                <FileText className="h-3 w-3 mr-1" /> Summary
-              </Button>
-              <Button variant="ghibli-outline" size="sm" className="w-full" onClick={() => navigate(`/listing/${id}`)}>
-                <ArrowLeft className="h-3 w-3 mr-1" /> Listing Info
-              </Button>
-              <Button variant="ghibli-outline" size="sm" className="w-full" onClick={() => navigate("/listings")}>
-                <Home className="h-3 w-3 mr-1" /> All Listings
-              </Button>
-              <Button variant="ghibli-outline" size="sm" className="w-full" onClick={() => navigate("/")}>
-                <Home className="h-3 w-3 mr-1" /> Home
-              </Button>
+            <div className="space-y-3">
+              {[
+                { icon: FileText, label: "Summary", path: `/summary/${id}` },
+                { icon: ArrowLeft, label: "Listing Info", path: `/listing/${id}` },
+                { icon: Home, label: "All Sanctuaries", path: "/listings" },
+              ].map((link) => (
+                <button
+                  key={link.label}
+                  onClick={() => navigate(link.path)}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-blue-100/50 bg-white/40 text-blue-600 font-bold text-sm hover:bg-blue-50 transition-all group"
+                >
+                  <link.icon size={16} className="group-hover:scale-110 transition-transform" />
+                  {link.label}
+                </button>
+              ))}
             </div>
           </div>
         </motion.div>
@@ -135,7 +139,7 @@ const Chat = () => {
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="flex-1 glass-card-strong overflow-hidden flex flex-col"
+          className="flex-1 oracle-glass-strong rounded-[2.5rem] overflow-hidden flex flex-col shadow-[0_24px_64px_rgba(100,150,255,0.1)]"
         >
           <ChatInterface messages={messages} onSend={handleSend} isLoading={isLoading} />
         </motion.div>
