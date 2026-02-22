@@ -377,18 +377,6 @@ npm run build
 
 ---
 
-## 🙏 Acknowledgments
-
-Built for the **AI Agents Challenge 2025** by [Your Team Name].
-
-**Powered by:**
-- Google Gemini 2.5 Flash
-- ElevenLabs Voice AI
-- Supabase (PostgreSQL + PostGIS)
-- OpenStreetMap (Overpass API)
-- OSRM Project
-- Zillow Research (ZORI/ZORDI data)
-
 **Inspired by the magical worlds of Studio Ghibli** — Spirited Away, Howl's Moving Castle, Kiki's Delivery Service, and more.
 
 ---

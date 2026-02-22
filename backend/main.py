@@ -902,8 +902,9 @@ class ChatRequest(BaseModel):
 
 @app.post("/api/chat")
 def chat_with_howl(request: ChatRequest):
-    """Chat endpoint — Howl answers questions about a specific listing using OpenRouter."""
-    api_key = os.environ.get("OPENROUTER_API_KEY")
+    """Chat endpoint — Howl answers questions about a specific listing, falling back to OpenRouter if Gemini fails."""
+    or_api_key = os.environ.get("OPENROUTER_API_KEY")
+    gemini_api_key = os.environ.get("GEMINI_API_KEY")
     
     ctx = request.listing_context
     listing_summary = f"""Property: {ctx.get('address', 'Unknown')}, {ctx.get('city', '')}, {ctx.get('state', '')} {ctx.get('zip', '')}
@@ -914,8 +915,8 @@ Utilities: {'Included' if ctx.get('utilitiesIncluded') else 'Not included'}
 Amenities: {', '.join(ctx.get('amenities', []))}
 Description: {ctx.get('description', 'N/A')}"""
     
-    if not api_key:
-        return {"response": f"I'd love to help, but my magic mirror is cloudy right now (API key not configured). Here's what I know: {listing_summary}"}
+    if not or_api_key and not gemini_api_key:
+        return {"response": f"I'd love to help, but my magic mirror is cloudy right now (API keys not configured). Here's what I know: {listing_summary}"}
     
     try:
         import requests as req
@@ -926,22 +927,46 @@ Property details:
 {listing_summary}
 
 Student's question: {request.question}"""
+
+        answer = None
         
-        response = req.post(
-            "https://openrouter.ai/api/v1/chat/completions",
-            headers={"Authorization": f"Bearer {api_key}"},
-            json={
-                "model": "google/gemini-2.5-flash",
-                "messages": [{"role": "user", "content": prompt}]
-            },
-            timeout=15
-        )
-        if response.ok:
-            data = response.json()
-            answer = data["choices"][0]["message"]["content"].strip().replace('"', '')
+        # Try direct Gemini first
+        if gemini_api_key:
+            try:
+                from google import genai
+                client = genai.Client(api_key=gemini_api_key)
+                resp = client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=prompt
+                )
+                if resp and resp.text:
+                    answer = resp.text.strip().replace('"', '')
+            except Exception as e:
+                sys.stderr.write(f"Direct Gemini chat failed: {e}\n")
+                
+        # Fallback to OpenRouter (if Gemini failed or wasn't available)
+        if not answer and or_api_key:
+            response = req.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={"Authorization": f"Bearer {or_api_key}"},
+                json={
+                    "models": ["google/gemini-2.5-flash", "openrouter/auto"],
+                    "route": "fallback",
+                    "messages": [{"role": "user", "content": prompt}]
+                },
+                timeout=15
+            )
+            if response.ok:
+                data = response.json()
+                answer = data["choices"][0]["message"]["content"].strip().replace('"', '')
+            else:
+                sys.stderr.write(f"OpenRouter chat failed: {response.text}\n")
+                
+        if answer:
             return {"response": answer}
         else:
             return {"response": "My castle seems to be having engine trouble... try again in a moment!"}
+            
     except Exception as e:
         sys.stderr.write(f"Chat error: {e}\n")
         return {"response": "The fire demon ate my response! Please try again."}
