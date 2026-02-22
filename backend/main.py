@@ -239,7 +239,7 @@ def _map_supabase_to_listing(row: dict) -> dict:
     }
 
 @app.get("/api/listings")
-def get_all_listings(college: str = None, radius: float = 10.0, max_price: float = 99999):
+def get_all_listings(college: str = None, radius: float = 50.0, max_price: float = 99999):
     """
     Get listings. If Supabase is configured and college is provided, uses geo-radius query.
     Otherwise falls back to CSV.
