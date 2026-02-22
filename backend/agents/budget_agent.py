@@ -31,7 +31,20 @@ def analyze_budget(listing: dict, target_budget: float) -> dict:
     logger.info("AGENT: budget calling LLM (Lin insight)")
     prompt = f"You are Lin from Spirited Away, a pragmatic worker evaluating budget. The user has ${target_budget}/mo. This property costs ${total_estimated}/mo (Rent: ${rent}, Util: ${utilities}). Give 1 punchy sentence telling them if it's a smart financial fit."
     
-    insight_text = generate_text(prompt, model="gemini-flash-latest") or ""
+    insight_text = generate_text(prompt, model="gemini-flash-latest")
+    
+    # Fallback insight if LLM fails
+    if not insight_text or not insight_text.strip():
+        logger.warning("AGENT: budget LLM returned empty, using fallback")
+        if total_estimated > target_budget:
+            overage = total_estimated - target_budget
+            insight_text = f"This place costs ${int(overage)} more than your budget. You'd be working overtime just to make rent."
+        elif total_estimated < target_budget * 0.7:
+            savings = target_budget - total_estimated
+            insight_text = f"Smart choice! This leaves you ${int(savings)}/month for savings or fun. That's the kind of financial cushion every student needs."
+        else:
+            pct = int((total_estimated / target_budget) * 100)
+            insight_text = f"At {pct}% of your budget, this is workable but tight. Budget carefully for other expenses."
         
     return {
         "matchScore": int(budget_fit),

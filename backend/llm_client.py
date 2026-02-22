@@ -27,27 +27,31 @@ def _get_openrouter_text(prompt: str, model: str, json_mode: bool = False) -> st
     try:
         from openai import OpenAI
     except ImportError:
-        logger.warning("install 'openai' to use OpenRouter")
+        logger.error("API ERROR: 'openai' library not installed (required for OpenRouter)")
         return None
     api_key = os.environ.get("OPENROUTER_API_KEY") or os.environ.get("OPEN_ROUTER_API_KEY")
     if not api_key:
+        logger.error("API ERROR: OPENROUTER_API_KEY not set in environment")
         return None
     model_id = _OPENROUTER_MODELS.get(model, model)
     if not model_id.startswith("google/"):
         model_id = f"google/{model_id}"
     logger.info("API CALL: OpenRouter model=%s json_mode=%s", model_id, json_mode)
-    client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
-    kwargs = {
-        "model": model_id,
-        "messages": [{"role": "user", "content": prompt}],
-    }
-    if json_mode:
-        kwargs["response_format"] = {"type": "json_object"}
-    resp = client.chat.completions.create(**kwargs)
-    if resp.choices and resp.choices[0].message.content:
-        logger.info("API RETURN: OpenRouter completed successfully")
-        return resp.choices[0].message.content
-    logger.warning("API RETURN: OpenRouter returned empty response")
+    try:
+        client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
+        kwargs = {
+            "model": model_id,
+            "messages": [{"role": "user", "content": prompt}],
+        }
+        if json_mode:
+            kwargs["response_format"] = {"type": "json_object"}
+        resp = client.chat.completions.create(**kwargs)
+        if resp.choices and resp.choices[0].message.content:
+            logger.info("API RETURN: OpenRouter completed successfully (length=%d)", len(resp.choices[0].message.content))
+            return resp.choices[0].message.content
+        logger.warning("API RETURN: OpenRouter returned empty response")
+    except Exception as e:
+        logger.error("API ERROR: OpenRouter failed: %s (type: %s)", str(e), type(e).__name__)
     return None
 
 
@@ -55,6 +59,7 @@ def _get_gemini_text(prompt: str, model: str, json_mode: bool = False, schema=No
     """Call Google Gemini directly. Returns text or None on failure."""
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
+        logger.error("API ERROR: GEMINI_API_KEY not set in environment")
         return None
     try:
         from google import genai
@@ -66,10 +71,13 @@ def _get_gemini_text(prompt: str, model: str, json_mode: bool = False, schema=No
             config = {"response_mime_type": "application/json", "response_schema": schema}
         resp = client.models.generate_content(model=model, contents=prompt, config=config)
         if resp and resp.text:
-            logger.info("API RETURN: Google Gemini completed successfully")
+            logger.info("API RETURN: Google Gemini completed successfully (length=%d)", len(resp.text))
             return resp.text
+        logger.warning("API RETURN: Google Gemini returned empty response")
+    except ImportError as e:
+        logger.error("API ERROR: Google Gemini library not installed: %s", e)
     except Exception as e:
-        logger.warning("API ERROR: Google Gemini failed: %s", e)
+        logger.error("API ERROR: Google Gemini failed: %s (type: %s)", str(e), type(e).__name__)
     return None
 
 

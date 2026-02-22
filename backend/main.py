@@ -29,11 +29,10 @@ from market_fairness.handler import run_market_fairness_agent
 from agents.kamaji import aggregate_insights, aggregate_insights_batch
 from agents.neighborhood_agent import analyze_nearby
 try:
-    from services.apartmentsdotcom import get_apartmentsdotcom
+    from services.craigslist import get_craigslist
 except ImportError as e:
     sys.stderr.write(f"[WARNING] Scraper dependencies missing ({e}). Real Mode (Scraper) will be unavailable.\n")
-    sys.stderr.write("  Install: pip install undetected-chromedriver seleniumbase playwright && playwright install chromium\n")
-    get_apartmentsdotcom = None
+    get_craigslist = None
 
 from services.geolocate import get_coordinates
 from data_loader import get_listings
@@ -108,11 +107,11 @@ def search_and_analyze_property(query: ListingQuery) -> str:
     use_mock = query.mock or os.environ.get("USE_MOCK_DATA", "0").lower() in ("1", "true", "yes")
     
     if use_scraper and not use_mock:
-        if get_apartmentsdotcom is None:
+        if get_craigslist is None:
             sys.stderr.write("[INFO] Scraper is disabled because dependencies are missing.\n")
         else:
             try:
-                real_apts = get_apartmentsdotcom(query.address, max_price=query.budget)
+                real_apts = get_craigslist(query.address, max_price=query.budget)
                 if real_apts:
                     for i, apt in enumerate(real_apts):
                         # Mapping logic consolidated from server.py
