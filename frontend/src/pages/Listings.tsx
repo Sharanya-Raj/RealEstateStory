@@ -144,10 +144,9 @@ const Listings = () => {
             exit={{ opacity: 0, height: 0 }}
             className="mb-6 rounded-2xl p-5"
             style={{
-              background: "rgba(255,255,255,0.45)",
-              backdropFilter: "blur(24px)",
-              border: "1px solid rgba(255,255,255,0.7)",
-              boxShadow: "0 4px 20px rgba(100,150,255,0.1)",
+              background: "rgba(0,0,0,0.5)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              boxShadow: "0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)",
             }}
           >
             <div className="flex justify-between items-center mb-3">
@@ -161,12 +160,9 @@ const Listings = () => {
             <input
               type="range" min={500} max={5000} step={50} value={maxPrice}
               onChange={(e) => setMaxPrice(parseInt(e.target.value))}
-              className="w-full"
+              className="w-full commute-slider"
               style={{
-                WebkitAppearance: "none", appearance: "none",
-                height: "6px", borderRadius: "9999px",
-                background: `linear-gradient(to right, #60a5fa ${((maxPrice - 500) / 4500) * 100}%, #dbeafe ${((maxPrice - 500) / 4500) * 100}%)`,
-                outline: "none", cursor: "pointer",
+                background: `linear-gradient(to right, #60a5fa ${((maxPrice - 500) / 4500) * 100}%, rgba(255,255,255,0.2) ${((maxPrice - 500) / 4500) * 100}%)`,
               }}
             />
             <div className="flex justify-between text-xs text-slate-300 font-medium mt-2 drop-shadow-md">
