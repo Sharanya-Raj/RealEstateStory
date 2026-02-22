@@ -11,6 +11,6 @@ def get_listings():
         try:
             _LISTINGS_DF = pd.read_csv(path)
         except Exception as e:
-            print(f"Error loading listings: {e}")
+            import sys; sys.stderr.write(f"Error loading listings: {e}\n")
             _LISTINGS_DF = pd.DataFrame()
     return _LISTINGS_DF

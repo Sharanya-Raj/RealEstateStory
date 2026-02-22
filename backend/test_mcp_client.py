@@ -31,12 +31,12 @@ setup_logging()
 logger = logging.getLogger("test_mcp_client")
 
 from fastmcp import Client
-from server import ListingQuery
+from main import ListingQuery
 
 
 def _direct_call(address: str, budget: float) -> str:
     """Fallback: call the MCP tool directly (no server subprocess)."""
-    from server import search_and_analyze_property, ListingQuery
+    from main import search_and_analyze_property, ListingQuery
 
     logger.info("DIRECT mode: calling search_and_analyze_property (no MCP subprocess)")
     query = ListingQuery(address=address, budget=budget)
@@ -46,8 +46,8 @@ def _direct_call(address: str, budget: float) -> str:
 
 
 async def _mcp_client_call(address: str, budget: float) -> str:
-    """Call the MCP server via FastMCP Client (spawns server.py subprocess)."""
-    server_path = os.path.join(_script_dir, "server.py")
+    """Call the MCP server via FastMCP Client (spawns mcp_server.py which uses main's mcp)."""
+    server_path = os.path.join(_script_dir, "mcp_server.py")
     logger.info("MCP mode: spawning server subprocess %s", server_path)
 
     client = Client(server_path)
@@ -87,15 +87,22 @@ def main():
 
     # When MCP_LOG_FILE is set, use DIRECT mode so server/agent logs are captured (subprocess logs aren't visible)
     use_mcp = os.environ.get("USE_MCP_CLIENT", "1") == "1"
-    if os.environ.get("MCP_LOG_FILE") and use_mcp:
+    log_file = os.environ.get("MCP_LOG_FILE")
+    if log_file and use_mcp:
         use_mcp = False
-        logger.info("MCP_LOG_FILE set: using DIRECT mode so server/agent logs appear in the log file")
+        # Resolve path same as log_config so we can tell the user where to look
+        if not os.path.isabs(log_file):
+            log_file = os.path.join(_script_dir, log_file)
+        logger.info("MCP_LOG_FILE set: using DIRECT mode, logging to %s", os.path.abspath(log_file))
     logger.info("Mode: %s", "MCP (subprocess)" if use_mcp else "DIRECT (in-process)")
 
     print(f"\nCalling with: address={uni!r}, budget=${budget:.0f}/mo")
     print("Please wait... (this may take 30-60 seconds with real scrapers)")
     if use_mcp:
         print("Tip: Set MCP_LOG_FILE=mcp.log to capture full server/agent logs (switches to DIRECT mode).\n")
+    elif log_file:
+        _path = os.path.join(_script_dir, log_file) if not os.path.isabs(log_file) else log_file
+        print(f"Logging to: {os.path.abspath(_path)}\n")
     else:
         print()
 
@@ -110,18 +117,60 @@ def main():
             print("\nTip: Set USE_MCP_CLIENT=0 to call the pipeline directly (no MCP server).")
         sys.exit(1)
 
-    # Pretty-print if it's JSON
+    # Parse result
+    parsed = None
     if isinstance(result, str):
         try:
             parsed = json.loads(result)
-            print(json.dumps(parsed, indent=2))
         except json.JSONDecodeError:
-            print(result)
+            parsed = {"raw": result}
     else:
-        print(json.dumps(result, indent=2) if isinstance(result, dict) else result)
+        parsed = result if isinstance(result, dict) else {"raw": str(result)}
 
-    with open("result.json", "w") as f:
-        json.dump(parsed, f, indent=2)
+    # --- Logs summary ---
+    print("\n" + "=" * 60)
+    print("  LOGS")
+    print("=" * 60)
+    if log_file:
+        _path = os.path.join(_script_dir, log_file) if not os.path.isabs(log_file) else log_file
+        print(f"  Log file: {os.path.abspath(_path)}")
+    else:
+        msg = "Logs: stderr"
+        if use_mcp:
+            msg += " (MCP subprocess logs not captured; set MCP_LOG_FILE=mcp.log for full logs)"
+        else:
+            msg += " (set MCP_LOG_FILE=mcp.log to capture to file)"
+        print(f"  {msg}")
+    print()
+
+    # --- Listings analyzed summary ---
+    if parsed and "listings" in parsed:
+        listings_data = parsed["listings"]
+        total = parsed.get("total_analyzed", len(listings_data))
+        print("=" * 60)
+        print(f"  LISTINGS ANALYZED ({total})")
+        print("=" * 60)
+        for i, item in enumerate(listings_data, 1):
+            lst = item.get("listing", item) if isinstance(item, dict) else {}
+            ins = item.get("insights", {}) if isinstance(item, dict) else {}
+            addr = lst.get("address", ins.get("address", "Unknown"))
+            rent = lst.get("base_rent", ins.get("rent", "—"))
+            match = ins.get("matchScore", "—")
+            true_cost = ins.get("trueCost", "—")
+            print(f"  {i}. {addr}")
+            print(f"     Rent: ${rent}  |  Match: {match}%  |  True cost: ${true_cost}")
+        print()
+
+    # Full JSON output
+    print("=" * 60)
+    print("  FULL OUTPUT (JSON)")
+    print("=" * 60)
+    print(json.dumps(parsed, indent=2))
+
+    if parsed is not None:
+        with open("result.json", "w") as f:
+            json.dump(parsed, f, indent=2)
+        print(f"\nSaved to result.json")
 
 
 if __name__ == "__main__":

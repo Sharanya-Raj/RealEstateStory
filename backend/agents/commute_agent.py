@@ -146,7 +146,7 @@ def analyze_commute(listing: dict, college: str = "") -> dict:
                 listing.get("state", ""),
                 listing.get("zip", ""),
             ]
-            apt_address = ", ".join(p for p in addr_parts if p)
+            apt_address = ", ".join(str(p) for p in addr_parts if p is not None and p != "")
         logger.info("[COMMUTE] Attempting real routing: '%s' → '%s'", apt_address, college)
 
         real = _get_real_commute(apt_address, college)

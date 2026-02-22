@@ -30,8 +30,9 @@ from agents.kamaji import aggregate_insights, aggregate_insights_batch
 from agents.neighborhood_agent import analyze_nearby
 try:
     from services.apartmentsdotcom import get_apartmentsdotcom
-except ImportError:
-    print("[WARNING] Scraper dependencies missing. Real Mode (Scraper) will be unavailable.")
+except ImportError as e:
+    sys.stderr.write(f"[WARNING] Scraper dependencies missing ({e}). Real Mode (Scraper) will be unavailable.\n")
+    sys.stderr.write("  Install: pip install undetected-chromedriver seleniumbase playwright && playwright install chromium\n")
     get_apartmentsdotcom = None
 
 from services.geolocate import get_coordinates
@@ -108,7 +109,7 @@ def search_and_analyze_property(query: ListingQuery) -> str:
     
     if use_scraper and not use_mock:
         if get_apartmentsdotcom is None:
-            print("[INFO] Scraper is disabled because dependencies are missing.")
+            sys.stderr.write("[INFO] Scraper is disabled because dependencies are missing.\n")
         else:
             try:
                 real_apts = get_apartmentsdotcom(query.address, max_price=query.budget)
@@ -152,12 +153,13 @@ def search_and_analyze_property(query: ListingQuery) -> str:
                 pass
 
     # Fallback to CSV if no listings found
+    max_csv_listings = int(os.environ.get("MAX_CSV_LISTINGS", "12"))
     if not matched_listings:
         if not df.empty:
             possible_matches = df[df["base_rent"] <= query.budget]
             if not possible_matches.empty:
-                # Use a sample for MCP tool simplicity
-                matched_listings = [possible_matches.sample(1).iloc[0].to_dict()]
+                take_df = possible_matches.head(max_csv_listings)
+                matched_listings = take_df.to_dict("records")
     
     if not matched_listings:
         return json.dumps({"error": "No listings available."})
@@ -434,7 +436,7 @@ def get_all_listings(college: str = None, radius: float = 50.0, max_price: float
             try:
                 from db import get_college_coords, get_nearby_listings, get_all_listings as db_get_all
             except ImportError:
-                print("[WARNING] Supabase dependencies missing. Real Mode (Database) will be unavailable.")
+                sys.stderr.write("[WARNING] Supabase dependencies missing. Real Mode (Database) will be unavailable.\n")
                 raise Exception("Supabase not installed")
 
             college_coords = None
@@ -448,7 +450,7 @@ def get_all_listings(college: str = None, radius: float = 50.0, max_price: float
             rows = db_get_all(limit=100)
             return [_map_supabase_to_listing(r, college_coords) for r in rows]
         except Exception as e:
-            print(f"[LISTINGS] Supabase error, falling back to CSV: {e}")
+            sys.stderr.write(f"[LISTINGS] Supabase error, falling back to CSV: {e}\n")
 
     # Fallback to CSV
     try:
@@ -502,14 +504,14 @@ def get_listing(listing_id: str, mock: bool = False):
             try:
                 from db import get_listing_by_id
             except ImportError:
-                print("[WARNING] Supabase dependencies missing. Real Mode (Database) will be unavailable.")
+                sys.stderr.write("[WARNING] Supabase dependencies missing. Real Mode (Database) will be unavailable.\n")
                 raise Exception("Supabase not installed")
             row = get_listing_by_id(listing_id)
             if row:
                 return _map_supabase_to_listing(row)
         except Exception as e:
             logger_msg = f"[LISTING] Supabase error, falling back to CSV: {e}"
-            print(logger_msg)
+            sys.stderr.write(logger_msg + "\n")
 
     # Fallback to CSV
     try:
@@ -599,7 +601,7 @@ Student's question: {request.question}"""
         else:
             return {"response": "My castle seems to be having engine trouble... try again in a moment!"}
     except Exception as e:
-        print(f"Chat error: {e}")
+        sys.stderr.write(f"Chat error: {e}\n")
         return {"response": "The fire demon ate my response! Please try again."}
 
 if __name__ == "__main__":

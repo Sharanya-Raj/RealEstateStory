@@ -10,7 +10,7 @@ ZORI_DATA = {}
 ZORDI_DATA = {}
 
 if os.path.exists(zori_path) and os.path.exists(zordi_path):
-    zori_df = pd.read_csv(zori_path)
+    zori_df = pd.read_csv(zori_path).copy()
     if "RegionName" in zori_df.columns:
         latest_date = zori_df.columns[-1]
         # Use pd.concat to avoid DataFrame fragmentation warning
@@ -22,7 +22,7 @@ if os.path.exists(zori_path) and os.path.exists(zordi_path):
         zori_df = zori_df.drop_duplicates(subset=["zip"], keep="first")
         ZORI_DATA = zori_df.set_index("zip").to_dict("index")
     
-    zordi_df = pd.read_csv(zordi_path)
+    zordi_df = pd.read_csv(zordi_path).copy()
     if "RegionName" in zordi_df.columns:
         zip_col = zordi_df["RegionName"].astype(str).apply(lambda x: x.split(',')[0].strip())
         if "p50" not in zordi_df.columns:

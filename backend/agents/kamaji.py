@@ -58,7 +58,7 @@ def aggregate_insights_batch(
             addr_list.append(raw)
         else:
             parts = [raw or L.get("address"), L.get("city"), L.get("state"), L.get("zip")]
-            addr_list.append(", ".join(p for p in parts if p))
+            addr_list.append(", ".join(str(p) for p in parts if p is not None and p != ""))
     geos = geocode_batch(addr_list, delay_sec=1.0)
     for i, L in enumerate(listings):
         g = geos[i] if i < len(geos) else {}
@@ -159,19 +159,29 @@ def aggregate_insights_batch(
             },
         })
 
-    # 5. Single batched LLM call for all narrative insights
-    rows = []
-    for i, L in enumerate(listings):
-        rows.append({
-            "i": i,
-            "address": L.get("address", "Unknown"),
-            "rent": L.get("base_rent"),
-            "commute": commutes[i]["driving"],
-            "walk_score": commutes[i]["walkScore"],
-            "percentile": fairnesses[i]["percentile"],
-            "true_cost": hiddens[i]["trueCost"],
-        })
-    prompt = f"""You are the Ghibli Nest real estate AI. For each of these {n} NJ rental listings near {college}, provide SHORT insights (1 sentence each).
+    # 5. Batched LLM calls for narrative insights (chunked to avoid rate limits)
+    import time
+    llm_insights = [{} for _ in range(n)]
+    LLM_BATCH_SIZE = int(os.environ.get("LLM_BATCH_SIZE", "8"))
+    LLM_BATCH_DELAY = float(os.environ.get("LLM_BATCH_DELAY", "1.5"))
+
+    for chunk_start in range(0, n, LLM_BATCH_SIZE):
+        chunk_end = min(chunk_start + LLM_BATCH_SIZE, n)
+        chunk_listings = listings[chunk_start:chunk_end]
+        chunk_n = len(chunk_listings)
+        rows = []
+        for i, L in enumerate(chunk_listings):
+            j = chunk_start + i
+            rows.append({
+                "i": j,
+                "address": L.get("address", "Unknown"),
+                "rent": L.get("base_rent"),
+                "commute": commutes[j]["driving"],
+                "walk_score": commutes[j]["walkScore"],
+                "percentile": fairnesses[j]["percentile"],
+                "true_cost": hiddens[j]["trueCost"],
+            })
+        prompt = f"""You are the Ghibli Nest real estate AI. For each of these {chunk_n} NJ rental listings near {college}, provide SHORT insights (1 sentence each).
 
 Listings data:
 {json.dumps(rows, indent=2)}
@@ -181,24 +191,26 @@ Return ONLY valid JSON with this exact structure (one object per listing, same o
   {{"budget_insight": "...", "commute_insight": "...", "neighborhood_summary": "...", "fairness_insight": "...", "kamaji_verdict": "..."}},
   ...
 ]}}"""
-    
-    try:
-        logger.info("API CALL: Batched LLM for %d listings", n)
-        raw = generate_text(prompt, model="gemini-flash-latest", json_mode=True)
-        if raw:
-            data = json.loads(raw.replace("```json", "").replace("```", "").strip())
-            arr = data.get("insights", [])
-            for i, item in enumerate(arr[:n]):
-                if i < len(llm_insights):
-                    llm_insights[i] = {
-                        "budget": item.get("budget_insight", ""),
-                        "commute": item.get("commute_insight", ""),
-                        "neighborhood": item.get("neighborhood_summary", ""),
-                        "fairness": item.get("fairness_insight", ""),
-                        "kamaji": item.get("kamaji_verdict", ""),
-                    }
-    except Exception as e:
-        logger.warning("Batched LLM failed: %s", e)
+        try:
+            if chunk_start > 0:
+                time.sleep(LLM_BATCH_DELAY)
+            logger.info("API CALL: Batched LLM for listings %d-%d of %d (chunk size=%d)", chunk_start + 1, chunk_end, n, chunk_n)
+            raw = generate_text(prompt, model="gemini-flash-latest", json_mode=True)
+            if raw:
+                data = json.loads(raw.replace("```json", "").replace("```", "").strip())
+                arr = data.get("insights", [])
+                for i, item in enumerate(arr[:chunk_n]):
+                    j = chunk_start + i
+                    if j < n:
+                        llm_insights[j] = {
+                            "budget": item.get("budget_insight", ""),
+                            "commute": item.get("commute_insight", ""),
+                            "neighborhood": item.get("neighborhood_summary", ""),
+                            "fairness": item.get("fairness_insight", ""),
+                            "kamaji": item.get("kamaji_verdict", ""),
+                        }
+        except Exception as e:
+            logger.warning("Batched LLM chunk %d-%d failed: %s", chunk_start + 1, chunk_end, e)
 
     # 6. Merge and build final results
     results = []

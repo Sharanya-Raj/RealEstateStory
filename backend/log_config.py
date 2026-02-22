@@ -22,6 +22,10 @@ def setup_logging(level: int = logging.INFO) -> None:
     )
     log_file = os.environ.get("MCP_LOG_FILE")
     if log_file:
+        # Resolve relative paths against backend dir so log is created reliably
+        if not os.path.isabs(log_file):
+            _backend_dir = os.path.dirname(os.path.abspath(__file__))
+            log_file = os.path.join(_backend_dir, log_file)
         fh = logging.FileHandler(log_file, mode="a", encoding="utf-8")
         fh.setFormatter(logging.Formatter(fmt, datefmt=datefmt))
         logging.getLogger().addHandler(fh)
