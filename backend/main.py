@@ -324,6 +324,10 @@ class PipelineRequest(BaseModel):
     max_distance_miles: float = 30.0
     mock: bool = False
 
+# In-memory cache of listings produced by the pipeline, keyed by listing id.
+# Allows GET /api/listings/{id} to resolve scraped listings that don't exist in CSV/Supabase.
+_pipeline_listing_cache: dict[str, dict] = {}
+
 @app.post("/api/pipeline")
 def run_full_pipeline(request: PipelineRequest):
     """
@@ -363,7 +367,13 @@ def run_full_pipeline(request: PipelineRequest):
     for raw, trans in zip(raw_listings, translated):
         raw["distanceMiles"] = trans.get("distanceMiles", raw.get("distanceMiles", 2.0))
 
-    logger.info("  [PIPELINE] Complete. Returning %d listings with agent data.", len(raw_listings))
+    # Cache listings so GET /api/listings/{id} can resolve scraped entries
+    for listing in raw_listings:
+        lid = listing.get("id")
+        if lid:
+            _pipeline_listing_cache[lid] = listing
+
+    logger.info("  [PIPELINE] Complete. Returning %d listings with agent data. (%d in lookup cache)", len(raw_listings), len(_pipeline_listing_cache))
     return {
         "listings": raw_listings,
         "agentResults": agent_results,
@@ -848,6 +858,12 @@ def get_all_listings(college: str = None, radius: float = 50.0, max_price: float
 @app.get("/api/listings/{listing_id}")
 def get_listing(listing_id: str, mock: bool = False):
     logger.info("GET /api/listings/%s", listing_id)
+
+    # Check pipeline cache first (scraped listings live here)
+    if listing_id in _pipeline_listing_cache:
+        logger.info("GET /api/listings/%s — found in pipeline cache", listing_id)
+        return _pipeline_listing_cache[listing_id]
+
     # Try Supabase first (if not in mock mode)
     use_mock_env = os.environ.get("USE_MOCK_DATA", "0").lower() in ("1", "true", "yes")
     is_mock = mock or use_mock_env

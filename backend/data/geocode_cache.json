@@ -1,0 +1,398 @@
+{
+ "rutgers new brunswick": {
+  "name": "Rutgers New Brunswick",
+  "latitude": 40.5204169,
+  "longitude": -74.4645303,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08904",
+  "display_name": "Rutgers University, Cleveland Avenue, Heritage at Highland Park, Highland Park, Middlesex County, New Jersey, 08904, United States"
+ },
+ "258 carlton ave, piscataway, nj 08854": {
+  "name": "258 Carlton Ave, Piscataway, NJ 08854",
+  "latitude": 40.5684691,
+  "longitude": -74.4417066,
+  "city": "Piscataway",
+  "state": "nj",
+  "zipcode": "08854",
+  "display_name": "258, Carlton Avenue, New Market, Piscataway Township, Middlesex County, New Jersey, 08854, United States"
+ },
+ "3060 new brunswick ave, piscataway, nj 08854": {
+  "name": "3060 New Brunswick Ave, Piscataway, NJ 08854",
+  "latitude": 40.5715228,
+  "longitude": -74.4381727,
+  "city": "New Brunswick",
+  "state": "nj",
+  "zipcode": "08854",
+  "display_name": "3060, New Brunswick Avenue, Piscataway Township, Middlesex County, New Jersey, 08854, United States"
+ },
+ "120 harper st, highland park, nj 08904": {
+  "name": "120 Harper St, Highland Park, NJ 08904",
+  "latitude": 40.4939894,
+  "longitude": -74.4304449,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08904",
+  "display_name": "120, Harper Street, Highland Park, Middlesex County, New Jersey, 08904, United States"
+ },
+ "575 easton ave, somerset, nj 08873": {
+  "name": "575 Easton Ave, Somerset, NJ 08873",
+  "latitude": 40.5061507,
+  "longitude": -74.4705322,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08873",
+  "display_name": "575, Easton Avenue, Franklin Township, Somerset County, New Jersey, 08873, United States"
+ },
+ "330-344 crowells rd, highland park, nj 08904": {
+  "name": "330-344 Crowells Rd, Highland Park, NJ 08904",
+  "latitude": 40.4970663,
+  "longitude": -74.4156922,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08904",
+  "display_name": "Crowells Road, Meadow View Apartments, Highland Park, Middlesex County, New Jersey, 08904, United States"
+ },
+ "1 chester cir, new brunswick, nj 08901": {
+  "name": "1 Chester Cir, New Brunswick, NJ 08901",
+  "latitude": 40.486288,
+  "longitude": -74.419626,
+  "city": "New Brunswick",
+  "state": "nj",
+  "zipcode": "08901",
+  "display_name": "1, Chester Circle, Raritan Gardens, New Brunswick, Middlesex County, New Jersey, 08901, United States"
+ },
+ "1 john f kennedy blvd, somerset, nj 08873": {
+  "name": "1 John F Kennedy Blvd, Somerset, NJ 08873",
+  "latitude": 40.510168,
+  "longitude": -74.491784,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08873",
+  "display_name": "1, John F Kennedy Boulevard, Franklin Township, Somerset County, New Jersey, 08873, United States"
+ },
+ "1155 livingston ave, north brunswick, nj 08902": {
+  "name": "1155 Livingston Ave, North Brunswick, NJ 08902",
+  "latitude": 40.4658109,
+  "longitude": -74.4744306,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08902",
+  "display_name": "1155, Livingston Avenue, North Brunswick Township, Middlesex County, New Jersey, 08902, United States"
+ },
+ "97 horizon dr, edison, nj 08817": {
+  "name": "97 Horizon Dr, Edison, NJ 08817",
+  "latitude": 40.5028352,
+  "longitude": -74.3756282,
+  "city": "Edison",
+  "state": "nj",
+  "zipcode": "08817",
+  "display_name": "97, Horizon Drive, Edison, Middlesex County, New Jersey, 08817, United States"
+ },
+ "66 sicard st, new brunswick, nj 08901": {
+  "name": "66 Sicard St, New Brunswick, NJ 08901",
+  "latitude": 40.5031763,
+  "longitude": -74.454692,
+  "city": "New Brunswick",
+  "state": "nj",
+  "zipcode": "08901",
+  "display_name": "66, Sicard Street, New Brunswick, Middlesex County, New Jersey, 08901, United States"
+ },
+ "100 hiram sq, new brunswick, nj 08901": {
+  "name": "100 Hiram Sq, New Brunswick, NJ 08901",
+  "latitude": 40.4948793,
+  "longitude": -74.4402425,
+  "city": "New Brunswick",
+  "state": "nj",
+  "zipcode": "08901",
+  "display_name": "100 Hiram Square, 100, Hiram Square, New Brunswick, Middlesex County, New Jersey, 08901, United States"
+ },
+ "10 landing ln, new brunswick, nj 08901": {
+  "name": "10 Landing Ln, New Brunswick, NJ 08901",
+  "latitude": 40.5066011,
+  "longitude": -74.4644058,
+  "city": "New Brunswick",
+  "state": "nj",
+  "zipcode": "08901",
+  "display_name": "10, Landing Lane, New Brunswick, Middlesex County, New Jersey, 08901, United States"
+ },
+ "462 hamilton st, somerset, nj 08873": {
+  "name": "462 Hamilton St, Somerset, NJ 08873",
+  "latitude": 40.4955171,
+  "longitude": -74.4619513,
+  "city": "Hamilton",
+  "state": "nj",
+  "zipcode": "08873",
+  "display_name": "462, Hamilton Street, Franklin Township, Somerset County, New Jersey, 08873, United States"
+ },
+ "1020 raritan ave, highland park, nj 08904": {
+  "name": "1020 Raritan Ave, Highland Park, NJ 08904",
+  "latitude": 40.5032229,
+  "longitude": -74.4188946,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08904",
+  "display_name": "1020, Raritan Avenue, Highland Park, Middlesex County, New Jersey, 08904, United States"
+ },
+ "18 regency manor drive, new brunswick, nj 08901": {
+  "name": "18 Regency Manor Drive, New Brunswick, NJ 08901",
+  "latitude": 40.4864595,
+  "longitude": -74.4144895,
+  "city": "New Brunswick",
+  "state": "nj",
+  "zipcode": "08901",
+  "display_name": "18, Regency Manor Drive, Rutgers Village, New Brunswick, Middlesex County, New Jersey, 08901, United States"
+ },
+ "1470 oak tree dr, north brunswick, nj 08902": {
+  "name": "1470 Oak Tree Dr, North Brunswick, NJ 08902",
+  "latitude": 40.471544,
+  "longitude": -74.4906592,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08902",
+  "display_name": "1470, Oak Tree Drive, North Brunswick Township, Middlesex County, New Jersey, 08902, United States"
+ },
+ "250 treetops dr, highland park, nj 08904": {
+  "name": "250 Treetops Dr, Highland Park, NJ 08904",
+  "latitude": 40.5091934,
+  "longitude": -74.4359407,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08904",
+  "display_name": "250, Treetops Drive, Treetops Apartments, Highland Park, Middlesex County, New Jersey, 08904, United States"
+ },
+ "304 s 2nd ave, highland park, nj 08904": {
+  "name": "304 S 2nd Ave, Highland Park, NJ 08904",
+  "latitude": 40.4949815,
+  "longitude": -74.4294223,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08904",
+  "display_name": "304, South 2nd Avenue, Highland Park, Middlesex County, New Jersey, 08904, United States"
+ },
+ "16 lenox ct, piscataway, nj 08854": {
+  "name": "16 Lenox Ct, Piscataway, NJ 08854",
+  "latitude": 40.5658185,
+  "longitude": -74.4602188,
+  "city": "Piscataway",
+  "state": "nj",
+  "zipcode": "08854",
+  "display_name": "16, Lenox Court, New Market, Piscataway Township, Middlesex County, New Jersey, 08854, United States"
+ },
+ "52 cedar ln, highland park, nj 08904": {
+  "name": "52 Cedar Ln, Highland Park, NJ 08904",
+  "latitude": 40.507502,
+  "longitude": -74.4363897,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08904",
+  "display_name": "52, Cedar Lane, Highland Park, Middlesex County, New Jersey, 08904, United States"
+ },
+ "100 cedar ln, highland park, nj 08904": {
+  "name": "100 Cedar Ln, Highland Park, NJ 08904",
+  "latitude": 40.507933,
+  "longitude": -74.435564,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08904",
+  "display_name": "100, Cedar Lane, Highland Park, Middlesex County, New Jersey, 08904, United States"
+ },
+ "290 george st, new brunswick, nj 08901": {
+  "name": "290 George St, New Brunswick, NJ 08901",
+  "latitude": 40.4918598,
+  "longitude": -74.443367,
+  "city": "New Brunswick",
+  "state": "nj",
+  "zipcode": "08901",
+  "display_name": "SoCam Apartments, 290, George Street, Feaster Park, New Brunswick, Middlesex County, New Jersey, 08901, United States"
+ },
+ "10 paul robeson blvd, new brunswick, nj 08901": {
+  "name": "10 Paul Robeson Blvd, New Brunswick, NJ 08901",
+  "latitude": 40.4885748,
+  "longitude": -74.4376671,
+  "city": "New Brunswick",
+  "state": "nj",
+  "zipcode": "08901",
+  "display_name": "Riverside Towers, 10, Paul Robeson Boulevard, Feaster Park, New Brunswick, Middlesex County, New Jersey, 08901, United States"
+ },
+ "60 woodbridge ave, highland park, nj 08904": {
+  "name": "60 Woodbridge Ave, Highland Park, NJ 08904",
+  "latitude": 40.5009509,
+  "longitude": -74.42055,
+  "city": "Woodbridge",
+  "state": "nj",
+  "zipcode": "08904",
+  "display_name": "60, Woodbridge Avenue, Highland Park, Middlesex County, New Jersey, 08904, United States"
+ },
+ "80 phelps ave, new brunswick, nj 08901": {
+  "name": "80 Phelps Ave, New Brunswick, NJ 08901",
+  "latitude": 40.4842256,
+  "longitude": -74.4255981,
+  "city": "New Brunswick",
+  "state": "nj",
+  "zipcode": "08901",
+  "display_name": "80, Phelps Avenue, New Brunswick, Middlesex County, New Jersey, 08901, United States"
+ },
+ "745 hamilton st, somerset, nj 08873": {
+  "name": "745 Hamilton St, Somerset, NJ 08873",
+  "latitude": 40.4906257,
+  "longitude": -74.4752449,
+  "city": "Hamilton",
+  "state": "nj",
+  "zipcode": "08873",
+  "display_name": "745, Hamilton Street, Voorhees, Franklin Township, Somerset County, New Jersey, 08873, United States"
+ },
+ "100 hillside ave, edison, nj 08817": {
+  "name": "100 Hillside Ave, Edison, NJ 08817",
+  "latitude": 40.5151094,
+  "longitude": -74.4067982,
+  "city": "Edison",
+  "state": "nj",
+  "zipcode": "08817",
+  "display_name": "100, Hillside Avenue, Stelton, Edison, Middlesex County, New Jersey, 08817, United States"
+ },
+ "11 brunswick ave, edison, nj 08817": {
+  "name": "11 Brunswick Ave, Edison, NJ 08817",
+  "latitude": 40.528871,
+  "longitude": -74.4070455,
+  "city": "Edison",
+  "state": "nj",
+  "zipcode": "08817",
+  "display_name": "11, Brunswick Avenue, Oxford Arms, Lahiere, Edison, Middlesex County, New Jersey, 08817, United States"
+ },
+ "1126 easton ave, somerset, nj 08873": {
+  "name": "1126 Easton Ave, Somerset, NJ 08873",
+  "latitude": 40.5171057,
+  "longitude": -74.4903169,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08873",
+  "display_name": "1126, Easton Avenue, Franklin Township, Somerset County, New Jersey, 08873, United States"
+ },
+ "911 village dr e, north brunswick, nj 08902": {
+  "name": "911 Village Dr E, North Brunswick, NJ 08902",
+  "latitude": 40.4646189,
+  "longitude": -74.4596366,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08902",
+  "display_name": "911, Village Drive East, Berdines Corners, North Brunswick Township, Middlesex County, New Jersey, 08902, United States"
+ },
+ "2 taylor ave, east brunswick, nj 08816": {
+  "name": "2 Taylor Ave, East Brunswick, NJ 08816",
+  "latitude": 40.465936,
+  "longitude": -74.40986,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08816",
+  "display_name": "2, Taylor Avenue, Washington Heights, Lawrence Brook Manor, East Brunswick Township, Middlesex County, New Jersey, 08816, United States"
+ },
+ "2880 birchwood ct, north brunswick, nj 08902": {
+  "name": "2880 Birchwood Ct, North Brunswick, NJ 08902",
+  "latitude": 40.4535518,
+  "longitude": -74.4783537,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08902",
+  "display_name": "2880, Birchwood Court, Red Lion, North Brunswick Township, Middlesex County, New Jersey, 08902, United States"
+ },
+ "1000 us highway 1, edison, nj 08817": {
+  "name": "1000 US Highway 1, Edison, NJ 08817",
+  "latitude": 40.5174876,
+  "longitude": -74.3669903,
+  "city": "Edison",
+  "state": "nj",
+  "zipcode": "08817",
+  "display_name": "BJ's Wholesale Club, 1000, US Highway 1, Bonhamtown, Nixon, Edison, Middlesex County, New Jersey, 08817, United States"
+ },
+ "280 river rd, piscataway, nj 08854": {
+  "name": "280 River Rd, Piscataway, NJ 08854",
+  "latitude": 40.5463965,
+  "longitude": -74.5144597,
+  "city": "Piscataway",
+  "state": "nj",
+  "zipcode": "08854",
+  "display_name": "280, River Road, Fieldville, Piscataway Township, Middlesex County, New Jersey, 08854, United States"
+ },
+ "238 old post rd, edison, nj 08817": {
+  "name": "238 Old Post Rd, Edison, NJ 08817",
+  "latitude": 40.506376,
+  "longitude": -74.3917391,
+  "city": "Edison",
+  "state": "nj",
+  "zipcode": "08817",
+  "display_name": "Old Post Road, Washington Park, Edison, Middlesex County, New Jersey, 08817, United States"
+ },
+ "29 s adelaide ave, highland park, nj 08904": {
+  "name": "29 S Adelaide Ave, Highland Park, NJ 08904",
+  "latitude": 40.49689,
+  "longitude": -74.4339433,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08904",
+  "display_name": "29, South Adelaide Avenue, Highland Park, Middlesex County, New Jersey, 08904, United States"
+ },
+ "285-287 george st, new brunswick, nj 08901": {
+  "name": "285-287 George St, New Brunswick, NJ 08901",
+  "latitude": 40.4838628,
+  "longitude": -74.4338279,
+  "city": "New Brunswick",
+  "state": "nj",
+  "zipcode": "08901",
+  "display_name": "George Street, Feaster Park, New Brunswick, Middlesex County, New Jersey, 08901, United States"
+ },
+ "117 benner st, highland park, nj 08904": {
+  "name": "117 Benner St, Highland Park, NJ 08904",
+  "latitude": 40.4962992,
+  "longitude": -74.4309269,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08904",
+  "display_name": "Benner Apartments, 117, Benner Street, Highland Park, Middlesex County, New Jersey, 08904, United States"
+ },
+ "513-515 s 1st ave, highland park, nj 08904": {
+  "name": "513-515 S 1st Ave, Highland Park, NJ 08904",
+  "latitude": 40.4942358,
+  "longitude": -74.4311468,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08904",
+  "display_name": "South 1st Avenue, Highland Park, Middlesex County, New Jersey, 08904, United States"
+ },
+ "481 s 2nd ave, highland park, nj 08904": {
+  "name": "481 S 2nd Ave, Highland Park, NJ 08904",
+  "latitude": 40.4938356,
+  "longitude": -74.4282861,
+  "city": "",
+  "state": "nj",
+  "zipcode": "08904",
+  "display_name": "481, South 2nd Avenue, Highland Park, Middlesex County, New Jersey, 08904, United States"
+ },
+ "15-33 belmont ave, edison, nj 08817": {
+  "name": "15-33 Belmont Ave, Edison, NJ 08817",
+  "latitude": 40.5082616,
+  "longitude": -74.4098594,
+  "city": "Edison",
+  "state": "nj",
+  "zipcode": "08817",
+  "display_name": "Belmont Avenue, Haven Homes, Edison, Middlesex County, New Jersey, 08817, United States"
+ },
+ "440 livingston ave, new brunswick, nj 08901": {
+  "name": "440 Livingston Ave, New Brunswick, NJ 08901",
+  "latitude": 40.478143,
+  "longitude": -74.459711,
+  "city": "New Brunswick",
+  "state": "nj",
+  "zipcode": "08901",
+  "display_name": "440, Livingston Avenue, Feaster Park, New Brunswick, Middlesex County, New Jersey, 08901, United States"
+ },
+ "301 n randolphville rd, piscataway, nj 08854": {
+  "name": "301 N Randolphville Rd, Piscataway, NJ 08854",
+  "latitude": 40.5628241,
+  "longitude": -74.4643484,
+  "city": "Piscataway",
+  "state": "nj",
+  "zipcode": "08854",
+  "display_name": "301, North Randolphville Road, Piscataway Township, Middlesex County, New Jersey, 08854, United States"
+ }
+}

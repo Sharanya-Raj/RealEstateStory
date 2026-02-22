@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import sys
@@ -9,8 +10,33 @@ logger = logging.getLogger("services.geolocate")
 
 cities = ["Princeton", "New Brunswick", "Camden", "Newark", "Piscataway", "Edison", "Woodbridge", "Toms River", "Hamilton", "Trenton", "Clifton", "Passaic", "Union City", "Bayonne", "Hackensack", "Jersey City", "Elizabeth", "Paterson", "Morristown", "Wayne", "West New York"]
 
-# L1: in-process cache — avoids any I/O for addresses geocoded in the current run
-_GEOCODE_CACHE: dict[str, dict] = {}
+# ── File-backed geocode cache ──────────────────────────────────────────────
+_GEOCODE_CACHE_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "geocode_cache.json")
+
+def _load_file_cache() -> dict[str, dict]:
+    """Load the persistent JSON geocode cache from disk into memory."""
+    if os.path.exists(_GEOCODE_CACHE_FILE):
+        try:
+            with open(_GEOCODE_CACHE_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            logger.info("GEOCODE FILE CACHE: loaded %d entries from %s", len(data), _GEOCODE_CACHE_FILE)
+            return data
+        except Exception as e:
+            logger.warning("GEOCODE FILE CACHE: failed to load — %s", e)
+    return {}
+
+def _save_file_cache() -> None:
+    """Persist the in-memory cache to disk."""
+    try:
+        os.makedirs(os.path.dirname(_GEOCODE_CACHE_FILE), exist_ok=True)
+        with open(_GEOCODE_CACHE_FILE, "w", encoding="utf-8") as f:
+            json.dump(_GEOCODE_CACHE, f, indent=1)
+        logger.debug("GEOCODE FILE CACHE: saved %d entries", len(_GEOCODE_CACHE))
+    except Exception as e:
+        logger.warning("GEOCODE FILE CACHE: failed to save — %s", e)
+
+# L1: in-process cache — seeded from disk on startup
+_GEOCODE_CACHE: dict[str, dict] = _load_file_cache()
 
 # Lazy import of DB helpers to avoid circular imports
 def _db_get(key: str) -> dict | None:
@@ -81,27 +107,40 @@ def get_coordinates(place):
     }
     logger.info("GEOCODE L3 RESULT: lat=%.4f lon=%.4f for %r — saving to Supabase", result["latitude"], result["longitude"], place)
 
-    # Persist to L1 + L2
+    # Persist to L1 (memory + file) + L2 (Supabase)
     _GEOCODE_CACHE[cache_key] = result
+    _save_file_cache()
     _db_set(cache_key, result)
     return result
 
 
+DEMO_GEOCODE_SECS = 15.0
+
 def geocode_batch(addresses: list[str], delay_sec: float = 1.0) -> list[dict]:
     """
     Geocode multiple addresses.
-    L1/L2 hits skip the Nominatim rate-limit delay; only real API calls are throttled.
+    L1 (file-backed memory) hits are instant; L2 (Supabase) hits are fast;
+    only real Nominatim calls are throttled.
+
+    When every address resolves from cache, a simulated delay of
+    ~DEMO_GEOCODE_SECS is spread across the batch so the demo looks
+    natural while still being deterministic.
     """
     results = []
     needs_api_delay = False
+    api_calls = 0
+    cache_hits = 0
+    new_entries = False
+
     for addr in addresses:
         cache_key = addr.strip().lower()
-        # Check L1 first (no I/O)
+        # Check L1 first (file-backed memory — no network)
         if cache_key in _GEOCODE_CACHE:
             geo = _GEOCODE_CACHE[cache_key]
             results.append({"latitude": geo["latitude"], "longitude": geo["longitude"]})
+            cache_hits += 1
             continue
-        # Check L2 (fast DB read)
+        # Check L2 (Supabase)
         db_row = _db_get(cache_key)
         if db_row and db_row.get("latitude") and db_row.get("longitude"):
             result = {
@@ -111,17 +150,38 @@ def geocode_batch(addresses: list[str], delay_sec: float = 1.0) -> list[dict]:
                 "zipcode": db_row.get("zipcode", ""), "display_name": db_row.get("display_name", ""),
             }
             _GEOCODE_CACHE[cache_key] = result
+            new_entries = True
             results.append({"latitude": result["latitude"], "longitude": result["longitude"]})
+            cache_hits += 1
             continue
         # L3: Nominatim — rate-limit only between real API calls
         if needs_api_delay and delay_sec > 0:
             time.sleep(delay_sec)
         needs_api_delay = True
+        api_calls += 1
         geo = get_coordinates(addr)
         if isinstance(geo, dict) and geo.get("latitude"):
             results.append({"latitude": geo["latitude"], "longitude": geo["longitude"]})
         else:
             results.append({"latitude": 0, "longitude": 0})
+
+    if new_entries:
+        _save_file_cache()
+
+    # If everything came from cache, simulate a realistic delay for the demo
+    if api_calls == 0 and len(addresses) > 0:
+        per_addr = DEMO_GEOCODE_SECS / max(len(addresses), 1)
+        logger.info(
+            "GEOCODE BATCH: all %d/%d from cache — simulating %.0fs demo delay (%.2fs each)",
+            cache_hits, len(addresses), DEMO_GEOCODE_SECS, per_addr,
+        )
+        for i, addr in enumerate(addresses):
+            time.sleep(per_addr)
+            if (i + 1) % 10 == 0 or (i + 1) == len(addresses):
+                logger.info("  geocoded %d/%d (cached)", i + 1, len(addresses))
+    else:
+        logger.info("GEOCODE BATCH: %d cache hits, %d API calls out of %d addresses", cache_hits, api_calls, len(addresses))
+
     return results
 
 
