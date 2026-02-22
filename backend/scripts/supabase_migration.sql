@@ -1,4 +1,20 @@
 -- Run this in the Supabase SQL Editor (one time)
+-- ─────────────────────────────────────────────
+-- geocode_cache: persistent geocoding cache so Nominatim is only hit once per address
+-- ─────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS geocode_cache (
+    address_key  TEXT PRIMARY KEY,         -- normalized address (lowercase, trimmed)
+    latitude     DOUBLE PRECISION NOT NULL,
+    longitude    DOUBLE PRECISION NOT NULL,
+    display_name TEXT,
+    city         TEXT,
+    zipcode      TEXT,
+    cached_at    TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Index for fast existence checks
+CREATE INDEX IF NOT EXISTS idx_geocode_cache_key ON geocode_cache (address_key);
+-- ─────────────────────────────────────────────
 -- 1. Enable PostGIS for geo-radius queries
 CREATE EXTENSION IF NOT EXISTS postgis;
 

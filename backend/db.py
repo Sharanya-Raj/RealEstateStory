@@ -68,6 +68,143 @@ def get_college_coords(college_name: str) -> tuple[float, float] | None:
     return None
 
 
+# ── DB availability (graceful degradation when Supabase not configured) ───
+
+def db_available() -> bool:
+    """Return True if Supabase is configured; False otherwise."""
+    return bool(os.environ.get("SUPABASE_URL") and os.environ.get("SUPABASE_KEY"))
+
+
+def listing_exists(address: str, name: str) -> bool:
+    """Check if a listing with this address+name already exists. Returns False if DB unavailable."""
+    if not db_available():
+        return False
+    try:
+        client = get_client()
+        result = (
+            client.table("listings")
+            .select("id")
+            .eq("address", address)
+            .eq("name", name)
+            .limit(1)
+            .execute()
+        )
+        return bool(result.data)
+    except Exception as e:
+        logger.warning("listing_exists failed: %s", e)
+        return False
+
+
+def insert_listing_from_agents(listing: dict, insights: dict | None = None, source: str = "apartments.com") -> bool:
+    """
+    Insert a listing (with optional agent insights) into the DB.
+    Expects listing dict with: name, address, city, state, zip, base_rent/price, bedrooms, bathrooms,
+    pet_friendly, has_gym, description, latitude, longitude.
+    Returns True on success, False if DB unavailable or insert fails.
+    """
+    if not db_available():
+        return False
+    try:
+        client = get_client()
+        amenities = []
+        if listing.get("has_gym"):
+            amenities.append("Gym")
+        if listing.get("has_grocery_nearby"):
+            amenities.append("Near Grocery")
+        if listing.get("pet_friendly"):
+            amenities.append("Pet Friendly")
+        lat = listing.get("latitude") or 0
+        lon = listing.get("longitude") or 0
+        if lat and lon:
+            client.rpc("upsert_listing_with_location", {
+                "p_name": str(listing.get("name", "Unknown")),
+                "p_address": str(listing.get("address", "")),
+                "p_city": str(listing.get("city", "")),
+                "p_state": str(listing.get("state", "NJ")),
+                "p_zip": str(listing.get("zip", "")),
+                "p_price": float(listing.get("base_rent") or listing.get("price") or 0),
+                "p_bedrooms": int(listing.get("bedrooms", 1)),
+                "p_bathrooms": float(listing.get("bathrooms", 1)) or 1,
+                "p_amenities": amenities,
+                "p_pet_friendly": bool(listing.get("pet_friendly")),
+                "p_has_gym": bool(listing.get("has_gym")),
+                "p_description": str(listing.get("description", "")),
+                "p_source": source,
+                "p_latitude": float(lat),
+                "p_longitude": float(lon),
+            }).execute()
+        else:
+            client.table("listings").upsert({
+                "name": str(listing.get("name", "Unknown")),
+                "address": str(listing.get("address", "")),
+                "city": str(listing.get("city", "")),
+                "state": str(listing.get("state", "NJ")),
+                "zip": str(listing.get("zip", "")),
+                "price": float(listing.get("base_rent") or listing.get("price") or 0),
+                "bedrooms": int(listing.get("bedrooms", 1)),
+                "bathrooms": float(listing.get("bathrooms", 1)) or 1,
+                "amenities": amenities,
+                "pet_friendly": bool(listing.get("pet_friendly")),
+                "has_gym": bool(listing.get("has_gym")),
+                "description": str(listing.get("description", "")),
+                "source": source,
+            }, on_conflict="address,name").execute()
+        return True
+    except Exception as e:
+        logger.warning("insert_listing_from_agents failed: %s", e)
+        return False
+
+
+# ── Geocode cache ────────────────────────────────────────────────────
+
+def geocode_cache_get(address_key: str) -> dict | None:
+    """
+    Look up a pre-geocoded address from Supabase.
+    Returns a dict with latitude, longitude, display_name, city, zipcode — or None on miss.
+    """
+    if not db_available():
+        return None
+    try:
+        client = get_client()
+        result = (
+            client.table("geocode_cache")
+            .select("latitude,longitude,display_name,city,zipcode")
+            .eq("address_key", address_key)
+            .limit(1)
+            .execute()
+        )
+        if result.data:
+            return result.data[0]
+        return None
+    except Exception as e:
+        logger.warning("geocode_cache_get failed: %s", e)
+        return None
+
+
+def geocode_cache_set(address_key: str, geo: dict) -> None:
+    """
+    Persist a geocoding result so it is found on future runs.
+    Silently skips if DB is unavailable.
+    """
+    if not db_available():
+        return
+    try:
+        client = get_client()
+        client.table("geocode_cache").upsert(
+            {
+                "address_key":  address_key,
+                "latitude":     geo.get("latitude"),
+                "longitude":    geo.get("longitude"),
+                "display_name": geo.get("display_name", ""),
+                "city":         geo.get("city", ""),
+                "zipcode":      geo.get("zipcode", ""),
+            },
+            on_conflict="address_key",
+        ).execute()
+    except Exception as e:
+        logger.warning("geocode_cache_set failed: %s", e)
+
+
 # ── Listing queries ─────────────────────────────────────────────────
 
 def get_nearby_listings(

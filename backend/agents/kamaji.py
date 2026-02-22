@@ -51,6 +51,26 @@ def aggregate_insights_batch(
     col_lat = college_geo.get("latitude") if college_geo else None
     col_lon = college_geo.get("longitude") if college_geo else None
 
+    # Decide which listings need geocoding.
+    # Scraped apartments all share the college's lat/lon as a placeholder —
+    # detect that by checking if every listing has the exact same coords, or
+    # if a listing's coords are within 50 m of the college (clearly not the apt).
+    def _is_placeholder(lat, lon, c_lat, c_lon):
+        if not lat or not lon:
+            return True
+        if c_lat and c_lon:
+            dlat, dlon = abs(float(lat) - c_lat), abs(float(lon) - c_lon)
+            if dlat < 0.001 and dlon < 0.001:   # ~100 m threshold
+                return True
+        return False
+
+    needs_geocode = [
+        _is_placeholder(L.get("latitude"), L.get("longitude"), col_lat, col_lon)
+        for L in listings
+    ]
+    n_need = sum(needs_geocode)
+    logger.info("Geocoding: %d/%d listings need geocoding (others already have unique coords)", n_need, n)
+
     addr_list = []
     for L in listings:
         raw = (L.get("address") or "").strip()
@@ -59,11 +79,20 @@ def aggregate_insights_batch(
         else:
             parts = [raw or L.get("address"), L.get("city"), L.get("state"), L.get("zip")]
             addr_list.append(", ".join(str(p) for p in parts if p is not None and p != ""))
-    geos = geocode_batch(addr_list, delay_sec=1.0)
+
+    # Only geocode the listings that need it; use a 0.7 s delay (still within Nominatim ToS)
+    addrs_to_geocode = [addr_list[i] for i, need in enumerate(needs_geocode) if need]
+    geos_needed = geocode_batch(addrs_to_geocode, delay_sec=0.7) if addrs_to_geocode else []
+
+    geo_iter = iter(geos_needed)
     for i, L in enumerate(listings):
-        g = geos[i] if i < len(geos) else {}
-        L["_lat"] = g.get("latitude") or L.get("latitude") or 0
-        L["_lon"] = g.get("longitude") or L.get("longitude") or 0
+        if needs_geocode[i]:
+            g = next(geo_iter, {})
+            L["_lat"] = g.get("latitude") or L.get("latitude") or 0
+            L["_lon"] = g.get("longitude") or L.get("longitude") or 0
+        else:
+            L["_lat"] = float(L.get("latitude") or 0)
+            L["_lon"] = float(L.get("longitude") or 0)
 
     apt_coords = [(L["_lat"], L["_lon"]) for L in listings]
     listings_with_coords = [(L, L["_lat"], L["_lon"]) for L in listings]

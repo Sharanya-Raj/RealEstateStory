@@ -36,9 +36,18 @@ def _parse_price(price_str: str) -> int | None:
     return int(digits) if digits else None
 
 
-def _parse_listings_from_soup(soup, geo: dict, location: str, max_price: float | None) -> list:
+def _parse_listings_from_soup(
+    soup,
+    geo: dict,
+    location: str,
+    max_price: float | None,
+    min_beds: int = 1,
+    require_parking: bool = False,
+) -> list:
     """
     Shared parsing logic using BeautifulSoup. Same for Princeton (uc/Selenium) and other schools (SB/Playwright).
+    min_beds: skip bed rows with fewer bedrooms than this (1=studio+, 2=1bed+, 3=2bed+)
+    require_parking: skip articles where no amenity mentions "parking"
     """
     apartments = []
     listings = soup.find_all("article", attrs={"data-listingid": True})
@@ -58,12 +67,24 @@ def _parse_listings_from_soup(soup, geo: dict, location: str, max_price: float |
             for amenity_el in amenity_els:
                 amenities.append(amenity_el.text.strip())
 
+            # Parking filter: skip this entire listing if parking is required but not listed
+            if require_parking:
+                amenity_text = " ".join(amenities).lower()
+                if "parking" not in amenity_text:
+                    logger.debug("Apartments.com: skipping %r — no parking amenity", name)
+                    continue
+
             bed_rows = article.select(".bedRentBox")
             if bed_rows:
                 for row in bed_rows:
                     bed_el = row.select_one(".bedTextBox")
                     price_el = row.select_one(".priceTextBox span")
                     if not bed_el or not price_el:
+                        continue
+
+                    beds = _parse_beds(bed_el.text)
+                    # Beds filter: skip rows that don't meet the minimum
+                    if beds < min_beds:
                         continue
 
                     price_str = price_el.text.strip()
@@ -76,7 +97,7 @@ def _parse_listings_from_soup(soup, geo: dict, location: str, max_price: float |
                         name=name,
                         address=address,
                         price=price_str,
-                        bedrooms=_parse_beds(bed_el.text),
+                        bedrooms=beds,
                         latitude=geo.get("latitude", 0.0),
                         longitude=geo.get("longitude", 0.0),
                         source="Apartments.com",
@@ -84,7 +105,8 @@ def _parse_listings_from_soup(soup, geo: dict, location: str, max_price: float |
                         amenities=amenities,
                     ))
             else:
-                if max_price is not None:
+                # No bed rows — only include if min_beds == 1 (solo) and price is fine
+                if min_beds > 1 or max_price is not None:
                     continue
                 apartments.append(Apartment(
                     name=name,
@@ -106,6 +128,7 @@ def _parse_listings_from_soup(soup, geo: dict, location: str, max_price: float |
 def _get_driver():
     """Initialize uc Chrome driver (used for Princeton only)."""
     options = uc.ChromeOptions()
+    options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument(
@@ -115,7 +138,12 @@ def _get_driver():
     return uc.Chrome(options=options)
 
 
-def get_apartmentsdotcom(location, max_price: float | None = None):
+def get_apartmentsdotcom(
+    location,
+    max_price: float | None = None,
+    min_beds: int = 1,
+    require_parking: bool = False,
+):
     """
     Scrape Apartments.com for listings near the given location.
     Princeton University: uses undetected_chromedriver (uc) + Selenium.
@@ -123,7 +151,10 @@ def get_apartmentsdotcom(location, max_price: float | None = None):
     If max_price is set, only listings with price <= max_price are added.
     Parsing is identical in both paths (BeautifulSoup).
     """
-    logger.info("API: Apartments.com scrape starting for location=%r, max_price=%s", location, max_price)
+    logger.info(
+        "API: Apartments.com scrape starting for location=%r, max_price=%s, min_beds=%d, require_parking=%s",
+        location, max_price, min_beds, require_parking,
+    )
     geo = geolocate.get_coordinates(location)
 
     if not isinstance(geo, dict) or not geo.get("latitude") or not geo.get("longitude"):
@@ -149,18 +180,51 @@ def get_apartmentsdotcom(location, max_price: float | None = None):
     all_apartments = []
     is_princeton = "princeton" in location.lower() and "university" in location.lower()
 
-    if is_princeton:
-        # Princeton: use undetected_chromedriver + Selenium (existing flow)
-        logger.info("Apartments.com: Princeton University — using uc/Selenium")
-        driver = _get_driver()
-        try:
+    # if is_princeton:
+    #     # Princeton: use undetected_chromedriver + Selenium (existing flow)
+    #     logger.info("Apartments.com: Princeton University — using uc/Selenium")
+    #     driver = _get_driver()
+    #     try:
+    #         current_page_url = base_url
+    #         while current_page_url:
+    #             logger.info("API: Apartments.com fetching page %s", current_page_url)
+    #             driver.get(current_page_url)
+    #             time.sleep(10)
+    #             soup = BeautifulSoup(driver.page_source, "html.parser")
+    #             page_apts = _parse_listings_from_soup(soup, geo, location, max_price, min_beds, require_parking)
+    #             all_apartments.extend(page_apts)
+    #             if not soup.find_all("article", attrs={"data-listingid": True}):
+    #                 logger.info("Apartments.com: No listings found on page, ending search")
+    #                 break
+    #             next_button = soup.select_one("a.next")
+    #             if next_button and next_button.get("href"):
+    #                 current_page_url = next_button.get("href")
+    #                 if not current_page_url.startswith("http"):
+    #                     current_page_url = "https://www.apartments.com" + current_page_url
+    #             else:
+    #                 current_page_url = None
+    #     finally:
+    #         driver.quit()
+    # else:
+        # Any other school: use SeleniumBase + Playwright
+    logger.info("Apartments.com: Other school — using SB + Playwright")
+    with SB(uc=True, headless=True) as sb:
+        debugger_address = sb.driver.capabilities["goog:chromeOptions"]["debuggerAddress"]
+        cdp_url = f"http://{debugger_address}"
+
+        with sync_playwright() as p:
+            browser = p.chromium.connect_over_cdp(cdp_url)
+            context = browser.contexts[0]
+            page = context.pages[0]
+
             current_page_url = base_url
             while current_page_url:
                 logger.info("API: Apartments.com fetching page %s", current_page_url)
-                driver.get(current_page_url)
-                time.sleep(10)
-                soup = BeautifulSoup(driver.page_source, "html.parser")
-                page_apts = _parse_listings_from_soup(soup, geo, location, max_price)
+                page.goto(current_page_url)
+                page.wait_for_timeout(10000)
+                html = page.content()
+                soup = BeautifulSoup(html, "html.parser")
+                page_apts = _parse_listings_from_soup(soup, geo, location, max_price, min_beds, require_parking)
                 all_apartments.extend(page_apts)
                 if not soup.find_all("article", attrs={"data-listingid": True}):
                     logger.info("Apartments.com: No listings found on page, ending search")
@@ -172,39 +236,7 @@ def get_apartmentsdotcom(location, max_price: float | None = None):
                         current_page_url = "https://www.apartments.com" + current_page_url
                 else:
                     current_page_url = None
-        finally:
-            driver.quit()
-    else:
-        # Any other school: use SeleniumBase + Playwright
-        logger.info("Apartments.com: Other school — using SB + Playwright")
-        with SB(uc=True, headless=True) as sb:
-            debugger_address = sb.driver.capabilities["goog:chromeOptions"]["debuggerAddress"]
-            cdp_url = f"http://{debugger_address}"
 
-            with sync_playwright() as p:
-                browser = p.chromium.connect_over_cdp(cdp_url)
-                context = browser.contexts[0]
-                page = context.pages[0]
-
-                current_page_url = base_url
-                while current_page_url:
-                    logger.info("API: Apartments.com fetching page %s", current_page_url)
-                    page.goto(current_page_url)
-                    page.wait_for_timeout(10000)
-                    html = page.content()
-                    soup = BeautifulSoup(html, "html.parser")
-                    page_apts = _parse_listings_from_soup(soup, geo, location, max_price)
-                    all_apartments.extend(page_apts)
-                    if not soup.find_all("article", attrs={"data-listingid": True}):
-                        logger.info("Apartments.com: No listings found on page, ending search")
-                        break
-                    next_button = soup.select_one("a.next")
-                    if next_button and next_button.get("href"):
-                        current_page_url = next_button.get("href")
-                        if not current_page_url.startswith("http"):
-                            current_page_url = "https://www.apartments.com" + current_page_url
-                    else:
-                        current_page_url = None
 
     logger.info("API: Apartments.com scrape completed, total listings=%d", len(all_apartments))
     return all_apartments

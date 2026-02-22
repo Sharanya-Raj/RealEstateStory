@@ -38,11 +38,16 @@ from services.geolocate import get_coordinates
 from data_loader import get_listings
 from services.voice_service import generate_voice
 
-# Load environment variables from .env file
-load_dotenv()
+try:
+    from db import listing_exists, insert_listing_from_agents, db_available
+except ImportError:
+    listing_exists = lambda a, n: False
+    insert_listing_from_agents = lambda l, i=None, s="apartments.com": False
+    db_available = lambda: False
 
 # Load environment variables from .env file
 load_dotenv()
+
 
 # Ensure the backend directory is in the python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -68,9 +73,21 @@ class LocationCoords(BaseModel):
 
 class ListingQuery(BaseModel):
     address: str = Field(description="The address to search for (e.g., '123 Main St, Edison NJ'). In our mock dataset, we will try to match the city or zip.")
-    budget: float = Field(default=1500.0, description="The user's monthly budget for the rental.")
+    budget: float = Field(default=1500.0, description="Max monthly budget (upper end of budget range).")
     mock_data: Optional[dict] = Field(default=None, description="Optional payload containing frontend mock data to analyze directly.")
     mock: bool = False
+    # User preference filters
+    roommates: str = Field(default="solo", description="Roommate preference: 'solo' (1 bed), '1+' (2 beds), '2+' (3+ beds).")
+    parking: str = Field(default="not_needed", description="Parking requirement: 'not_needed', '1', or '2'.")
+    max_distance_miles: float = Field(default=30.0, description="Maximum distance to campus in miles.")
+
+
+def _haversine_miles(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """Straight-line distance between two lat/lon points in miles."""
+    R = 3958.8
+    lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
+    a = math.sin((lat2 - lat1) / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin((lon2 - lon1) / 2) ** 2
+    return 2 * R * math.asin(math.sqrt(a))
 
 # --- MCP Tools (Ported from server.py) ---
 
@@ -102,37 +119,64 @@ def search_and_analyze_property(query: ListingQuery) -> str:
     """
     df = get_listings()
     matched_listings = []
-    
+    listings_from_scraper = False  # True if we got listings from Apartments.com scraper
+
+    # --- Derive filters from user preferences ---
+    _roommate_min_beds = {"solo": 1, "1+": 2, "2+": 3}
+    min_beds = _roommate_min_beds.get(query.roommates, 1)
+    require_parking = query.parking in ("1", "2")
+    max_dist = query.max_distance_miles  # miles; 30 = no effective limit
+
+    # Geocode college once for distance filtering
+    _college_lat: float | None = None
+    _college_lon: float | None = None
+    try:
+        _cgeo = get_coordinates(query.address)
+        if isinstance(_cgeo, dict) and _cgeo.get("latitude") and _cgeo.get("longitude"):
+            _college_lat = float(_cgeo["latitude"])
+            _college_lon = float(_cgeo["longitude"])
+    except Exception:
+        pass
+
     use_scraper = os.environ.get("USE_APARTMENTS_COM", "1").lower() in ("1", "true", "yes")
     use_mock = query.mock or os.environ.get("USE_MOCK_DATA", "0").lower() in ("1", "true", "yes")
-    
+
     if use_scraper and not use_mock:
         if get_craigslist is None:
             sys.stderr.write("[INFO] Scraper is disabled because dependencies are missing.\n")
         else:
             try:
-                real_apts = get_craigslist(query.address, max_price=query.budget)
+                real_apts = get_craigslist(
+                    query.address,
+                    max_price=query.budget,
+                    min_beds=min_beds,
+                    require_parking=require_parking,
+                )
                 if real_apts:
+                    new_count = 0
                     for i, apt in enumerate(real_apts):
+                        addr = apt.address or ""
+                        name = apt.name or "Unknown"
+                        # Skip if already in DB
+                        if db_available() and listing_exists(addr, name):
+                            continue
                         # Mapping logic consolidated from server.py
                         price_str = re.sub(r"[^\d]", "", apt.price or "")
                         base_rent = int(price_str) if price_str else 1500
-                        addr_str = apt.address or ""
-                        zip_match = re.search(r"\b\d{5}(?:-\d{4})?\b", addr_str)
+                        zip_match = re.search(r"\b\d{5}(?:-\d{4})?\b", addr)
                         zipcode = zip_match.group(0)[:5] if zip_match else "00000"
-                        
-                        # More robust city/state parsing: "Address, City, ST ZIP"
+
                         city = "Unknown"
                         state = "NJ"
-                        city_state_match = re.search(r",\s*([^,]+),\s*([A-Z]{2})\b", addr_str)
+                        city_state_match = re.search(r",\s*([^,]+),\s*([A-Z]{2})\b", addr)
                         if city_state_match:
                             city = city_state_match.group(1).strip()
                             state = city_state_match.group(2).strip()
-                        
+
                         matched_listings.append({
-                            "id": f"apt_real_{i + 1}",
-                            "name": apt.name,
-                            "address": apt.address,
+                            "id": f"apt_real_{new_count + 1}",
+                            "name": name,
+                            "address": addr,
                             "city": city,
                             "state": state,
                             "zip": zipcode,
@@ -140,14 +184,42 @@ def search_and_analyze_property(query: ListingQuery) -> str:
                             "bedrooms": apt.bedrooms,
                             "bathrooms": 1,
                             "sqft": 800,
-                            "pet_friendly": "pet" in (getattr(apt, 'amenities', []) or []),
-                            "has_gym": "gym" in (getattr(apt, 'amenities', []) or []),
+                            "pet_friendly": "pet" in (getattr(apt, "amenities", []) or []),
+                            "has_gym": "gym" in (getattr(apt, "amenities", []) or []),
                             "avg_utilities": 120,
                             "description": f"Property from {apt.source}: {apt.name}",
                             "latitude": getattr(apt, "latitude", None),
                             "longitude": getattr(apt, "longitude", None),
-                            "image_url": IMAGE_ASSETS[i % len(IMAGE_ASSETS)]
+                            "image_url": IMAGE_ASSETS[new_count % len(IMAGE_ASSETS)],
                         })
+                        new_count += 1
+                    # Distance filter: remove listings too far from campus
+                    if _college_lat and _college_lon and max_dist < 30:
+                        before = len(matched_listings)
+                        matched_listings = [
+                            L for L in matched_listings
+                            if (
+                                L.get("latitude") and L.get("longitude")
+                                and _haversine_miles(_college_lat, _college_lon, L["latitude"], L["longitude"]) <= max_dist
+                            )
+                        ]
+                        removed = before - len(matched_listings)
+                        if removed:
+                            sys.stderr.write(f"[INFO] Distance filter removed {removed} listings beyond {max_dist} mi\n")
+
+                    listings_from_scraper = len(matched_listings) > 0
+
+                    # Cap before the expensive agent pipeline
+                    max_analyze = int(os.environ.get("MAX_SCRAPER_ANALYZE", "20"))
+                    if len(matched_listings) > max_analyze:
+                        # Sort cheapest-first within budget, then take the cap
+                        matched_listings.sort(key=lambda L: abs(L["base_rent"] - query.budget))
+                        dropped = len(matched_listings) - max_analyze
+                        matched_listings = matched_listings[:max_analyze]
+                        sys.stderr.write(
+                            f"[INFO] Capped scraper results: analyzing {max_analyze} of "
+                            f"{max_analyze + dropped} listings (set MAX_SCRAPER_ANALYZE to change)\n"
+                        )
             except Exception:
                 pass
 
@@ -155,7 +227,11 @@ def search_and_analyze_property(query: ListingQuery) -> str:
     max_csv_listings = int(os.environ.get("MAX_CSV_LISTINGS", "12"))
     if not matched_listings:
         if not df.empty:
-            possible_matches = df[df["base_rent"] <= query.budget]
+            # Apply budget + bed filters to CSV (no distance — CSV rows have no lat/lon)
+            possible_matches = df[
+                (df["base_rent"] <= query.budget) &
+                (df["bedrooms"] >= min_beds)
+            ]
             if not possible_matches.empty:
                 take_df = possible_matches.head(max_csv_listings)
                 matched_listings = take_df.to_dict("records")
@@ -169,10 +245,28 @@ def search_and_analyze_property(query: ListingQuery) -> str:
         results = [{"listing": m, "insights": ins} for m, ins in zip(matched_listings, all_insights)]
     else:
         results = [{"listing": matched_listings[0], "insights": aggregate_insights(matched_listings[0], query.budget, college=query.address)}]
-    
-    return json.dumps({"total_analyzed": len(results), "listings": results}, indent=2)
 
+    # Persist scraped listings to DB after running agents
+    inserted = 0
+    if listings_from_scraper and db_available():
+        for item in results:
+            listing = item.get("listing", {})
+            insights = item.get("insights", {})
+            if insert_listing_from_agents(listing, insights, source="apartments.com"):
+                inserted += 1
+
+    out = {
+        "total_analyzed": len(results),
+        "listings": results,
+    }
+    if listings_from_scraper and db_available():
+        out["db_inserted"] = inserted
+    return json.dumps(out, indent=2)
+
+
+# ============================================================================================
 # --- FastAPI Endpoints ---
+# ============================================================================================
 
 @app.post("/api/fairness", response_model=MarketFairnessOutput)
 def evaluate_market_fairness(input_data: MarketFairnessInput):

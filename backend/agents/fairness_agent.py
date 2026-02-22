@@ -12,6 +12,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(current_dir, ".."))
 from market_fairness.handler import run_market_fairness_agent
 from market_fairness.schema import MarketFairnessInput
+from market_fairness.data_access import get_zori_history
 
 def analyze_fairness(listing: dict) -> dict:
     """
@@ -22,21 +23,24 @@ def analyze_fairness(listing: dict) -> dict:
     rent = float(listing.get('base_rent', 1500))
     l_id = str(listing.get('id', 'mock_1'))
     city_name = str(listing.get('city', ''))
-    
+
     historical_avg = rent
     trend = "stable"
     percentile = 50
     fairness_score = 50.0
     insight = "In line with current market trends"
     explanation = {}
-    
+
     # ── Run the real Market Fairness Agent (ZORI/ZORDI computation) ──
+    # ZORI is keyed by ZIP code, not city name. Always pass the ZIP first;
+    # fall back to city name only when the ZIP is absent (e.g. scraped listings).
+    zori_key = zip_code if zip_code and zip_code != "00000" else city_name
     try:
-        logger.info("AGENT: fairness calling run_market_fairness_agent (ZORI/ZORDI)")
+        logger.info("AGENT: fairness calling run_market_fairness_agent (ZORI/ZORDI) key=%s", zori_key)
         input_data = MarketFairnessInput(
             listing_id=l_id,
             listing_rent=rent,
-            zip_code=city_name if city_name else zip_code  # ZORI uses city names
+            zip_code=zori_key,
         )
         mf_result = run_market_fairness_agent(input_data)
         
@@ -62,17 +66,40 @@ def analyze_fairness(listing: dict) -> dict:
     except Exception as e:
         logger.warning("Fairness Agent Error: %s", e)
                 
-    historical_prices = [
-        {"month": "Jan", "price": historical_avg * 0.9},
-        {"month": "Feb", "price": historical_avg * 0.95},
-        {"month": "Mar", "price": historical_avg},
-        {"month": "Apr", "price": rent},
-    ]
+    # ── Real ZORI historical time-series (last 12 months) ──
+    # Try the ZIP first, then fall back to city name if the ZIP wasn't in the dataset.
+    historical_prices = get_zori_history(zip_code, n_months=12)
+    if not historical_prices and city_name:
+        historical_prices = get_zori_history(city_name, n_months=12)
+
+    # If real data came back, derive the trend from the first-vs-last price
+    if len(historical_prices) >= 2:
+        price_start = historical_prices[0]["price"]
+        price_end   = historical_prices[-1]["price"]
+        change_pct  = (price_end - price_start) / price_start if price_start else 0
+        if change_pct > 0.02:
+            trend = "up"
+        elif change_pct < -0.02:
+            trend = "down"
+        else:
+            trend = "stable"
+        logger.info(
+            "AGENT: fairness real ZORI history %d months, %.1f%% change → trend=%s",
+            len(historical_prices), change_pct * 100, trend,
+        )
+    else:
+        # Synthetic fallback — only used when the ZIP/city is not in ZORI at all
+        historical_prices = [
+            {"month": "Jan", "price": round(rent * 0.90, 2)},
+            {"month": "Apr", "price": round(rent * 0.95, 2)},
+            {"month": "Jul", "price": round(rent * 0.98, 2)},
+            {"month": "Oct", "price": round(rent, 2)},
+        ]
 
     api_key = os.environ.get("OPENROUTER_API_KEY")
-    
+
     try:
-        # 1. LLM fallback: generate historical data if ZORI had no data
+        # LLM fallback: generate historical data if ZORI had no data
         if "error" in str(explanation).lower() and api_key:
             logger.info("AGENT: fairness calling LLM for historical data (ZORI fallback)")
             prompt_data = f"""
