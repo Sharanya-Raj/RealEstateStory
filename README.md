@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🏡 Ghibli Nest
+# 🏡 The Spirited Oracle
 
 ### *Apartment hunting, reimagined as a Ghibli film.*
 
@@ -32,7 +32,7 @@ Nobody tells you. Until now.
 
 ## The Solution
 
-Ghibli Nest sends **six specialized AI agents** — each voiced as a beloved Ghibli character — to investigate every corner of a rental listing. They answer the questions landlords won't:
+The Spirited Oracle sends **six specialized AI agents** — each voiced as a beloved Ghibli character — to investigate every corner of a rental listing. They answer the questions landlords won't:
 
 | Agent | Character | What They Uncover |
 |---|---|---|
@@ -264,7 +264,7 @@ The technical result is a system that answers questions apartment hunters actual
 
 > *"My listed rent is $1,500 — but what will I actually spend each month, including the gym I'll need, the utilities that aren't included, and the $80 parking the description mentioned once?"*
 
-Ghibli Nest answers that question with a Spirit Match score, a true cost breakdown, a ZORI market percentile, and a neighborhood vibe summary — all narrated in character.
+The Spirited Oracle answers that question with a Spirit Match score, a true cost breakdown, a ZORI market percentile, and a neighborhood vibe summary — all narrated in character.
 
 ---
 
