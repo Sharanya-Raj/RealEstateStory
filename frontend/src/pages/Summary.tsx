@@ -157,11 +157,15 @@ const Summary = () => {
           
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8 relative z-10">
             <div className="w-24 h-24 rounded-3xl bg-black/40 border border-white/20 flex items-center justify-center text-5xl shadow-2xl animate-float overflow-hidden">
-              {summaryAgent.image ? (
-                <img src={summaryAgent.image} alt={summaryAgent.name} className="w-full h-full object-cover" />
-              ) : (
-                <span className="drop-shadow-md">{summaryAgent.emoji}</span>
-              )}
+              {(() => {
+                // Use the public kamaji image explicitly when rendering the summary header
+                const kamajiPublic = new URL('/images/kamaji1.PNG', import.meta.url).href;
+                const src = summaryAgent.character === 'Kamaji' ? kamajiPublic : summaryAgent.image;
+                if (src) {
+                  return <img src={src} alt={summaryAgent.name} className="w-full h-full object-cover" />;
+                }
+                return <span className="drop-shadow-md">{summaryAgent.emoji}</span>;
+              })()}
             </div>
             <div className="text-center md:text-left">
               <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
