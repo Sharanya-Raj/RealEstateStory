@@ -16,7 +16,7 @@
 
 <br/><br/>
 
-> **Built for AI Agents Challenge 2025** — targeting Google Gemini, ElevenLabs, Vultr, and ADP prize tracks.
+> 🏆 **1st Place, Best Financial Hack** — HackHERS 2026 
 
 </div>
 
